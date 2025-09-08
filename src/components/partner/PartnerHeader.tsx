@@ -1,5 +1,5 @@
 import { Bell, Home, Zap, ShoppingCart, Building, User } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -43,6 +43,8 @@ export function PartnerHeader({
 }: PartnerHeaderProps) {
   const { cartItems } = useOrders();
   const { partnerType, setPartnerType, isOrganizational } = usePartner();
+  const navigate = useNavigate();
+  const location = useLocation();
   
   // Calculate cart count: bundles count as 1, individual items count as 1 each
   const getCartItemCount = () => {
@@ -63,7 +65,17 @@ export function PartnerHeader({
   const cartItemCount = getCartItemCount();
 
   const togglePartnerType = () => {
-    setPartnerType(isOrganizational ? 'individual' : 'organizational');
+    const newPartnerType = isOrganizational ? 'individual' : 'organizational';
+    
+    // Extract the current page from the path (e.g., /individual/dashboard -> dashboard)
+    const pathParts = location.pathname.split('/');
+    const currentPage = pathParts[2] || 'dashboard'; // default to dashboard if no specific page
+    
+    // Update context
+    setPartnerType(newPartnerType);
+    
+    // Navigate to the same page but with the new partner type
+    navigate(`/${newPartnerType}/${currentPage}${location.search}`);
   };
 
   return (
