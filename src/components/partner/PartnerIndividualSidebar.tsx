@@ -19,15 +19,15 @@ import {
 } from "@/components/ui/sidebar";
 
 const mainItems = [
-  { title: "Dashboard", url: "/partners/individual/dashboard", icon: LayoutDashboard },
-  { title: "My Founders", url: "/partners/individual/founders", icon: Users },
-  { title: "Founder Reports", url: "/partners/individual/reports", icon: FileText },
-  { title: "Referrals & Earnings", url: "/partners/individual/earnings", icon: DollarSign },
+  { title: "Dashboard", url: "/individual/dashboard", icon: LayoutDashboard },
+  { title: "My Founders", url: "/individual/founders", icon: Users },
+  { title: "Founder Reports", url: "/individual/reports", icon: FileText },
+  { title: "Referrals & Earnings", url: "/individual/earnings", icon: DollarSign },
 ];
 
 const profileItems = [
-  { title: "My Profile", url: "/partners/individual/profile", icon: User },
-  { title: "Partnership Opportunities", url: "/partners/individual/opportunities", icon: Briefcase },
+  { title: "My Profile", url: "/individual/profile", icon: User },
+  { title: "Partnership Opportunities", url: "/individual/opportunities", icon: Briefcase },
 ];
 
 export function PartnerIndividualSidebar() {
@@ -40,7 +40,7 @@ export function PartnerIndividualSidebar() {
       <SidebarContent>
         <div className="p-4">
           <NavLink 
-            to="/partners/individual/dashboard"
+            to="/individual/dashboard"
             className="flex items-center gap-3 hover:opacity-80 transition-opacity"
           >
             <img 

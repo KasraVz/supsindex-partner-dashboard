@@ -71,7 +71,7 @@ export function PartnerHeader({
       <div className="flex items-center gap-4">
         <SidebarTrigger />
         <Button variant="ghost" size="sm" asChild>
-          <Link to={`/partners/${partnerType}/dashboard`}>
+          <Link to={`/${partnerType}/dashboard`}>
             <Home className="h-4 w-4" />
           </Link>
         </Button>
@@ -101,17 +101,17 @@ export function PartnerHeader({
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-48">
             <DropdownMenuItem asChild>
-              <Link to={`/partners/${partnerType}/founders`} className="w-full">
+              <Link to={`/${partnerType}/founders`} className="w-full">
                 View My Founders
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link to={`/partners/${partnerType}/earnings`} className="w-full">
+              <Link to={`/${partnerType}/earnings`} className="w-full">
                 Referrals & Earnings
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link to={`/partners/${partnerType}/reports`} className="w-full">
+              <Link to={`/${partnerType}/reports`} className="w-full">
                 View Reports
               </Link>
             </DropdownMenuItem>
@@ -175,7 +175,7 @@ export function PartnerHeader({
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem>
-              <Link to={`/partners/${partnerType}/profile`}>Profile</Link>
+              <Link to={`/${partnerType}/profile`}>Profile</Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
               <Link to="/dashboard/support">Support</Link>

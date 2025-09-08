@@ -22,21 +22,21 @@ import {
 } from "@/components/ui/sidebar";
 
 const mainItems = [
-  { title: "Dashboard", url: "/partners/organizational/dashboard", icon: LayoutDashboard },
-  { title: "My Founders", url: "/partners/organizational/founders", icon: Users },
-  { title: "Founder Reports", url: "/partners/organizational/reports", icon: FileText },
-  { title: "Referrals & Earnings", url: "/partners/organizational/earnings", icon: DollarSign },
+  { title: "Dashboard", url: "/organizational/dashboard", icon: LayoutDashboard },
+  { title: "My Founders", url: "/organizational/founders", icon: Users },
+  { title: "Founder Reports", url: "/organizational/reports", icon: FileText },
+  { title: "Referrals & Earnings", url: "/organizational/earnings", icon: DollarSign },
 ];
 
 const profileItems = [
-  { title: "My Profile", url: "/partners/organizational/profile", icon: User },
-  { title: "Partnership Opportunities", url: "/partners/organizational/opportunities", icon: Briefcase },
+  { title: "My Profile", url: "/organizational/profile", icon: User },
+  { title: "Partnership Opportunities", url: "/organizational/opportunities", icon: Briefcase },
 ];
 
 const organizationItems = [
-  { title: "Team Management", url: "/partners/organizational/team", icon: Building },
-  { title: "Strategic Reports", url: "/partners/organizational/strategic-reports", icon: BarChart3 },
-  { title: "Custom Test (DI) Requests", url: "/partners/organizational/custom-tests", icon: Beaker },
+  { title: "Team Management", url: "/organizational/team", icon: Building },
+  { title: "Strategic Reports", url: "/organizational/strategic-reports", icon: BarChart3 },
+  { title: "Custom Test (DI) Requests", url: "/organizational/custom-tests", icon: Beaker },
 ];
 
 export function PartnerOrganizationalSidebar() {
@@ -49,7 +49,7 @@ export function PartnerOrganizationalSidebar() {
       <SidebarContent>
         <div className="p-4">
           <NavLink 
-            to="/partners/organizational/dashboard"
+            to="/organizational/dashboard"
             className="flex items-center gap-3 hover:opacity-80 transition-opacity"
           >
             <img 
