@@ -30,7 +30,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import supsindexLogo from "@/assets/supsindex-logo.png";
+
 
 const mainItems = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
@@ -73,7 +73,7 @@ export function AppSidebar() {
             className="flex items-center gap-3 hover:opacity-80 transition-opacity"
           >
             <img 
-              src={supsindexLogo} 
+              src="/lovable-uploads/186bfc82-f0f1-42d6-b18b-8ae9cdc2a1f0.png" 
               alt="Supsindex" 
               className="h-8 w-auto"
             />
