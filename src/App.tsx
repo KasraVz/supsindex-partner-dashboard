@@ -11,8 +11,8 @@ import NotFound from "./pages/NotFound";
 
 // Partner pages - Individual
 import IndividualPartnerDashboard from "@/pages/partner/individual/Dashboard";
-import MyFounders from "@/pages/partner/individual/Founders";
-import FounderReports from "@/pages/partner/individual/Reports"; 
+import MyCandidates from "@/pages/partner/individual/Candidates";
+import CandidateReports from "@/pages/partner/individual/Reports"; 
 import ReferralsAndEarnings from "@/pages/partner/individual/Earnings";
 import IndividualProfile from "@/pages/partner/individual/Profile";
 import PartnershipOpportunities from "@/pages/partner/individual/Opportunities";
@@ -39,8 +39,8 @@ const App = () => (
               {/* Individual Partner Routes */}
               <Route path="/individual" element={<PartnerLayout />}>
                 <Route path="dashboard" element={<IndividualPartnerDashboard />} />
-                <Route path="founders" element={<MyFounders />} />
-                <Route path="reports" element={<FounderReports />} />
+                <Route path="candidates" element={<MyCandidates />} />
+                <Route path="reports" element={<CandidateReports />} />
                 <Route path="earnings" element={<ReferralsAndEarnings />} />
                 <Route path="profile" element={<IndividualProfile />} />
                 <Route path="opportunities" element={<PartnershipOpportunities />} />
@@ -49,8 +49,8 @@ const App = () => (
               {/* Organizational Partner Routes */}
               <Route path="/organizational" element={<PartnerLayout />}>
                 <Route path="dashboard" element={<OrganizationalPartnerDashboard />} />
-                <Route path="founders" element={<MyFounders />} />
-                <Route path="reports" element={<FounderReports />} />
+                <Route path="candidates" element={<MyCandidates />} />
+                <Route path="reports" element={<CandidateReports />} />
                 <Route path="earnings" element={<ReferralsAndEarnings />} />
                 <Route path="profile" element={<IndividualProfile />} />
                 <Route path="opportunities" element={<PartnershipOpportunities />} />

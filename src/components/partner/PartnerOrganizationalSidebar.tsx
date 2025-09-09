@@ -9,6 +9,7 @@ import {
   Building,
   BarChart3,
   Beaker,
+  TrendingUp,
 } from "lucide-react";
 import {
   Sidebar,
@@ -23,8 +24,11 @@ import {
 
 const mainItems = [
   { title: "Dashboard", url: "/organizational/dashboard", icon: LayoutDashboard },
-  { title: "My Founders", url: "/organizational/founders", icon: Users },
-  { title: "Founder Reports", url: "/organizational/reports", icon: FileText },
+];
+
+const referralAnalyticsItems = [
+  { title: "My Candidates", url: "/organizational/candidates", icon: Users },
+  { title: "Candidate Reports", url: "/organizational/reports", icon: FileText },
   { title: "Referrals & Earnings", url: "/organizational/earnings", icon: DollarSign },
 ];
 
@@ -65,6 +69,24 @@ export function PartnerOrganizationalSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {mainItems.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild isActive={isActive(item.url)}>
+                    <NavLink to={item.url}>
+                      <item.icon className="h-4 w-4" />
+                      <span>{item.title}</span>
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <SidebarGroup>
+          <SidebarGroupLabel>Referral Analytics</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {referralAnalyticsItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild isActive={isActive(item.url)}>
                     <NavLink to={item.url}>

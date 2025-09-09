@@ -6,6 +6,7 @@ import {
   FileText,
   DollarSign,
   Briefcase,
+  TrendingUp,
 } from "lucide-react";
 import {
   Sidebar,
@@ -20,8 +21,11 @@ import {
 
 const mainItems = [
   { title: "Dashboard", url: "/individual/dashboard", icon: LayoutDashboard },
-  { title: "My Founders", url: "/individual/founders", icon: Users },
-  { title: "Founder Reports", url: "/individual/reports", icon: FileText },
+];
+
+const referralAnalyticsItems = [
+  { title: "My Candidates", url: "/individual/candidates", icon: Users },
+  { title: "Candidate Reports", url: "/individual/reports", icon: FileText },
   { title: "Referrals & Earnings", url: "/individual/earnings", icon: DollarSign },
 ];
 
@@ -56,6 +60,24 @@ export function PartnerIndividualSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {mainItems.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild isActive={isActive(item.url)}>
+                    <NavLink to={item.url}>
+                      <item.icon className="h-4 w-4" />
+                      <span>{item.title}</span>
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <SidebarGroup>
+          <SidebarGroupLabel>Referral Analytics</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {referralAnalyticsItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild isActive={isActive(item.url)}>
                     <NavLink to={item.url}>

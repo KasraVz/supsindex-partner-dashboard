@@ -7,7 +7,7 @@ const reports = [
   {
     id: 1,
     title: "Sarah Johnson - Quarterly Progress Report",
-    founder: "Sarah Johnson",
+    candidate: "Sarah Johnson",
     company: "TechStartup Inc.",
     type: "Progress Report",
     status: "Complete",
@@ -17,7 +17,7 @@ const reports = [
   {
     id: 2,
     title: "Mike Chen - Assessment Summary",
-    founder: "Mike Chen", 
+    candidate: "Mike Chen", 
     company: "InnovaCorp",
     type: "Assessment",
     status: "Processing",
@@ -27,7 +27,7 @@ const reports = [
   {
     id: 3,
     title: "Lisa Wang - Annual Performance Review",
-    founder: "Lisa Wang",
+    candidate: "Lisa Wang",
     company: "FutureTech Solutions",
     type: "Annual Review",
     status: "Complete",
@@ -37,7 +37,7 @@ const reports = [
   {
     id: 4,
     title: "Cohort Analysis - Q1 2024",
-    founder: "Multiple Founders",
+    candidate: "Multiple Candidates",
     company: "Batch Report",
     type: "Cohort Analysis",
     status: "Complete",
@@ -46,14 +46,14 @@ const reports = [
   }
 ];
 
-export default function FounderReports() {
+export default function CandidateReports() {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Founder Reports</h1>
+          <h1 className="text-3xl font-bold tracking-tight">Candidate Reports</h1>
           <p className="text-muted-foreground">
-            Access and download detailed reports for all your referred founders.
+            Access and download detailed reports for all your referred candidates.
           </p>
         </div>
         <Button>
@@ -74,7 +74,7 @@ export default function FounderReports() {
                   <div>
                     <CardTitle className="text-lg">{report.title}</CardTitle>
                     <CardDescription>
-                      {report.founder} • {report.company}
+                      {report.candidate} • {report.company}
                     </CardDescription>
                   </div>
                 </div>
@@ -122,7 +122,7 @@ export default function FounderReports() {
         <CardHeader>
           <CardTitle>Report Request Guidelines</CardTitle>
           <CardDescription>
-            Important information about requesting and accessing founder reports
+            Important information about requesting and accessing candidate reports
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">

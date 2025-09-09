@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Mail, Phone, ExternalLink, FileText } from "lucide-react";
 
-const founders = [
+const candidates = [
   {
     id: 1,
     name: "Sarah Johnson",
@@ -43,14 +43,14 @@ const founders = [
   }
 ];
 
-export default function MyFounders() {
+export default function MyCandidates() {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">My Founders</h1>
+          <h1 className="text-3xl font-bold tracking-tight">My Candidates</h1>
           <p className="text-muted-foreground">
-            Manage and track all the founders you've referred to the platform.
+            Manage and track all the candidates you've referred to the platform.
           </p>
         </div>
         <Button>
@@ -60,22 +60,22 @@ export default function MyFounders() {
       </div>
 
       <div className="grid gap-4">
-        {founders.map((founder) => (
-          <Card key={founder.id}>
+        {candidates.map((candidate) => (
+          <Card key={candidate.id}>
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-4">
                   <Avatar>
                     <AvatarImage src="/placeholder.svg" />
-                    <AvatarFallback>{founder.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                    <AvatarFallback>{candidate.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                   </Avatar>
                   <div>
-                    <CardTitle className="text-lg">{founder.name}</CardTitle>
-                    <CardDescription>{founder.company}</CardDescription>
+                    <CardTitle className="text-lg">{candidate.name}</CardTitle>
+                    <CardDescription>{candidate.company}</CardDescription>
                   </div>
                 </div>
-                <Badge variant={founder.status === 'Active' ? 'default' : 'secondary'}>
-                  {founder.status}
+                <Badge variant={candidate.status === 'Active' ? 'default' : 'secondary'}>
+                  {candidate.status}
                 </Badge>
               </div>
             </CardHeader>
@@ -84,27 +84,27 @@ export default function MyFounders() {
                 <div className="space-y-2">
                   <div className="flex items-center space-x-2">
                     <Mail className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-sm">{founder.email}</span>
+                    <span className="text-sm">{candidate.email}</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Phone className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-sm">{founder.phone}</span>
+                    <span className="text-sm">{candidate.phone}</span>
                   </div>
                   <div className="text-sm text-muted-foreground">
-                    Joined: {founder.joinDate}
+                    Joined: {candidate.joinDate}
                   </div>
                   <div className="text-sm text-muted-foreground">
-                    Last active: {founder.lastActivity}
+                    Last active: {candidate.lastActivity}
                   </div>
                 </div>
                 <div className="space-y-2">
                   <div className="flex justify-between">
                     <span className="text-sm">Assessments Taken:</span>
-                    <span className="text-sm font-medium">{founder.assessments}</span>
+                    <span className="text-sm font-medium">{candidate.assessments}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-sm">Reports Generated:</span>
-                    <span className="text-sm font-medium">{founder.reports}</span>
+                    <span className="text-sm font-medium">{candidate.reports}</span>
                   </div>
                   <div className="flex space-x-2 mt-4">
                     <Button size="sm" variant="outline">
