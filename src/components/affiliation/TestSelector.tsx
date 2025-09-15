@@ -29,12 +29,9 @@ interface TestSelectorProps {
 }
 
 const availableTests: Test[] = [
-  { id: 'investment-readiness', name: 'Investment Readiness Assessment', type: 'Standard' },
-  { id: 'leadership-potential', name: 'Leadership Potential Analysis', type: 'Standard' },
-  { id: 'technical-skills', name: 'Technical Skills Evaluation', type: 'Standard' },
-  { id: 'market-validation', name: 'Market Validation Framework', type: 'Premium' },
-  { id: 'financial-modeling', name: 'Financial Modeling Competency', type: 'Premium' },
-  { id: 'strategic-thinking', name: 'Strategic Thinking Assessment', type: 'Premium' },
+  { id: 'fpa', name: 'Founder Public Awareness (FPA)', type: 'Standard' },
+  { id: 'eea', name: 'Ecosystem Environment Awareness (EEA)', type: 'Standard' },
+  { id: 'geb', name: 'General Entrepreneurial Behavior (GEB)', type: 'Premium' },
 ];
 
 export function TestSelector({ selectedTests, onSelectionChange }: TestSelectorProps) {

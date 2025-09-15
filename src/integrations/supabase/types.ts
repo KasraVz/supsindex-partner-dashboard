@@ -66,9 +66,11 @@ export type Database = {
           completed_at: string | null
           discount_amount: number | null
           id: string
+          report_content: string | null
           report_generated_at: string | null
           report_sent_at: string | null
           report_status: string
+          report_url: string | null
           used_at: string
           user_email: string
           user_name: string
@@ -79,9 +81,11 @@ export type Database = {
           completed_at?: string | null
           discount_amount?: number | null
           id?: string
+          report_content?: string | null
           report_generated_at?: string | null
           report_sent_at?: string | null
           report_status?: string
+          report_url?: string | null
           used_at?: string
           user_email: string
           user_name: string
@@ -92,9 +96,11 @@ export type Database = {
           completed_at?: string | null
           discount_amount?: number | null
           id?: string
+          report_content?: string | null
           report_generated_at?: string | null
           report_sent_at?: string | null
           report_status?: string
+          report_url?: string | null
           used_at?: string
           user_email?: string
           user_name?: string

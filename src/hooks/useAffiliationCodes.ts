@@ -27,6 +27,8 @@ export interface AffiliationUsage {
   completed_at?: string;
   report_generated_at?: string;
   report_sent_at?: string;
+  report_content?: string;
+  report_url?: string;
   code: {
     code: string;
     name: string;

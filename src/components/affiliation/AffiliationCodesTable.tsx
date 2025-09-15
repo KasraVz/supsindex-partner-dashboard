@@ -7,9 +7,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Plus, Copy, ExternalLink, MoreHorizontal } from 'lucide-react';
+import { Plus, Copy, Share2, MoreHorizontal } from 'lucide-react';
 import { useAffiliationCodes } from '@/hooks/useAffiliationCodes';
 import { TestSelector } from './TestSelector';
+import { ShareModal } from './ShareModal';
 import { useToast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
 export function AffiliationCodesTable() {
@@ -27,9 +28,12 @@ export function AffiliationCodesTable() {
     max_usage: undefined as number | undefined,
     expires_at: ''
   });
-  const {
-    toast
-  } = useToast();
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [selectedCodeForSharing, setSelectedCodeForSharing] = useState<{
+    code: string;
+    name: string;
+  } | null>(null);
+  const { toast } = useToast();
   const handleCreateCode = async () => {
     if (!newCodeData.name.trim() || newCodeData.tests.length === 0) {
       toast({
@@ -65,6 +69,11 @@ export function AffiliationCodesTable() {
   };
   const getAffiliationLink = (code: string) => {
     return `${window.location.origin}/assessment?code=${code}`;
+  };
+
+  const handleShare = (code: string, name: string) => {
+    setSelectedCodeForSharing({ code, name });
+    setShowShareModal(true);
   };
   if (loading) {
     return <div>Loading...</div>;
@@ -201,8 +210,19 @@ export function AffiliationCodesTable() {
                     </TableCell>
                     <TableCell>
                       <div className="flex gap-1">
-                        <Button size="sm" variant="outline" onClick={() => copyToClipboard(getAffiliationLink(code.code), 'Link')}>
-                          <ExternalLink className="h-3 w-3" />
+                        <Button 
+                          size="sm" 
+                          variant="outline" 
+                          onClick={() => copyToClipboard(getAffiliationLink(code.code), 'Link')}
+                        >
+                          <Copy className="h-3 w-3" />
+                        </Button>
+                        <Button 
+                          size="sm" 
+                          variant="outline" 
+                          onClick={() => handleShare(code.code, code.name)}
+                        >
+                          <Share2 className="h-3 w-3" />
                         </Button>
                       </div>
                     </TableCell>
@@ -211,5 +231,12 @@ export function AffiliationCodesTable() {
             </Table>}
         </CardContent>
       </Card>
+
+      <ShareModal 
+        isOpen={showShareModal}
+        onClose={() => setShowShareModal(false)}
+        affiliationLink={selectedCodeForSharing ? getAffiliationLink(selectedCodeForSharing.code) : ''}
+        codeName={selectedCodeForSharing?.name || ''}
+      />
     </div>;
 }

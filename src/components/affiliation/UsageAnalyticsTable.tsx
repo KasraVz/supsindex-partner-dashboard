@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Search, Filter } from 'lucide-react';
-import { useAffiliationUsage } from '@/hooks/useAffiliationCodes';
+import { Search, Filter, FileText } from 'lucide-react';
+import { useAffiliationUsage, AffiliationUsage } from '@/hooks/useAffiliationCodes';
+import { ReportViewer } from './ReportViewer';
 import { format } from 'date-fns';
 
 export function UsageAnalyticsTable() {
@@ -13,6 +15,13 @@ export function UsageAnalyticsTable() {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [reportFilter, setReportFilter] = useState<string>('all');
+  const [selectedReport, setSelectedReport] = useState<AffiliationUsage | null>(null);
+  const [showReportViewer, setShowReportViewer] = useState(false);
+
+  const handleViewReport = (usage: AffiliationUsage) => {
+    setSelectedReport(usage);
+    setShowReportViewer(true);
+  };
 
   const filteredUsage = usage.filter((item) => {
     const matchesSearch = 
@@ -155,6 +164,7 @@ export function UsageAnalyticsTable() {
                   <TableHead>Discount</TableHead>
                   <TableHead>Used Date</TableHead>
                   <TableHead>Completed Date</TableHead>
+                  <TableHead>Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -190,6 +200,18 @@ export function UsageAnalyticsTable() {
                         : '-'
                       }
                     </TableCell>
+                    <TableCell>
+                      {(item.report_status === 'generated' || item.report_status === 'sent') && (
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => handleViewReport(item)}
+                        >
+                          <FileText className="h-4 w-4 mr-2" />
+                          View Report
+                        </Button>
+                      )}
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -197,6 +219,12 @@ export function UsageAnalyticsTable() {
           )}
         </CardContent>
       </Card>
+
+      <ReportViewer 
+        isOpen={showReportViewer}
+        onClose={() => setShowReportViewer(false)}
+        usage={selectedReport}
+      />
     </div>
   );
 }
