@@ -3,25 +3,68 @@ import { CandidatesTable } from "@/components/candidates/CandidatesTable";
 import { CandidatesFilters } from "@/components/candidates/CandidatesFilters";
 import { CandidatesPagination } from "@/components/candidates/CandidatesPagination";
 import { AffiliationCodeSelector } from "@/components/affiliation/AffiliationCodeSelector";
+import { CandidateWithAssessments, AssessmentDetail } from "@/types/assessment";
+
+// Generate mock assessment details
+const generateMockAssessmentDetails = (candidateId: number): AssessmentDetail[] => {
+  const testNames = ["Cognitive Assessment", "Personality Test", "Skills Evaluation", "Leadership Assessment", "Technical Screening"];
+  const testTypes = ["Cognitive", "Personality", "Technical", "Leadership", "Skills"];
+  const assessmentStatuses: ('not_started' | 'in_progress' | 'completed')[] = ['not_started', 'in_progress', 'completed'];
+  const paymentStatuses: ('unpaid' | 'paid')[] = ['unpaid', 'paid'];
+  const reportStatuses: ('not_generated' | 'generated' | 'sent')[] = ['not_generated', 'generated', 'sent'];
+
+  const numAssessments = Math.floor(Math.random() * 4) + 2; // 2-5 assessments per candidate
+  
+  return Array.from({ length: numAssessments }, (_, i) => {
+    const assessmentStatus = assessmentStatuses[Math.floor(Math.random() * assessmentStatuses.length)];
+    const paymentStatus = assessmentStatus === 'completed' ? paymentStatuses[Math.floor(Math.random() * paymentStatuses.length)] : 'unpaid';
+    const reportStatus = assessmentStatus === 'completed' ? reportStatuses[Math.floor(Math.random() * reportStatuses.length)] : 'not_generated';
+    
+    const usedAt = new Date(2023, Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1);
+    const completedAt = assessmentStatus === 'completed' ? new Date(usedAt.getTime() + Math.random() * 7 * 24 * 60 * 60 * 1000) : undefined;
+    const reportGeneratedAt = reportStatus !== 'not_generated' && completedAt ? new Date(completedAt.getTime() + Math.random() * 3 * 24 * 60 * 60 * 1000) : undefined;
+    const reportSentAt = reportStatus === 'sent' && reportGeneratedAt ? new Date(reportGeneratedAt.getTime() + Math.random() * 2 * 24 * 60 * 60 * 1000) : undefined;
+
+    return {
+      id: `${candidateId}-${i + 1}`,
+      testName: testNames[i % testNames.length],
+      testType: testTypes[i % testTypes.length],
+      assessmentStatus,
+      paymentStatus,
+      reportStatus,
+      discountAmount: paymentStatus === 'paid' ? Math.floor(Math.random() * 50) + 25 : undefined,
+      usedAt,
+      completedAt,
+      reportGeneratedAt,
+      reportSentAt,
+      reportUrl: reportStatus === 'sent' ? `https://reports.example.com/${candidateId}-${i + 1}` : undefined,
+      reportContent: reportStatus !== 'not_generated' ? `Mock report content for ${testNames[i % testNames.length]}` : undefined,
+    };
+  });
+};
 
 // Generate mock data for demonstration
-const generateMockCandidates = (count: number) => {
+const generateMockCandidates = (count: number): CandidateWithAssessments[] => {
   const names = ["Sarah Johnson", "Mike Chen", "Lisa Wang", "David Smith", "Emma Wilson", "James Brown", "Sophie Taylor", "Alex Garcia", "Maya Patel", "Ryan O'Connor"];
   const companies = ["TechStartup Inc.", "InnovaCorp", "FutureTech Solutions", "DataDrive LLC", "CloudScale Systems", "AI Dynamics", "NextGen Solutions", "ByteForce Tech", "Quantum Labs", "Digital Horizons"];
   const statuses = ["Active", "Pending", "Inactive"];
   
-  return Array.from({ length: count }, (_, i) => ({
-    id: i + 1,
-    name: names[i % names.length] + (i > 9 ? ` ${Math.floor(i / 10) + 1}` : ""),
-    email: `user${i + 1}@${companies[i % companies.length].toLowerCase().replace(/[^a-z]/g, "")}.com`,
-    phone: `+1 (555) ${String(Math.floor(Math.random() * 900) + 100)}-${String(Math.floor(Math.random() * 9000) + 1000)}`,
-    company: companies[i % companies.length],
-    status: statuses[i % statuses.length],
-    joinDate: new Date(2023, Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-    lastActivity: i % 4 === 0 ? "2 hours ago" : i % 4 === 1 ? "1 day ago" : i % 4 === 2 ? "3 days ago" : "1 week ago",
-    assessments: Math.floor(Math.random() * 8) + 1,
-    reports: Math.floor(Math.random() * 5)
-  }));
+  return Array.from({ length: count }, (_, i) => {
+    const assessmentDetails = generateMockAssessmentDetails(i + 1);
+    return {
+      id: i + 1,
+      name: names[i % names.length] + (i > 9 ? ` ${Math.floor(i / 10) + 1}` : ""),
+      email: `user${i + 1}@${companies[i % companies.length].toLowerCase().replace(/[^a-z]/g, "")}.com`,
+      phone: `+1 (555) ${String(Math.floor(Math.random() * 900) + 100)}-${String(Math.floor(Math.random() * 9000) + 1000)}`,
+      company: companies[i % companies.length],
+      status: statuses[i % statuses.length],
+      joinDate: new Date(2023, Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+      lastActivity: i % 4 === 0 ? "2 hours ago" : i % 4 === 1 ? "1 day ago" : i % 4 === 2 ? "3 days ago" : "1 week ago",
+      assessments: assessmentDetails.length,
+      reports: assessmentDetails.filter(a => a.reportStatus !== 'not_generated').length,
+      assessmentDetails
+    };
+  });
 };
 
 const allCandidates = generateMockCandidates(1000);

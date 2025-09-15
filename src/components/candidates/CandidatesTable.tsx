@@ -4,23 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Mail, Phone, FileText, ChevronDown, ChevronUp } from "lucide-react";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-
-interface Candidate {
-  id: number;
-  name: string;
-  email: string;
-  phone: string;
-  company: string;
-  status: string;
-  joinDate: string;
-  lastActivity: string;
-  assessments: number;
-  reports: number;
-}
+import { CandidateAssessmentDetails } from "./CandidateAssessmentDetails";
+import { CandidateWithAssessments } from "@/types/assessment";
 
 interface CandidatesTableProps {
-  candidates: Candidate[];
+  candidates: CandidateWithAssessments[];
   loading?: boolean;
 }
 
@@ -142,29 +130,13 @@ export function CandidatesTable({ candidates, loading }: CandidatesTableProps) {
               {expandedRows.has(candidate.id) && (
                 <TableRow className="bg-muted/20">
                   <TableCell colSpan={7}>
-                    <div className="py-4 px-4">
-                      <div className="grid gap-4 md:grid-cols-2">
-                        <div className="space-y-2">
-                          <div className="flex items-center space-x-2">
-                            <Mail className="h-4 w-4 text-muted-foreground" />
-                            <span className="text-sm">{candidate.email}</span>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <Phone className="h-4 w-4 text-muted-foreground" />
-                            <span className="text-sm">{candidate.phone}</span>
-                          </div>
-                        </div>
-                        <div className="flex space-x-2">
-                          <Button size="sm" variant="outline">
-                            <FileText className="mr-2 h-4 w-4" />
-                            View Reports
-                          </Button>
-                          <Button size="sm" variant="outline">
-                            <Mail className="mr-2 h-4 w-4" />
-                            Contact
-                          </Button>
-                        </div>
-                      </div>
+                    <div className="py-6 px-4">
+                      <CandidateAssessmentDetails
+                        assessmentDetails={candidate.assessmentDetails}
+                        candidateName={candidate.name}
+                        candidateEmail={candidate.email}
+                        candidatePhone={candidate.phone}
+                      />
                     </div>
                   </TableCell>
                 </TableRow>
