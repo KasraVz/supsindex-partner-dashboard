@@ -14,7 +14,101 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      affiliation_codes: {
+        Row: {
+          code: string
+          created_at: string
+          discount_percent: number
+          expires_at: string | null
+          id: string
+          is_active: boolean
+          max_usage: number | null
+          name: string
+          partner_id: string
+          tests: string[]
+          updated_at: string
+          usage_count: number
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          discount_percent?: number
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          max_usage?: number | null
+          name: string
+          partner_id: string
+          tests: string[]
+          updated_at?: string
+          usage_count?: number
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          discount_percent?: number
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          max_usage?: number | null
+          name?: string
+          partner_id?: string
+          tests?: string[]
+          updated_at?: string
+          usage_count?: number
+        }
+        Relationships: []
+      }
+      affiliation_usage: {
+        Row: {
+          assessment_status: string
+          code_id: string
+          completed_at: string | null
+          discount_amount: number | null
+          id: string
+          report_generated_at: string | null
+          report_sent_at: string | null
+          report_status: string
+          used_at: string
+          user_email: string
+          user_name: string
+        }
+        Insert: {
+          assessment_status?: string
+          code_id: string
+          completed_at?: string | null
+          discount_amount?: number | null
+          id?: string
+          report_generated_at?: string | null
+          report_sent_at?: string | null
+          report_status?: string
+          used_at?: string
+          user_email: string
+          user_name: string
+        }
+        Update: {
+          assessment_status?: string
+          code_id?: string
+          completed_at?: string | null
+          discount_amount?: number | null
+          id?: string
+          report_generated_at?: string | null
+          report_sent_at?: string | null
+          report_status?: string
+          used_at?: string
+          user_email?: string
+          user_name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "affiliation_usage_code_id_fkey"
+            columns: ["code_id"]
+            isOneToOne: false
+            referencedRelation: "affiliation_codes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

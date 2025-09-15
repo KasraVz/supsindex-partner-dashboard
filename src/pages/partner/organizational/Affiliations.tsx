@@ -1,21 +1,45 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Users, Target, Calendar, TestTube } from 'lucide-react';
-import { TestSelector } from '@/components/affiliation/TestSelector';
-import { BenefitsDisplay } from '@/components/affiliation/BenefitsDisplay';
-import { CodeGenerator } from '@/components/affiliation/CodeGenerator';
+import { AffiliationCodesTable } from '@/components/affiliation/AffiliationCodesTable';
+import { UsageAnalyticsTable } from '@/components/affiliation/UsageAnalyticsTable';
+import { useAffiliationCodes, useAffiliationUsage } from '@/hooks/useAffiliationCodes';
 
 export default function OrganizationalAffiliations() {
-  const [selectedTests, setSelectedTests] = useState<string[]>([]);
+  const { codes } = useAffiliationCodes();
+  const { usage } = useAffiliationUsage();
+  const [stats, setStats] = useState({
+    activeAffiliations: 0,
+    totalDiscountProvided: 0,
+    monthlyActivity: 0,
+    availableTests: 6,
+  });
+
+  useEffect(() => {
+    // Calculate stats from real data
+    const activeCodes = codes.filter(code => code.is_active).length;
+    const totalDiscount = usage.reduce((sum, item) => sum + (item.discount_amount || 0), 0);
+    const thisMonth = new Date();
+    thisMonth.setDate(1);
+    const monthlyUsage = usage.filter(item => new Date(item.used_at) >= thisMonth).length;
+
+    setStats({
+      activeAffiliations: activeCodes,
+      totalDiscountProvided: totalDiscount,
+      monthlyActivity: monthlyUsage,
+      availableTests: 6, // This could be dynamic based on your test catalog
+    });
+  }, [codes, usage]);
 
   return (
     <div className="min-h-screen bg-dashboard-bg p-6 space-y-6">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground">Affiliations</h1>
+          <h1 className="text-3xl font-bold text-foreground">Affiliation Management</h1>
           <p className="text-muted-foreground mt-2">
-            Create affiliation codes to provide discounts to candidates and track your organizational impact
+            Create and manage affiliation codes to provide discounts to candidates and track your organizational impact
           </p>
         </div>
 
@@ -23,12 +47,12 @@ export default function OrganizationalAffiliations() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <Card className="bg-dashboard-card shadow-card">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Active Affiliations</CardTitle>
+              <CardTitle className="text-sm font-medium">Active Codes</CardTitle>
               <Users className="h-4 w-4 text-brand-orange" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">23</div>
-              <p className="text-xs text-muted-foreground">+3 from last month</p>
+              <div className="text-2xl font-bold">{stats.activeAffiliations}</div>
+              <p className="text-xs text-muted-foreground">Currently active codes</p>
             </CardContent>
           </Card>
 
@@ -38,19 +62,19 @@ export default function OrganizationalAffiliations() {
               <Target className="h-4 w-4 text-brand-orange" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">$4,250</div>
+              <div className="text-2xl font-bold">${stats.totalDiscountProvided.toFixed(0)}</div>
               <p className="text-xs text-muted-foreground">Saved by candidates</p>
             </CardContent>
           </Card>
 
           <Card className="bg-dashboard-card shadow-card">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">This Month's Activity</CardTitle>
+              <CardTitle className="text-sm font-medium">This Month's Usage</CardTitle>
               <Calendar className="h-4 w-4 text-brand-orange" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">8</div>
-              <p className="text-xs text-muted-foreground">New affiliations</p>
+              <div className="text-2xl font-bold">{stats.monthlyActivity}</div>
+              <p className="text-xs text-muted-foreground">Code uses this month</p>
             </CardContent>
           </Card>
 
@@ -60,66 +84,27 @@ export default function OrganizationalAffiliations() {
               <TestTube className="h-4 w-4 text-brand-orange" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">6</div>
+              <div className="text-2xl font-bold">{stats.availableTests}</div>
               <p className="text-xs text-muted-foreground">Ready for affiliation</p>
             </CardContent>
           </Card>
         </div>
 
-        {/* Main Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Left Column */}
-          <div className="space-y-6">
-            <BenefitsDisplay />
-            
-            <Card>
-              <CardHeader>
-                <CardTitle>Create Affiliation Code</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <TestSelector 
-                  selectedTests={selectedTests}
-                  onSelectionChange={setSelectedTests}
-                />
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Right Column */}
-          <div className="space-y-6">
-            <CodeGenerator selectedTests={selectedTests} />
-            
-            <Card>
-              <CardHeader>
-                <CardTitle>Recent Affiliation Activity</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {[
-                  { candidate: "Alex Johnson", test: "Investment Readiness", status: "Completed", discount: "$45" },
-                  { candidate: "Sarah Chen", test: "Leadership Analysis", status: "In Progress", discount: "$35" },
-                  { candidate: "Mike Rodriguez", test: "Technical Skills", status: "Completed", discount: "$50" },
-                  { candidate: "Emma Wilson", test: "Market Validation", status: "Started", discount: "$60" },
-                ].map((activity, index) => (
-                  <div key={index} className="flex justify-between items-center p-3 bg-dashboard-accent rounded-lg">
-                    <div>
-                      <div className="font-medium">{activity.candidate}</div>
-                      <div className="text-sm text-muted-foreground">{activity.test}</div>
-                    </div>
-                    <div className="text-right">
-                      <Badge 
-                        variant={activity.status === 'Completed' ? 'default' : 'secondary'}
-                        className={activity.status === 'Completed' ? 'bg-brand-orange text-white' : ''}
-                      >
-                        {activity.status}
-                      </Badge>
-                      <div className="text-sm text-muted-foreground mt-1">{activity.discount} saved</div>
-                    </div>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
-          </div>
-        </div>
+        {/* Main Tabbed Content */}
+        <Tabs defaultValue="manage" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-2 lg:w-[400px]">
+            <TabsTrigger value="manage">Manage Codes</TabsTrigger>
+            <TabsTrigger value="analytics">Usage Analytics</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="manage">
+            <AffiliationCodesTable />
+          </TabsContent>
+          
+          <TabsContent value="analytics">
+            <UsageAnalyticsTable />
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
