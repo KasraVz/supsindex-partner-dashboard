@@ -166,7 +166,7 @@ export function AffiliationCodesTable() {
                   <TableHead>Usage</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Created</TableHead>
-                  <TableHead>Actions</TableHead>
+                  <TableHead>Share Link</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
