@@ -7,7 +7,7 @@ export default function IndividualPartnerDashboard() {
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Individual Partner Dashboard</h1>
         <p className="text-muted-foreground">
-          Welcome to your partner dashboard. Track your referrals, earnings, and founder progress.
+          Welcome to your partner dashboard. Track your affiliations, earnings, and founder progress.
         </p>
       </div>
 
@@ -27,7 +27,7 @@ export default function IndividualPartnerDashboard() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Active Referrals</CardTitle>
+            <CardTitle className="text-sm font-medium">Active Affiliations</CardTitle>
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -110,7 +110,7 @@ export default function IndividualPartnerDashboard() {
           <CardContent>
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <span className="text-sm">Assessment Referrals</span>
+                <span className="text-sm">Assessment Affiliations</span>
                 <span className="text-sm font-medium">$1,200</span>
               </div>
               <div className="flex items-center justify-between">

@@ -119,7 +119,7 @@ export function PartnerHeader({
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <Link to={`/${partnerType}/earnings`} className="w-full">
-                Referrals & Earnings
+                Affiliations & Earnings
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>

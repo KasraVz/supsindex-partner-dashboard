@@ -12,7 +12,7 @@ const mockNotifications: Notification[] = [
   {
     id: "1",
     title: "New Founder Application",
-    message: "A new founder has applied through your referral link",
+    message: "A new founder has applied through your affiliation link",
     read: false,
     type: "success",
     createdAt: new Date(Date.now() - 2 * 60 * 1000) // 2 minutes ago
@@ -20,7 +20,7 @@ const mockNotifications: Notification[] = [
   {
     id: "2", 
     title: "Commission Earned",
-    message: "You've earned $150 commission from a successful referral",
+    message: "You've earned $150 commission from a successful affiliation",
     read: false,
     type: "success",
     createdAt: new Date(Date.now() - 60 * 60 * 1000) // 1 hour ago

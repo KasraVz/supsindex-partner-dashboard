@@ -52,7 +52,7 @@ export function BenefitsDisplay() {
               </Badge>
             </div>
             <p className="text-sm text-muted-foreground">
-              You earn 15% cashback on successful referrals while candidates get 5% off.
+              You earn 15% cashback on successful affiliations while candidates get 5% off.
             </p>
           </div>
         )}

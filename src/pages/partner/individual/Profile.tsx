@@ -51,7 +51,7 @@ export default function IndividualProfile() {
                 <span className="text-sm font-medium">Jan 2024</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-sm">Total Referrals</span>
+                <span className="text-sm">Total Affiliations</span>
                 <span className="text-sm font-medium">12</span>
               </div>
               <div className="flex items-center justify-between">

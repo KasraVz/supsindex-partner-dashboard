@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Mail, Phone, ExternalLink, FileText } from "lucide-react";
+import { AffiliationCodeSelector } from "@/components/affiliation/AffiliationCodeSelector";
 
 const candidates = [
   {
@@ -53,11 +54,9 @@ export default function MyCandidates() {
             Manage and track all the candidates you've referred to the platform.
           </p>
         </div>
-        <Button>
-          <ExternalLink className="mr-2 h-4 w-4" />
-          Share Referral Link
-        </Button>
       </div>
+
+      <AffiliationCodeSelector />
 
       <div className="grid gap-4">
         {candidates.map((candidate) => (
