@@ -12,33 +12,37 @@ import { useAffiliationCodes } from '@/hooks/useAffiliationCodes';
 import { TestSelector } from './TestSelector';
 import { useToast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
-
 export function AffiliationCodesTable() {
-  const { codes, loading, toggleCodeStatus, createCode } = useAffiliationCodes();
+  const {
+    codes,
+    loading,
+    toggleCodeStatus,
+    createCode
+  } = useAffiliationCodes();
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [newCodeData, setNewCodeData] = useState({
     name: '',
     tests: [] as string[],
     discount_percent: 15,
     max_usage: undefined as number | undefined,
-    expires_at: '',
+    expires_at: ''
   });
-  const { toast } = useToast();
-
+  const {
+    toast
+  } = useToast();
   const handleCreateCode = async () => {
     if (!newCodeData.name.trim() || newCodeData.tests.length === 0) {
       toast({
         title: 'Validation Error',
         description: 'Please provide a name and select at least one test',
-        variant: 'destructive',
+        variant: 'destructive'
       });
       return;
     }
-
     try {
       await createCode({
         ...newCodeData,
-        expires_at: newCodeData.expires_at || undefined,
+        expires_at: newCodeData.expires_at || undefined
       });
       setShowCreateDialog(false);
       setNewCodeData({
@@ -46,31 +50,26 @@ export function AffiliationCodesTable() {
         tests: [],
         discount_percent: 15,
         max_usage: undefined,
-        expires_at: '',
+        expires_at: ''
       });
     } catch (error) {
       // Error handling is done in the hook
     }
   };
-
   const copyToClipboard = (text: string, type: string) => {
     navigator.clipboard.writeText(text);
     toast({
       title: 'Copied',
-      description: `${type} copied to clipboard`,
+      description: `${type} copied to clipboard`
     });
   };
-
   const getAffiliationLink = (code: string) => {
     return `${window.location.origin}/assessment?code=${code}`;
   };
-
   if (loading) {
     return <div>Loading...</div>;
   }
-
-  return (
-    <div className="space-y-6">
+  return <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-2xl font-bold">Manage Affiliation Codes</h2>
@@ -90,31 +89,23 @@ export function AffiliationCodesTable() {
             <div className="space-y-4">
               <div>
                 <Label htmlFor="name">Code Name</Label>
-                <Input
-                  id="name"
-                  value={newCodeData.name}
-                  onChange={(e) => setNewCodeData(prev => ({ ...prev, name: e.target.value }))}
-                  placeholder="e.g., University Partnership"
-                />
+                <Input id="name" value={newCodeData.name} onChange={e => setNewCodeData(prev => ({
+                ...prev,
+                name: e.target.value
+              }))} placeholder="e.g., University Partnership" />
               </div>
               
               <div>
-                <Label>Select Tests</Label>
-                <TestSelector
-                  selectedTests={newCodeData.tests}
-                  onSelectionChange={(tests) => setNewCodeData(prev => ({ ...prev, tests }))}
-                />
+                
+                <TestSelector selectedTests={newCodeData.tests} onSelectionChange={tests => setNewCodeData(prev => ({
+                ...prev,
+                tests
+              }))} />
               </div>
 
               <div>
                 <Label htmlFor="discount">Discount Percentage</Label>
-                <Input
-                  id="discount"
-                  type="number"
-                  value={newCodeData.discount_percent}
-                  disabled
-                  className="bg-muted text-muted-foreground cursor-not-allowed"
-                />
+                <Input id="discount" type="number" value={newCodeData.discount_percent} disabled className="bg-muted text-muted-foreground cursor-not-allowed" />
                 <p className="text-xs text-muted-foreground mt-1">
                   Discount percentages are determined by the back office
                 </p>
@@ -122,24 +113,18 @@ export function AffiliationCodesTable() {
 
               <div>
                 <Label htmlFor="max_usage">Maximum Uses (Optional)</Label>
-                <Input
-                  id="max_usage"
-                  type="number"
-                  min="1"
-                  value={newCodeData.max_usage || ''}
-                  onChange={(e) => setNewCodeData(prev => ({ ...prev, max_usage: e.target.value ? parseInt(e.target.value) : undefined }))}
-                  placeholder="Leave empty for unlimited"
-                />
+                <Input id="max_usage" type="number" min="1" value={newCodeData.max_usage || ''} onChange={e => setNewCodeData(prev => ({
+                ...prev,
+                max_usage: e.target.value ? parseInt(e.target.value) : undefined
+              }))} placeholder="Leave empty for unlimited" />
               </div>
 
               <div>
                 <Label htmlFor="expires_at">Expiration Date (Optional)</Label>
-                <Input
-                  id="expires_at"
-                  type="datetime-local"
-                  value={newCodeData.expires_at}
-                  onChange={(e) => setNewCodeData(prev => ({ ...prev, expires_at: e.target.value }))}
-                />
+                <Input id="expires_at" type="datetime-local" value={newCodeData.expires_at} onChange={e => setNewCodeData(prev => ({
+                ...prev,
+                expires_at: e.target.value
+              }))} />
               </div>
 
               <div className="flex gap-2">
@@ -160,12 +145,9 @@ export function AffiliationCodesTable() {
           <CardTitle>Active Affiliation Codes</CardTitle>
         </CardHeader>
         <CardContent>
-          {codes.length === 0 ? (
-            <div className="text-center py-8 text-muted-foreground">
+          {codes.length === 0 ? <div className="text-center py-8 text-muted-foreground">
               No affiliation codes created yet. Create your first code to get started.
-            </div>
-          ) : (
-            <Table>
+            </div> : <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead>Name</TableHead>
@@ -179,35 +161,26 @@ export function AffiliationCodesTable() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {codes.map((code) => (
-                  <TableRow key={code.id}>
+                {codes.map(code => <TableRow key={code.id}>
                     <TableCell className="font-medium">{code.name}</TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
                         <code className="bg-dashboard-accent px-2 py-1 rounded text-sm">
                           {code.code}
                         </code>
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          onClick={() => copyToClipboard(code.code, 'Code')}
-                        >
+                        <Button size="sm" variant="ghost" onClick={() => copyToClipboard(code.code, 'Code')}>
                           <Copy className="h-3 w-3" />
                         </Button>
                       </div>
                     </TableCell>
                     <TableCell>
                       <div className="flex flex-wrap gap-1">
-                        {code.tests.slice(0, 2).map((test, index) => (
-                          <Badge key={index} variant="secondary" className="text-xs">
+                        {code.tests.slice(0, 2).map((test, index) => <Badge key={index} variant="secondary" className="text-xs">
                             {test}
-                          </Badge>
-                        ))}
-                        {code.tests.length > 2 && (
-                          <Badge variant="secondary" className="text-xs">
+                          </Badge>)}
+                        {code.tests.length > 2 && <Badge variant="secondary" className="text-xs">
                             +{code.tests.length - 2} more
-                          </Badge>
-                        )}
+                          </Badge>}
                       </div>
                     </TableCell>
                     <TableCell>{code.discount_percent}%</TableCell>
@@ -217,10 +190,7 @@ export function AffiliationCodesTable() {
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
-                        <Switch
-                          checked={code.is_active}
-                          onCheckedChange={(checked) => toggleCodeStatus(code.id, checked)}
-                        />
+                        <Switch checked={code.is_active} onCheckedChange={checked => toggleCodeStatus(code.id, checked)} />
                         <Badge variant={code.is_active ? 'default' : 'secondary'}>
                           {code.is_active ? 'Active' : 'Inactive'}
                         </Badge>
@@ -231,22 +201,15 @@ export function AffiliationCodesTable() {
                     </TableCell>
                     <TableCell>
                       <div className="flex gap-1">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => copyToClipboard(getAffiliationLink(code.code), 'Link')}
-                        >
+                        <Button size="sm" variant="outline" onClick={() => copyToClipboard(getAffiliationLink(code.code), 'Link')}>
                           <ExternalLink className="h-3 w-3" />
                         </Button>
                       </div>
                     </TableCell>
-                  </TableRow>
-                ))}
+                  </TableRow>)}
               </TableBody>
-            </Table>
-          )}
+            </Table>}
         </CardContent>
       </Card>
-    </div>
-  );
+    </div>;
 }
