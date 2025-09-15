@@ -111,11 +111,13 @@ export function AffiliationCodesTable() {
                 <Input
                   id="discount"
                   type="number"
-                  min="1"
-                  max="100"
                   value={newCodeData.discount_percent}
-                  onChange={(e) => setNewCodeData(prev => ({ ...prev, discount_percent: parseInt(e.target.value) || 15 }))}
+                  disabled
+                  className="bg-muted text-muted-foreground cursor-not-allowed"
                 />
+                <p className="text-xs text-muted-foreground mt-1">
+                  Discount percentages are determined by the back office
+                </p>
               </div>
 
               <div>
