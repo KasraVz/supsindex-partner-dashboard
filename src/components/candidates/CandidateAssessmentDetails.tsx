@@ -2,8 +2,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Progress } from "@/components/ui/progress";
-import { FileText, Mail, ExternalLink, Download } from "lucide-react";
+import { FileText, Mail, ExternalLink, CreditCard, AlertCircle } from "lucide-react";
 import { AssessmentDetail } from "@/types/assessment";
+import { canAccessReport, getReportInaccessibleReason } from "@/lib/assessment-utils";
 
 interface CandidateAssessmentDetailsProps {
   assessmentDetails: AssessmentDetail[];
@@ -140,21 +141,33 @@ export function CandidateAssessmentDetails({
                     })}
                   </TableCell>
                   <TableCell>
-                    <div className="flex space-x-1">
-                      {assessment.reportStatus === 'sent' && assessment.reportUrl && (
-                        <Button size="sm" variant="outline">
-                          <FileText className="h-3 w-3" />
-                        </Button>
-                      )}
-                      {assessment.reportStatus === 'generated' && (
-                        <Button size="sm" variant="outline">
-                          <ExternalLink className="h-3 w-3" />
-                        </Button>
-                      )}
-                      {assessment.assessmentStatus === 'completed' && assessment.paymentStatus === 'unpaid' && (
-                        <Button size="sm" variant="outline" className="text-xs">
-                          Pay
-                        </Button>
+                    <div className="flex gap-2">
+                      {canAccessReport(assessment.paymentStatus, assessment.assessmentStatus, assessment.reportStatus) ? (
+                        <>
+                          <Button variant="outline" size="sm">
+                            <FileText className="h-4 w-4 mr-1" />
+                            View Report
+                          </Button>
+                          {assessment.reportUrl && (
+                            <Button variant="outline" size="sm">
+                              <ExternalLink className="h-4 w-4 mr-1" />
+                              External Link
+                            </Button>
+                          )}
+                        </>
+                      ) : (
+                        <>
+                          {assessment.paymentStatus === 'unpaid' && (
+                            <Button variant="default" size="sm">
+                              <CreditCard className="h-4 w-4 mr-1" />
+                              Pay Now
+                            </Button>
+                          )}
+                          <div className="flex items-center text-sm text-muted-foreground">
+                            <AlertCircle className="h-4 w-4 mr-1" />
+                            {getReportInaccessibleReason(assessment.paymentStatus, assessment.assessmentStatus)}
+                          </div>
+                        </>
                       )}
                     </div>
                   </TableCell>

@@ -5,10 +5,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Search, Filter, FileText } from 'lucide-react';
+import { Search, Filter, FileText, AlertCircle } from 'lucide-react';
 import { useAffiliationUsage, AffiliationUsage } from '@/hooks/useAffiliationCodes';
 import { ReportViewer } from './ReportViewer';
 import { format } from 'date-fns';
+import { canAccessReport } from '@/lib/assessment-utils';
 
 export function UsageAnalyticsTable() {
   const { usage, loading } = useAffiliationUsage();
@@ -160,6 +161,7 @@ export function UsageAnalyticsTable() {
                   <TableHead>User</TableHead>
                   <TableHead>Code</TableHead>
                   <TableHead>Assessment Status</TableHead>
+                  <TableHead>Payment Status</TableHead>
                   <TableHead>Report Status</TableHead>
                   <TableHead>Discount</TableHead>
                   <TableHead>Used Date</TableHead>
@@ -186,6 +188,14 @@ export function UsageAnalyticsTable() {
                       {getStatusBadge(item.assessment_status)}
                     </TableCell>
                     <TableCell>
+                      <Badge 
+                        variant={item.discount_amount ? 'default' : 'secondary'}
+                        className={item.discount_amount ? 'bg-brand-orange text-white' : ''}
+                      >
+                        {item.discount_amount ? 'Paid' : 'Unpaid'}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
                       {getReportBadge(item.report_status)}
                     </TableCell>
                     <TableCell>
@@ -201,7 +211,11 @@ export function UsageAnalyticsTable() {
                       }
                     </TableCell>
                     <TableCell>
-                      {(item.report_status === 'generated' || item.report_status === 'sent') && (
+                      {canAccessReport(
+                        item.discount_amount ? 'paid' : 'unpaid',
+                        item.assessment_status as 'not_started' | 'in_progress' | 'completed',
+                        item.report_status as 'not_generated' | 'generated' | 'sent'
+                      ) ? (
                         <Button 
                           variant="outline" 
                           size="sm"
@@ -210,6 +224,11 @@ export function UsageAnalyticsTable() {
                           <FileText className="h-4 w-4 mr-2" />
                           View Report
                         </Button>
+                      ) : (
+                        <div className="flex items-center text-sm text-muted-foreground">
+                          <AlertCircle className="h-4 w-4 mr-1" />
+                          {!item.discount_amount ? 'Payment Required' : 'Assessment Not Complete'}
+                        </div>
                       )}
                     </TableCell>
                   </TableRow>

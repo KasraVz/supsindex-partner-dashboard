@@ -18,7 +18,10 @@ const generateMockAssessmentDetails = (candidateId: number): AssessmentDetail[] 
   return Array.from({ length: numAssessments }, (_, i) => {
     const assessmentStatus = assessmentStatuses[Math.floor(Math.random() * assessmentStatuses.length)];
     const paymentStatus = assessmentStatus === 'completed' ? paymentStatuses[Math.floor(Math.random() * paymentStatuses.length)] : 'unpaid';
-    const reportStatus = assessmentStatus === 'completed' ? reportStatuses[Math.floor(Math.random() * reportStatuses.length)] : 'not_generated';
+    // Reports can only be generated/sent if assessment is completed AND paid
+    const reportStatus = assessmentStatus === 'completed' && paymentStatus === 'paid' 
+      ? reportStatuses[Math.floor(Math.random() * reportStatuses.length)] 
+      : 'not_generated';
     
     const usedAt = new Date(2023, Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1);
     const completedAt = assessmentStatus === 'completed' ? new Date(usedAt.getTime() + Math.random() * 7 * 24 * 60 * 60 * 1000) : undefined;
@@ -37,8 +40,9 @@ const generateMockAssessmentDetails = (candidateId: number): AssessmentDetail[] 
       completedAt,
       reportGeneratedAt,
       reportSentAt,
-      reportUrl: reportStatus === 'sent' ? `https://reports.example.com/${candidateId}-${i + 1}` : undefined,
-      reportContent: reportStatus !== 'not_generated' ? `Mock report content for ${testNames[i % testNames.length]}` : undefined,
+      // Only provide report URL and content if assessment is completed AND paid
+      reportUrl: reportStatus === 'sent' && paymentStatus === 'paid' ? `https://reports.example.com/${candidateId}-${i + 1}` : undefined,
+      reportContent: reportStatus !== 'not_generated' && paymentStatus === 'paid' ? `Mock report content for ${testNames[i % testNames.length]}` : undefined,
     };
   });
 };
