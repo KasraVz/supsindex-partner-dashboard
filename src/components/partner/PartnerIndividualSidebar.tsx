@@ -23,10 +23,10 @@ const mainItems = [
   { title: "Dashboard", url: "/individual/dashboard", icon: LayoutDashboard },
 ];
 
-const referralAnalyticsItems = [
+const affiliationAnalyticsItems = [
   { title: "My Candidates", url: "/individual/candidates", icon: Users },
   { title: "Candidate Reports", url: "/individual/reports", icon: FileText },
-  { title: "Referrals & Earnings", url: "/individual/earnings", icon: DollarSign },
+  { title: "Affiliations & Earnings", url: "/individual/earnings", icon: TrendingUp },
 ];
 
 const profileItems = [
@@ -74,10 +74,10 @@ export function PartnerIndividualSidebar() {
         </SidebarGroup>
 
         <SidebarGroup>
-          <SidebarGroupLabel>Referral Analytics</SidebarGroupLabel>
+          <SidebarGroupLabel>Affiliation Analytics</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {referralAnalyticsItems.map((item) => (
+              {affiliationAnalyticsItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild isActive={isActive(item.url)}>
                     <NavLink to={item.url}>

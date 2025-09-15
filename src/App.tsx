@@ -13,7 +13,8 @@ import NotFound from "./pages/NotFound";
 import IndividualPartnerDashboard from "@/pages/partner/individual/Dashboard";
 import MyCandidates from "@/pages/partner/individual/Candidates";
 import CandidateReports from "@/pages/partner/individual/Reports"; 
-import ReferralsAndEarnings from "@/pages/partner/individual/Earnings";
+import AffiliationsAndEarnings from "@/pages/partner/individual/Earnings";
+import OrganizationalAffiliations from "@/pages/partner/organizational/Affiliations";
 import IndividualProfile from "@/pages/partner/individual/Profile";
 import PartnershipOpportunities from "@/pages/partner/individual/Opportunities";
 
@@ -41,7 +42,7 @@ const App = () => (
                 <Route path="dashboard" element={<IndividualPartnerDashboard />} />
                 <Route path="candidates" element={<MyCandidates />} />
                 <Route path="reports" element={<CandidateReports />} />
-                <Route path="earnings" element={<ReferralsAndEarnings />} />
+                <Route path="earnings" element={<AffiliationsAndEarnings />} />
                 <Route path="profile" element={<IndividualProfile />} />
                 <Route path="opportunities" element={<PartnershipOpportunities />} />
               </Route>
@@ -51,7 +52,7 @@ const App = () => (
                 <Route path="dashboard" element={<OrganizationalPartnerDashboard />} />
                 <Route path="candidates" element={<MyCandidates />} />
                 <Route path="reports" element={<CandidateReports />} />
-                <Route path="earnings" element={<ReferralsAndEarnings />} />
+                <Route path="affiliations" element={<OrganizationalAffiliations />} />
                 <Route path="profile" element={<IndividualProfile />} />
                 <Route path="opportunities" element={<PartnershipOpportunities />} />
                 <Route path="team" element={<TeamManagement />} />
