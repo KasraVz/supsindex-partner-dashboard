@@ -18,6 +18,7 @@ const generateMockAssessmentDetails = (candidateId: number): AssessmentDetail[] 
   return Array.from({ length: numAssessments }, (_, i) => {
     const assessmentStatus = assessmentStatuses[Math.floor(Math.random() * assessmentStatuses.length)];
     const paymentStatus = assessmentStatus === 'completed' ? paymentStatuses[Math.floor(Math.random() * paymentStatuses.length)] : 'unpaid';
+    const paidBy = paymentStatus === 'paid' ? (Math.random() > 0.7 ? 'partner' : 'candidate') : undefined;
     // Reports can only be generated/sent if assessment is completed AND paid
     const reportStatus = assessmentStatus === 'completed' && paymentStatus === 'paid' 
       ? reportStatuses[Math.floor(Math.random() * reportStatuses.length)] 
@@ -34,6 +35,7 @@ const generateMockAssessmentDetails = (candidateId: number): AssessmentDetail[] 
       testType: testTypes[i % testTypes.length],
       assessmentStatus,
       paymentStatus,
+      paidBy,
       reportStatus,
       discountAmount: paymentStatus === 'paid' ? Math.floor(Math.random() * 50) + 25 : undefined,
       usedAt,

@@ -45,10 +45,28 @@ export function getReportInaccessibleReason(
   assessmentStatus: 'not_started' | 'in_progress' | 'completed'
 ): string {
   if (paymentStatus === 'unpaid') {
-    return 'Payment required to access reports';
+    return 'Candidate needs to pay for assessment';
   }
   if (assessmentStatus !== 'completed') {
     return 'Assessment must be completed first';
   }
   return 'Report not available';
+}
+
+/**
+ * Gets the payment status badge text and variant
+ */
+export function getPaymentStatusInfo(
+  paymentStatus: 'unpaid' | 'paid',
+  paidBy?: 'candidate' | 'partner'
+): { text: string; variant: 'default' | 'destructive' | 'secondary' } {
+  if (paymentStatus === 'unpaid') {
+    return { text: 'Unpaid', variant: 'destructive' };
+  }
+  
+  if (paidBy === 'partner') {
+    return { text: 'Paid by Partner', variant: 'secondary' };
+  }
+  
+  return { text: 'Paid by Candidate', variant: 'default' };
 }

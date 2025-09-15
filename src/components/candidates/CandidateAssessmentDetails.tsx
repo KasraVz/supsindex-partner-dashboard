@@ -4,7 +4,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Progress } from "@/components/ui/progress";
 import { FileText, Mail, ExternalLink, CreditCard, AlertCircle } from "lucide-react";
 import { AssessmentDetail } from "@/types/assessment";
-import { canAccessReport, getReportInaccessibleReason } from "@/lib/assessment-utils";
+import { canAccessReport, getReportInaccessibleReason, getPaymentStatusInfo } from "@/lib/assessment-utils";
 
 interface CandidateAssessmentDetailsProps {
   assessmentDetails: AssessmentDetail[];
@@ -32,15 +32,17 @@ export function CandidateAssessmentDetails({
     }
   };
 
-  const getPaymentStatusBadge = (status: string) => {
-    switch (status) {
-      case 'paid':
-        return <Badge variant="default" className="bg-green-100 text-green-800 border-green-200">Paid</Badge>;
-      case 'unpaid':
-        return <Badge variant="destructive" className="bg-red-100 text-red-800 border-red-200">Unpaid</Badge>;
-      default:
-        return <Badge variant="outline">{status}</Badge>;
-    }
+  const getPaymentStatusBadge = (status: 'unpaid' | 'paid', paidBy?: 'candidate' | 'partner') => {
+    const { text, variant } = getPaymentStatusInfo(status, paidBy);
+    return (
+      <Badge variant={variant} className={
+        variant === 'destructive' ? "bg-red-100 text-red-800 border-red-200" :
+        variant === 'secondary' ? "bg-blue-100 text-blue-800 border-blue-200" :
+        "bg-green-100 text-green-800 border-green-200"
+      }>
+        {text}
+      </Badge>
+    );
   };
 
   const getReportStatusBadge = (status: string) => {
@@ -127,9 +129,9 @@ export function CandidateAssessmentDetails({
                   <TableCell>
                     {getAssessmentStatusBadge(assessment.assessmentStatus)}
                   </TableCell>
-                  <TableCell>
-                    {getPaymentStatusBadge(assessment.paymentStatus)}
-                  </TableCell>
+                   <TableCell>
+                     {getPaymentStatusBadge(assessment.paymentStatus, assessment.paidBy)}
+                   </TableCell>
                   <TableCell>
                     {getReportStatusBadge(assessment.reportStatus)}
                   </TableCell>
@@ -140,37 +142,43 @@ export function CandidateAssessmentDetails({
                       year: 'numeric' 
                     })}
                   </TableCell>
-                  <TableCell>
-                    <div className="flex gap-2">
-                      {canAccessReport(assessment.paymentStatus, assessment.assessmentStatus, assessment.reportStatus) ? (
-                        <>
-                          <Button variant="outline" size="sm">
-                            <FileText className="h-4 w-4 mr-1" />
-                            View Report
-                          </Button>
-                          {assessment.reportUrl && (
-                            <Button variant="outline" size="sm">
-                              <ExternalLink className="h-4 w-4 mr-1" />
-                              External Link
-                            </Button>
-                          )}
-                        </>
-                      ) : (
-                        <>
-                          {assessment.paymentStatus === 'unpaid' && (
-                            <Button variant="default" size="sm">
-                              <CreditCard className="h-4 w-4 mr-1" />
-                              Pay Now
-                            </Button>
-                          )}
-                          <div className="flex items-center text-sm text-muted-foreground">
-                            <AlertCircle className="h-4 w-4 mr-1" />
-                            {getReportInaccessibleReason(assessment.paymentStatus, assessment.assessmentStatus)}
-                          </div>
-                        </>
-                      )}
-                    </div>
-                  </TableCell>
+                   <TableCell>
+                     <div className="flex gap-2">
+                       {canAccessReport(assessment.paymentStatus, assessment.assessmentStatus, assessment.reportStatus) ? (
+                         <>
+                           <Button variant="outline" size="sm">
+                             <FileText className="h-4 w-4 mr-1" />
+                             View Report
+                           </Button>
+                           {assessment.reportUrl && (
+                             <Button variant="outline" size="sm">
+                               <ExternalLink className="h-4 w-4 mr-1" />
+                               External Link
+                             </Button>
+                           )}
+                         </>
+                       ) : (
+                         <div className="flex flex-col gap-2">
+                           {assessment.paymentStatus === 'unpaid' && (
+                             <div className="flex gap-2">
+                               <Button variant="outline" size="sm">
+                                 <Mail className="h-4 w-4 mr-1" />
+                                 Remind Candidate
+                               </Button>
+                               <Button variant="default" size="sm">
+                                 <CreditCard className="h-4 w-4 mr-1" />
+                                 Pay on Behalf
+                               </Button>
+                             </div>
+                           )}
+                           <div className="flex items-center text-sm text-muted-foreground">
+                             <AlertCircle className="h-4 w-4 mr-1" />
+                             {getReportInaccessibleReason(assessment.paymentStatus, assessment.assessmentStatus)}
+                           </div>
+                         </div>
+                       )}
+                     </div>
+                   </TableCell>
                 </TableRow>
               ))}
             </TableBody>

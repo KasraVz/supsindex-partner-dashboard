@@ -4,6 +4,7 @@ export interface AssessmentDetail {
   testType: string;
   assessmentStatus: 'not_started' | 'in_progress' | 'completed';
   paymentStatus: 'unpaid' | 'paid';
+  paidBy?: 'candidate' | 'partner';
   reportStatus: 'not_generated' | 'generated' | 'sent';
   discountAmount?: number;
   usedAt: Date;
