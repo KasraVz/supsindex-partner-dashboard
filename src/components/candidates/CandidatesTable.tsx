@@ -91,56 +91,55 @@ export function CandidatesTable({ candidates, loading }: CandidatesTableProps) {
         </TableHeader>
         <TableBody>
           {candidates.map((candidate) => (
-            <Collapsible key={candidate.id} open={expandedRows.has(candidate.id)}>
-              <CollapsibleTrigger asChild>
-                <TableRow 
-                  className="cursor-pointer hover:bg-muted/50"
-                  onClick={() => toggleRow(candidate.id)}
-                >
-                  <TableCell>
-                    <div className="flex items-center space-x-3">
-                      <Avatar className="h-8 w-8">
-                        <AvatarImage src="/placeholder.svg" />
-                        <AvatarFallback className="text-xs">
-                          {candidate.name.split(' ').map(n => n[0]).join('')}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="flex items-center space-x-2">
-                        <span className="font-medium">{candidate.name}</span>
-                        {expandedRows.has(candidate.id) ? 
-                          <ChevronUp className="h-4 w-4 text-muted-foreground" /> : 
-                          <ChevronDown className="h-4 w-4 text-muted-foreground" />
-                        }
-                      </div>
+            <>
+              <TableRow 
+                key={candidate.id}
+                className="cursor-pointer hover:bg-muted/50"
+                onClick={() => toggleRow(candidate.id)}
+              >
+                <TableCell>
+                  <div className="flex items-center space-x-3">
+                    <Avatar className="h-8 w-8">
+                      <AvatarImage src="/placeholder.svg" />
+                      <AvatarFallback className="text-xs">
+                        {candidate.name.split(' ').map(n => n[0]).join('')}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex items-center space-x-2">
+                      <span className="font-medium">{candidate.name}</span>
+                      {expandedRows.has(candidate.id) ? 
+                        <ChevronUp className="h-4 w-4 text-muted-foreground" /> : 
+                        <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                      }
                     </div>
-                  </TableCell>
-                  <TableCell>{candidate.company}</TableCell>
-                  <TableCell>
-                    <Badge variant={candidate.status === 'Active' ? 'default' : 'secondary'}>
-                      {candidate.status}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="text-sm text-muted-foreground">{candidate.joinDate}</TableCell>
-                  <TableCell className="text-sm text-muted-foreground">{candidate.lastActivity}</TableCell>
-                  <TableCell>
-                    <div className="text-sm">
-                      <div>Assessments: {candidate.assessments}</div>
-                      <div>Reports: {candidate.reports}</div>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex space-x-1">
-                      <Button size="sm" variant="outline" onClick={(e) => e.stopPropagation()}>
-                        <FileText className="h-4 w-4" />
-                      </Button>
-                      <Button size="sm" variant="outline" onClick={(e) => e.stopPropagation()}>
-                        <Mail className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              </CollapsibleTrigger>
-              <CollapsibleContent asChild>
+                  </div>
+                </TableCell>
+                <TableCell>{candidate.company}</TableCell>
+                <TableCell>
+                  <Badge variant={candidate.status === 'Active' ? 'default' : 'secondary'}>
+                    {candidate.status}
+                  </Badge>
+                </TableCell>
+                <TableCell className="text-sm text-muted-foreground">{candidate.joinDate}</TableCell>
+                <TableCell className="text-sm text-muted-foreground">{candidate.lastActivity}</TableCell>
+                <TableCell>
+                  <div className="text-sm">
+                    <div>Assessments: {candidate.assessments}</div>
+                    <div>Reports: {candidate.reports}</div>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className="flex space-x-1">
+                    <Button size="sm" variant="outline" onClick={(e) => e.stopPropagation()}>
+                      <FileText className="h-4 w-4" />
+                    </Button>
+                    <Button size="sm" variant="outline" onClick={(e) => e.stopPropagation()}>
+                      <Mail className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </TableCell>
+              </TableRow>
+              {expandedRows.has(candidate.id) && (
                 <TableRow className="bg-muted/20">
                   <TableCell colSpan={7}>
                     <div className="py-4 px-4">
@@ -169,8 +168,8 @@ export function CandidatesTable({ candidates, loading }: CandidatesTableProps) {
                     </div>
                   </TableCell>
                 </TableRow>
-              </CollapsibleContent>
-            </Collapsible>
+              )}
+            </>
           ))}
         </TableBody>
       </Table>
