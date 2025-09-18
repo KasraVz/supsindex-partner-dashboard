@@ -24,7 +24,7 @@ const mainItems = [
 ];
 
 const affiliationAnalyticsItems = [
-  { title: "My Candidates", url: "/individual/candidates", icon: Users },
+  { title: "Affiliated Candidates", url: "/individual/candidates", icon: Users },
   { title: "Candidate Reports", url: "/individual/reports", icon: FileText },
   { title: "Affiliations & Earnings", url: "/individual/earnings", icon: TrendingUp },
 ];
