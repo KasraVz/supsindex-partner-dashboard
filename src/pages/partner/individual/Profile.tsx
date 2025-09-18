@@ -59,42 +59,63 @@ export default function IndividualProfile() {
 
         <div className="md:col-span-2 space-y-6">
           <Card>
-            <CardHeader>
-              <CardTitle>Basic Information</CardTitle>
-              <CardDescription>
-                Update your personal and professional details
-              </CardDescription>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle>Profile Information</CardTitle>
+              <Button variant="outline" size="sm">
+                <ExternalLink className="mr-2 h-4 w-4" />
+                Request Edit
+              </Button>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className="space-y-2">
-                  <Label htmlFor="firstName">First Name</Label>
-                  <Input id="firstName" defaultValue="John" />
+            <CardContent className="space-y-6">
+              <div className="grid gap-6 md:grid-cols-2">
+                <div className="space-y-3">
+                  <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                    <MapPin className="h-4 w-4" />
+                    <span>Full Name</span>
+                  </div>
+                  <p className="font-medium">John Doe</p>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="lastName">Last Name</Label>
-                  <Input id="lastName" defaultValue="Partner" />
+                
+                <div className="space-y-3">
+                  <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                    <ExternalLink className="h-4 w-4" />
+                    <span>Email Address</span>
+                  </div>
+                  <p className="font-medium">john.doe@example.com</p>
+                </div>
+                
+                <div className="space-y-3">
+                  <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                    <Briefcase className="h-4 w-4" />
+                    <span>Passport ID</span>
+                  </div>
+                  <p className="font-medium">ABC123456789</p>
+                </div>
+                
+                <div className="space-y-3">
+                  <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                    <Award className="h-4 w-4" />
+                    <span>Verification Status</span>
+                  </div>
+                  <Badge className="bg-green-100 text-green-800 hover:bg-green-100">Verified</Badge>
                 </div>
               </div>
               
-              <div className="space-y-2">
-                <Label htmlFor="email">Email Address</Label>
-                <Input id="email" type="email" defaultValue="john@example.com" />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="phone">Phone Number</Label>
-                <Input id="phone" defaultValue="+1 (555) 123-4567" />
-              </div>
-              
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className="space-y-2">
-                  <Label htmlFor="city">City</Label>
-                  <Input id="city" defaultValue="San Francisco" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="country">Country</Label>
-                  <Input id="country" defaultValue="United States" />
+              <div className="border-t pt-6">
+                <h3 className="text-lg font-semibold mb-4">Account Statistics</h3>
+                <div className="grid gap-6 md:grid-cols-3">
+                  <div>
+                    <p className="text-sm text-muted-foreground">Member since:</p>
+                    <p className="font-medium">January 2024</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Tests completed:</p>
+                    <p className="font-medium">8</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Certifications:</p>
+                    <p className="font-medium">12</p>
+                  </div>
                 </div>
               </div>
             </CardContent>
