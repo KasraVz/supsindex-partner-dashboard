@@ -28,42 +28,20 @@ interface ProfileEditRequestDialogProps {
   editingRequest?: EditRequest | null;
 }
 
-const PROFILE_SECTIONS = {
-  personal: "Personal Profile",
-  business: "Business Profile"
-};
-
-const PROFILE_FIELDS = {
-  personal: [
-    { value: "fullName", label: "Full Name" },
-    { value: "email", label: "Email Address" },
-    { value: "passportId", label: "Passport ID" },
-    { value: "profilePhoto", label: "Profile Photo" }
-  ],
-  business: [
-    { value: "startupName", label: "Startup Name" },
-    { value: "startupWebsite", label: "Startup Website" },
-    { value: "primaryIndustry", label: "Primary Industry" },
-    { value: "developmentStage", label: "Development Stage" },
-    { value: "targetEcosystem", label: "Target Ecosystem" }
-  ]
-};
+const PROFILE_FIELDS = [
+  { value: "fullName", label: "Full Name" },
+  { value: "passportId", label: "Passport ID" },
+  { value: "profilePhoto", label: "Profile Photo" }
+];
 
 const MOCK_CURRENT_VALUES = {
   fullName: "John Doe",
-  email: "john.doe@example.com",
   passportId: "ABC123456789",
-  profilePhoto: "Current profile photo",
-  startupName: "TechFlow Solutions",
-  startupWebsite: "https://www.techflowsolutions.com",
-  primaryIndustry: "Software & SaaS",
-  developmentStage: "Building Initial Traction/Early Customers",
-  targetEcosystem: "Silicon Valley"
+  profilePhoto: "Current profile photo"
 };
 
 export function ProfileEditRequestDialog({ open, onOpenChange, editingRequest }: ProfileEditRequestDialogProps) {
   const [isLoading, setIsLoading] = useState(false);
-  const [profileSection, setProfileSection] = useState<string>("");
   const [selectedField, setSelectedField] = useState<string>("");
   const [requestedValue, setRequestedValue] = useState<string>("");
   const [reason, setReason] = useState<string>("");
@@ -75,33 +53,19 @@ export function ProfileEditRequestDialog({ open, onOpenChange, editingRequest }:
   // Pre-populate form when editing an existing request
   useEffect(() => {
     if (editingRequest) {
-      // Map the profile section names to the form values
-      const sectionMap: Record<string, string> = {
-        "Personal Profile": "personal",
-        "Business Profile": "business"
-      };
-      
       // Map field names to form values
       const fieldMap: Record<string, string> = {
         "Full Name": "fullName",
-        "Email Address": "email",
         "Passport ID": "passportId",
-        "Profile Photo": "profilePhoto",
-        "Startup Name": "startupName",
-        "Startup Website": "startupWebsite",
-        "Primary Industry": "primaryIndustry",
-        "Development Stage": "developmentStage",
-        "Target Ecosystem": "targetEcosystem"
+        "Profile Photo": "profilePhoto"
       };
 
-      setProfileSection(sectionMap[editingRequest.profileSection] || "");
       setSelectedField(fieldMap[editingRequest.field] || "");
       setRequestedValue(editingRequest.requestedValue);
       setReason(editingRequest.reason);
       setPriority(editingRequest.priority);
     } else {
       // Reset form when not editing
-      setProfileSection("");
       setSelectedField("");
       setRequestedValue("");
       setReason("");
@@ -114,16 +78,11 @@ export function ProfileEditRequestDialog({ open, onOpenChange, editingRequest }:
     return MOCK_CURRENT_VALUES[fieldKey as keyof typeof MOCK_CURRENT_VALUES] || "Not set";
   };
 
-  const getAvailableFields = () => {
-    if (profileSection === "personal") return PROFILE_FIELDS.personal;
-    if (profileSection === "business") return PROFILE_FIELDS.business;
-    return [];
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!profileSection || !selectedField || !requestedValue || !reason || !priority) {
+    if (!selectedField || !requestedValue || !reason || !priority) {
       toast({
         title: "Missing Information",
         description: "Please fill in all required fields.",
@@ -156,7 +115,6 @@ export function ProfileEditRequestDialog({ open, onOpenChange, editingRequest }:
     
     // Reset form only if not editing
     if (!editingRequest) {
-      setProfileSection("");
       setSelectedField("");
       setRequestedValue("");
       setReason("");
@@ -167,10 +125,6 @@ export function ProfileEditRequestDialog({ open, onOpenChange, editingRequest }:
     onOpenChange(false);
   };
 
-  const handleProfileSectionChange = (value: string) => {
-    setProfileSection(value);
-    setSelectedField(""); // Reset selected field when profile section changes
-  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -190,35 +144,20 @@ export function ProfileEditRequestDialog({ open, onOpenChange, editingRequest }:
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="profileSection">Profile Section *</Label>
-            <Select value={profileSection} onValueChange={handleProfileSectionChange}>
+            <Label htmlFor="field">Field to Change *</Label>
+            <Select value={selectedField} onValueChange={setSelectedField}>
               <SelectTrigger>
-                <SelectValue placeholder="Select profile section to edit" />
+                <SelectValue placeholder="Select field to edit" />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="personal">Personal Profile</SelectItem>
-                <SelectItem value="business">Business Profile</SelectItem>
+              <SelectContent className="bg-background border z-50">
+                {PROFILE_FIELDS.map((field) => (
+                  <SelectItem key={field.value} value={field.value}>
+                    {field.label}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
-
-          {profileSection && (
-            <div className="space-y-2">
-              <Label htmlFor="field">Field to Change *</Label>
-              <Select value={selectedField} onValueChange={setSelectedField}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select field to edit" />
-                </SelectTrigger>
-                <SelectContent>
-                  {getAvailableFields().map((field) => (
-                    <SelectItem key={field.value} value={field.value}>
-                      {field.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          )}
 
           {selectedField && (
             <div className="space-y-2">
@@ -261,7 +200,7 @@ export function ProfileEditRequestDialog({ open, onOpenChange, editingRequest }:
               <SelectTrigger>
                 <SelectValue placeholder="Select priority level" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-background border z-50">
                 <SelectItem value="low">Low - General update</SelectItem>
                 <SelectItem value="medium">Medium - Important change</SelectItem>
                 <SelectItem value="high">High - Urgent correction</SelectItem>
@@ -300,7 +239,7 @@ export function ProfileEditRequestDialog({ open, onOpenChange, editingRequest }:
           </Button>
           <Button
             onClick={handleSubmit}
-            disabled={isLoading || !profileSection || !selectedField || !requestedValue || !reason || !priority}
+            disabled={isLoading || !selectedField || !requestedValue || !reason || !priority}
           >
             {isLoading ? "Submitting..." : editingRequest ? "Update Request" : "Submit Request"}
           </Button>
