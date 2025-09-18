@@ -40,26 +40,6 @@ export default function IndividualProfile() {
             </CardContent>
           </Card>
 
-          <Card className="mt-6">
-            <CardHeader>
-              <CardTitle>Partner Status</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="text-sm">Current Level</span>
-                <Badge>Active Partner</Badge>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm">Member Since</span>
-                <span className="text-sm font-medium">Jan 2024</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm">Total Affiliations</span>
-                <span className="text-sm font-medium">12</span>
-              </div>
-              
-            </CardContent>
-          </Card>
         </div>
 
         <div className="md:col-span-2 space-y-6">
@@ -116,11 +96,19 @@ export default function IndividualProfile() {
               </div>
               
               <div className="border-t pt-6">
-                <h3 className="text-lg font-semibold mb-4">Partner Statistics</h3>
+                <h3 className="text-lg font-semibold mb-4">Partner Information</h3>
                 <div className="grid gap-6 md:grid-cols-3">
                   <div>
-                    <p className="text-sm text-muted-foreground">Member since:</p>
+                    <p className="text-sm text-muted-foreground">Partner Level:</p>
+                    <Badge className="bg-green-100 text-green-800 hover:bg-green-100">Active Partner</Badge>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Member Since:</p>
                     <p className="font-medium">January 2024</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Total Affiliations:</p>
+                    <p className="font-medium">12</p>
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Active Affiliation Codes:</p>
@@ -137,10 +125,6 @@ export default function IndividualProfile() {
                   <div>
                     <p className="text-sm text-muted-foreground">Commission Earned:</p>
                     <p className="font-medium">$2,450</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Active Status:</p>
-                    <Badge className="bg-green-100 text-green-800 hover:bg-green-100">Active Partner</Badge>
                   </div>
                 </div>
               </div>
