@@ -96,7 +96,7 @@ export default function IndividualProfile() {
               </div>
               
               <div className="border-t pt-6">
-                <h3 className="text-lg font-semibold mb-4">Partner Information</h3>
+                <h3 className="text-lg font-semibold mb-4">Statistics</h3>
                 <div className="grid gap-6 md:grid-cols-3">
                   <div>
                     <p className="text-sm text-muted-foreground">Partner Level:</p>
