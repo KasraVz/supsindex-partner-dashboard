@@ -20,6 +20,7 @@ import PartnershipOpportunities from "@/pages/partner/individual/Opportunities";
 
 // Partner pages - Organizational
 import OrganizationalPartnerDashboard from "@/pages/partner/organizational/Dashboard";
+import OrganizationalProfile from "@/pages/partner/organizational/Profile";
 import TeamManagement from "@/pages/partner/organizational/TeamManagement";
 import StrategicReports from "@/pages/partner/organizational/StrategicReports";
 import CustomTestRequests from "@/pages/partner/organizational/CustomTests";
@@ -53,7 +54,7 @@ const App = () => (
                 <Route path="candidates" element={<MyCandidates />} />
                 <Route path="reports" element={<CandidateReports />} />
                 <Route path="affiliations" element={<OrganizationalAffiliations />} />
-                <Route path="profile" element={<IndividualProfile />} />
+                <Route path="profile" element={<OrganizationalProfile />} />
                 <Route path="opportunities" element={<PartnershipOpportunities />} />
                 <Route path="team" element={<TeamManagement />} />
                 <Route path="strategic-reports" element={<StrategicReports />} />
