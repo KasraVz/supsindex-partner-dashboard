@@ -7,6 +7,10 @@ import {
   DollarSign,
   Briefcase,
   TrendingUp,
+  CreditCard,
+  GraduationCap,
+  HelpCircle,
+  Zap,
 } from "lucide-react";
 import {
   Sidebar,
@@ -21,17 +25,27 @@ import {
 
 const mainItems = [
   { title: "Dashboard", url: "/individual/dashboard", icon: LayoutDashboard },
+  { title: "Fast Track", url: "/individual/fast-track", icon: Zap },
 ];
 
 const affiliationAnalyticsItems = [
   { title: "Affiliated Candidates", url: "/individual/candidates", icon: Users },
   { title: "Candidate Reports", url: "/individual/reports", icon: FileText },
   { title: "Affiliations & Earnings", url: "/individual/earnings", icon: TrendingUp },
+  { title: "Money Claims", url: "/individual/claims", icon: CreditCard },
+];
+
+const scholarshipItems = [
+  { title: "My Scholarships", url: "/individual/scholarships", icon: GraduationCap },
 ];
 
 const profileItems = [
   { title: "My Profile", url: "/individual/profile", icon: User },
   { title: "Partnership Opportunities", url: "/individual/opportunities", icon: Briefcase },
+];
+
+const supportItems = [
+  { title: "Support Center", url: "/individual/support", icon: HelpCircle },
 ];
 
 export function PartnerIndividualSidebar() {
@@ -92,10 +106,46 @@ export function PartnerIndividualSidebar() {
         </SidebarGroup>
 
         <SidebarGroup>
+          <SidebarGroupLabel>Scholarship Management</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {scholarshipItems.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild isActive={isActive(item.url)}>
+                    <NavLink to={item.url}>
+                      <item.icon className="h-4 w-4" />
+                      <span>{item.title}</span>
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <SidebarGroup>
           <SidebarGroupLabel>My Profile & Growth</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {profileItems.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild isActive={isActive(item.url)}>
+                    <NavLink to={item.url}>
+                      <item.icon className="h-4 w-4" />
+                      <span>{item.title}</span>
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <SidebarGroup>
+          <SidebarGroupLabel>Support & Help</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {supportItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild isActive={isActive(item.url)}>
                     <NavLink to={item.url}>

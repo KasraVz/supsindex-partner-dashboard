@@ -10,6 +10,9 @@ import {
   BarChart3,
   Beaker,
   TrendingUp,
+  GraduationCap,
+  HelpCircle,
+  Zap,
 } from "lucide-react";
 import {
   Sidebar,
@@ -24,6 +27,7 @@ import {
 
 const mainItems = [
   { title: "Dashboard", url: "/organizational/dashboard", icon: LayoutDashboard },
+  { title: "Fast Track", url: "/organizational/fast-track", icon: Zap },
 ];
 
 const affiliationAnalyticsItems = [
@@ -37,10 +41,18 @@ const profileItems = [
   { title: "Partnership Opportunities", url: "/organizational/opportunities", icon: Briefcase },
 ];
 
+const scholarshipItems = [
+  { title: "Organization Scholarships", url: "/organizational/scholarships", icon: GraduationCap },
+];
+
 const organizationItems = [
   { title: "Team Management", url: "/organizational/team", icon: Building },
   { title: "Strategic Reports", url: "/organizational/strategic-reports", icon: BarChart3 },
   { title: "Custom Test (DI) Requests", url: "/organizational/custom-tests", icon: Beaker },
+];
+
+const supportItems = [
+  { title: "Support Center", url: "/organizational/support", icon: HelpCircle },
 ];
 
 export function PartnerOrganizationalSidebar() {
@@ -101,6 +113,24 @@ export function PartnerOrganizationalSidebar() {
         </SidebarGroup>
 
         <SidebarGroup>
+          <SidebarGroupLabel>Scholarship Management</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {scholarshipItems.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild isActive={isActive(item.url)}>
+                    <NavLink to={item.url}>
+                      <item.icon className="h-4 w-4" />
+                      <span>{item.title}</span>
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <SidebarGroup>
           <SidebarGroupLabel>My Profile & Growth</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
@@ -123,6 +153,24 @@ export function PartnerOrganizationalSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {organizationItems.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild isActive={isActive(item.url)}>
+                    <NavLink to={item.url}>
+                      <item.icon className="h-4 w-4" />
+                      <span>{item.title}</span>
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <SidebarGroup>
+          <SidebarGroupLabel>Support & Help</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {supportItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild isActive={isActive(item.url)}>
                     <NavLink to={item.url}>
