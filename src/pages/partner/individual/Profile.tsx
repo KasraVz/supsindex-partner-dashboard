@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -6,8 +7,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Camera, MapPin, Briefcase, Award, ExternalLink } from "lucide-react";
+import { ProfileEditRequestDialog } from "@/components/profile/ProfileEditRequestDialog";
 export default function IndividualProfile() {
-  return <div className="space-y-6">
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+
+  return (
+    <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">My Profile</h1>
         <p className="text-muted-foreground">
@@ -61,7 +66,11 @@ export default function IndividualProfile() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle>Profile Information</CardTitle>
-              <Button variant="outline" size="sm">
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => setIsEditDialogOpen(true)}
+              >
                 <ExternalLink className="mr-2 h-4 w-4" />
                 Request Edit
               </Button>
@@ -201,5 +210,11 @@ export default function IndividualProfile() {
           </div>
         </div>
       </div>
-    </div>;
+
+      <ProfileEditRequestDialog
+        open={isEditDialogOpen}
+        onOpenChange={setIsEditDialogOpen}
+      />
+    </div>
+  );
 }
