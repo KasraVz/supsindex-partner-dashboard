@@ -22,125 +22,108 @@ export default function OrganizationalProfile() {
       </div>
 
       {/* Organization Profile Section */}
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
-          <div>
-            <CardTitle>Organization Profile</CardTitle>
-            <CardDescription>Primary organization information displayed to partners</CardDescription>
-          </div>
-          <Button variant="outline" size="sm" onClick={() => setIsEditDialogOpen(true)}>
-            <ExternalLink className="mr-2 h-4 w-4" />
-            Request Edit
-          </Button>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="grid gap-6 md:grid-cols-2">
-            <div className="space-y-3">
-              <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                <Building className="h-4 w-4" />
-                <span>Organization Name</span>
-              </div>
-              <p className="font-medium">TechVenture Solutions Inc.</p>
-            </div>
-            
-            <div className="space-y-3">
-              <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                <Briefcase className="h-4 w-4" />
-                <span>Industry</span>
-              </div>
-              <p className="font-medium">Technology Consulting</p>
-            </div>
-            
-            <div className="space-y-3">
-              <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                <ExternalLink className="h-4 w-4" />
-                <span>Organization Email</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <p className="font-medium">contact@techventure.com</p>
-                <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
-                  <CheckCircle className="mr-1 h-3 w-3" />
-                  Verified
-                </Badge>
-              </div>
-            </div>
-            
-            <div className="space-y-3">
-              <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                <Building className="h-4 w-4" />
-                <span>Registration Number</span>
-              </div>
-              <p className="font-medium">REG-2019-1234567</p>
-            </div>
-            
-            <div className="space-y-3">
-              <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                <MapPin className="h-4 w-4" />
-                <span>Address</span>
-              </div>
-              <p className="font-medium">123 Innovation Drive, Tech City, TC 12345</p>
-            </div>
-            
-            <div className="space-y-3">
-              <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                <Globe className="h-4 w-4" />
-                <span>Website</span>
-              </div>
-              <p className="font-medium">www.techventure.com</p>
-            </div>
-            
-            <div className="space-y-3">
-              <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                <Calendar className="h-4 w-4" />
-                <span>Founded</span>
-              </div>
-              <p className="font-medium">2019</p>
-            </div>
-            
-            <div className="space-y-3">
-              <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                <Users className="h-4 w-4" />
-                <span>Number of Employees</span>
-              </div>
-              <p className="font-medium">50-100</p>
-            </div>
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="org-description">Organization Description</Label>
-            <Textarea 
-              id="org-description" 
-              rows={3} 
-              defaultValue="Leading technology consulting firm specializing in digital transformation and innovative solutions for enterprises and startups." 
-              readOnly
-            />
-          </div>
-        </CardContent>
-      </Card>
-
       <div className="grid gap-6 md:grid-cols-3">
-        {/* Representative Profile Section */}
-        <div className="md:col-span-1">
+        <div className="md:col-span-2">
           <Card>
-            <CardHeader>
-              <CardTitle>Representative Profile Photo</CardTitle>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <div>
+                <CardTitle>Organization Profile</CardTitle>
+                <CardDescription>Primary organization information displayed to partners</CardDescription>
+              </div>
+              <Button variant="outline" size="sm" onClick={() => setIsEditDialogOpen(true)}>
+                <ExternalLink className="mr-2 h-4 w-4" />
+                Request Edit
+              </Button>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex flex-col items-center space-y-4">
-                <Avatar className="h-32 w-32">
-                  <AvatarImage src="/placeholder.svg" />
-                  <AvatarFallback className="text-2xl">JD</AvatarFallback>
-                </Avatar>
-                <Button variant="outline" size="sm">
-                  <Camera className="mr-2 h-4 w-4" />
-                  Upload Photo
-                </Button>
+            <CardContent className="space-y-6">
+              <div className="grid gap-6 md:grid-cols-2">
+                <div className="space-y-3">
+                  <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                    <Building className="h-4 w-4" />
+                    <span>Organization Name</span>
+                  </div>
+                  <p className="font-medium">TechVenture Solutions Inc.</p>
+                </div>
+                
+                <div className="space-y-3">
+                  <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                    <Briefcase className="h-4 w-4" />
+                    <span>Industry</span>
+                  </div>
+                  <p className="font-medium">Technology Consulting</p>
+                </div>
+                
+                <div className="space-y-3">
+                  <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                    <ExternalLink className="h-4 w-4" />
+                    <span>Organization Email</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <p className="font-medium">contact@techventure.com</p>
+                    <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
+                      <CheckCircle className="mr-1 h-3 w-3" />
+                      Verified
+                    </Badge>
+                  </div>
+                </div>
+                
+                <div className="space-y-3">
+                  <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                    <Building className="h-4 w-4" />
+                    <span>Registration Number</span>
+                  </div>
+                  <p className="font-medium">REG-2019-1234567</p>
+                </div>
+                
+                <div className="space-y-3">
+                  <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                    <MapPin className="h-4 w-4" />
+                    <span>Address</span>
+                  </div>
+                  <p className="font-medium">123 Innovation Drive, Tech City, TC 12345</p>
+                </div>
+                
+                <div className="space-y-3">
+                  <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                    <Globe className="h-4 w-4" />
+                    <span>Website</span>
+                  </div>
+                  <p className="font-medium">www.techventure.com</p>
+                </div>
+                
+                <div className="space-y-3">
+                  <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                    <Calendar className="h-4 w-4" />
+                    <span>Founded</span>
+                  </div>
+                  <p className="font-medium">2019</p>
+                </div>
+                
+                <div className="space-y-3">
+                  <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                    <Users className="h-4 w-4" />
+                    <span>Number of Employees</span>
+                  </div>
+                  <p className="font-medium">50-100</p>
+                </div>
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="org-description">Organization Description</Label>
+                <Textarea 
+                  id="org-description" 
+                  rows={3} 
+                  defaultValue="Leading technology consulting firm specializing in digital transformation and innovative solutions for enterprises and startups." 
+                  readOnly
+                />
               </div>
             </CardContent>
           </Card>
+        </div>
 
-          {/* Organization Statistics */}
-          <Card className="mt-6">
+        {/* Organization Statistics */}
+        <div className="md:col-span-1">
+          <Card>
             <CardHeader>
               <CardTitle>Organization Statistics</CardTitle>
             </CardHeader>
@@ -174,6 +157,29 @@ export default function OrganizationalProfile() {
                   <span className="text-sm text-muted-foreground">Team Members:</span>
                   <span className="text-sm font-medium">12</span>
                 </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+
+      {/* Representative Profile Section */}
+      <div className="grid gap-6 md:grid-cols-3">
+        <div className="md:col-span-1">
+          <Card>
+            <CardHeader>
+              <CardTitle>Representative Profile Photo</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex flex-col items-center space-y-4">
+                <Avatar className="h-32 w-32">
+                  <AvatarImage src="/placeholder.svg" />
+                  <AvatarFallback className="text-2xl">JD</AvatarFallback>
+                </Avatar>
+                <Button variant="outline" size="sm">
+                  <Camera className="mr-2 h-4 w-4" />
+                  Upload Photo
+                </Button>
               </div>
             </CardContent>
           </Card>
