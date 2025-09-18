@@ -6,10 +6,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Camera, MapPin, Briefcase, Award, ExternalLink } from "lucide-react";
-
 export default function IndividualProfile() {
-  return (
-    <div className="space-y-6">
+  return <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">My Profile</h1>
         <p className="text-muted-foreground">
@@ -54,10 +52,7 @@ export default function IndividualProfile() {
                 <span className="text-sm">Total Affiliations</span>
                 <span className="text-sm font-medium">12</span>
               </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm">Success Rate</span>
-                <span className="text-sm font-medium">85%</span>
-              </div>
+              
             </CardContent>
           </Card>
         </div>
@@ -125,11 +120,7 @@ export default function IndividualProfile() {
               
               <div className="space-y-2">
                 <Label htmlFor="bio">Bio</Label>
-                <Textarea 
-                  id="bio" 
-                  rows={4}
-                  defaultValue="Experienced business consultant with 15+ years in startup mentoring and venture capital. Specialized in helping early-stage companies develop scalable business models and secure funding."
-                />
+                <Textarea id="bio" rows={4} defaultValue="Experienced business consultant with 15+ years in startup mentoring and venture capital. Specialized in helping early-stage companies develop scalable business models and secure funding." />
               </div>
               
               <div className="space-y-2">
@@ -189,6 +180,5 @@ export default function IndividualProfile() {
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 }
