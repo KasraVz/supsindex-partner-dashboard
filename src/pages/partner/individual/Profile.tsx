@@ -10,9 +10,7 @@ import { Camera, MapPin, Briefcase, Award, ExternalLink, Eye } from "lucide-reac
 import { ProfileEditRequestDialog } from "@/components/profile/ProfileEditRequestDialog";
 export default function IndividualProfile() {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-
-  return (
-    <div className="space-y-6">
+  return <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">My Profile</h1>
         <p className="text-muted-foreground">
@@ -54,10 +52,7 @@ export default function IndividualProfile() {
                   <span className="text-sm text-muted-foreground">Member Since:</span>
                   <span className="text-sm font-medium">January 2024</span>
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Total Affiliations:</span>
-                  <span className="text-sm font-medium">12</span>
-                </div>
+                
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-muted-foreground">Active Affiliation Codes:</span>
                   <span className="text-sm font-medium">3</span>
@@ -84,11 +79,7 @@ export default function IndividualProfile() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle>Profile Information</CardTitle>
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={() => setIsEditDialogOpen(true)}
-              >
+              <Button variant="outline" size="sm" onClick={() => setIsEditDialogOpen(true)}>
                 <ExternalLink className="mr-2 h-4 w-4" />
                 Request Edit
               </Button>
@@ -216,10 +207,6 @@ export default function IndividualProfile() {
         </div>
       </div>
 
-      <ProfileEditRequestDialog
-        open={isEditDialogOpen}
-        onOpenChange={setIsEditDialogOpen}
-      />
-    </div>
-  );
+      <ProfileEditRequestDialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen} />
+    </div>;
 }
