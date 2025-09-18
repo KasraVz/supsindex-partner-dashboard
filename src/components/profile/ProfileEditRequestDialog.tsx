@@ -30,14 +30,12 @@ interface ProfileEditRequestDialogProps {
 
 const PROFILE_FIELDS = [
   { value: "fullName", label: "Full Name" },
-  { value: "passportId", label: "Passport ID" },
-  { value: "profilePhoto", label: "Profile Photo" }
+  { value: "passportId", label: "Passport ID" }
 ];
 
 const MOCK_CURRENT_VALUES = {
   fullName: "John Doe",
-  passportId: "ABC123456789",
-  profilePhoto: "Current profile photo"
+  passportId: "ABC123456789"
 };
 
 export function ProfileEditRequestDialog({ open, onOpenChange, editingRequest }: ProfileEditRequestDialogProps) {

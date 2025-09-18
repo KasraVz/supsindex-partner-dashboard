@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Camera, MapPin, Briefcase, Award, ExternalLink } from "lucide-react";
+import { Camera, MapPin, Briefcase, Award, ExternalLink, Eye } from "lucide-react";
 import { ProfileEditRequestDialog } from "@/components/profile/ProfileEditRequestDialog";
 export default function IndividualProfile() {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
@@ -98,7 +98,12 @@ export default function IndividualProfile() {
                     <Briefcase className="h-4 w-4" />
                     <span>Passport ID</span>
                   </div>
-                  <p className="font-medium">ABC123456789</p>
+                  <div className="flex items-center justify-between">
+                    <p className="font-medium">ABC123456789</p>
+                    <Button variant="ghost" size="sm" className="h-auto p-1">
+                      <Eye className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
                 
                 <div className="space-y-3">
@@ -111,19 +116,31 @@ export default function IndividualProfile() {
               </div>
               
               <div className="border-t pt-6">
-                <h3 className="text-lg font-semibold mb-4">Account Statistics</h3>
+                <h3 className="text-lg font-semibold mb-4">Partner Statistics</h3>
                 <div className="grid gap-6 md:grid-cols-3">
                   <div>
                     <p className="text-sm text-muted-foreground">Member since:</p>
                     <p className="font-medium">January 2024</p>
                   </div>
                   <div>
-                    <p className="text-sm text-muted-foreground">Tests completed:</p>
-                    <p className="font-medium">8</p>
+                    <p className="text-sm text-muted-foreground">Active Affiliation Codes:</p>
+                    <p className="font-medium">3</p>
                   </div>
                   <div>
-                    <p className="text-sm text-muted-foreground">Certifications:</p>
+                    <p className="text-sm text-muted-foreground">Total Candidates Referred:</p>
+                    <p className="font-medium">28</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Successful Referrals:</p>
                     <p className="font-medium">12</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Commission Earned:</p>
+                    <p className="font-medium">$2,450</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Active Status:</p>
+                    <Badge className="bg-green-100 text-green-800 hover:bg-green-100">Active Partner</Badge>
                   </div>
                 </div>
               </div>
