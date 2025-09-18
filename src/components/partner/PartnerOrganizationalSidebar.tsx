@@ -37,7 +37,7 @@ const affiliationAnalyticsItems = [
 ];
 
 const profileItems = [
-  { title: "My Profile", url: "/organizational/profile", icon: User },
+  { title: "Organization Profile", url: "/organizational/profile", icon: User },
   { title: "Partnership Opportunities", url: "/organizational/opportunities", icon: Briefcase },
 ];
 

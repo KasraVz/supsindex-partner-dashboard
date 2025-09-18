@@ -53,7 +53,9 @@ const mockApplications = [
       email: "sarah.j@email.com",
       avatar: "/placeholder.svg",
       gpa: 3.8,
-      major: "Computer Science"
+      major: "Computer Science",
+      university: "Stanford University",
+      expectedGraduation: "2024"
     },
     submittedAt: "2024-01-18",
     status: "pending",
@@ -68,7 +70,9 @@ const mockApplications = [
       email: "m.chen@email.com",
       avatar: "/placeholder.svg",
       gpa: 3.9,
-      major: "Software Engineering"
+      major: "Software Engineering",
+      university: "MIT",
+      expectedGraduation: "2024"
     },
     submittedAt: "2024-01-16",
     status: "reviewed",
@@ -83,7 +87,9 @@ const mockApplications = [
       email: "emily.d@email.com",
       avatar: "/placeholder.svg",
       gpa: 3.7,
-      major: "Business Administration"
+      major: "Business Administration",
+      university: "Harvard Business School",
+      expectedGraduation: "2024"
     },
     submittedAt: "2024-01-12",
     status: "approved",
@@ -281,8 +287,8 @@ export default function Scholarships() {
                   <TableRow>
                     <TableHead>Applicant</TableHead>
                     <TableHead>Scholarship</TableHead>
+                    <TableHead>University</TableHead>
                     <TableHead>GPA</TableHead>
-                    <TableHead>Major</TableHead>
                     <TableHead>Score</TableHead>
                     <TableHead>Submitted</TableHead>
                     <TableHead>Status</TableHead>
@@ -302,7 +308,7 @@ export default function Scholarships() {
                           </Avatar>
                           <div>
                             <p className="font-medium">{application.applicant.name}</p>
-                            <p className="text-sm text-muted-foreground">{application.applicant.email}</p>
+                            <p className="text-sm text-muted-foreground">{application.applicant.major}</p>
                           </div>
                         </div>
                       </TableCell>
@@ -312,17 +318,27 @@ export default function Scholarships() {
                           <p className="text-xs text-muted-foreground">{application.scholarshipId}</p>
                         </div>
                       </TableCell>
+                      <TableCell>
+                        <div>
+                          <p className="text-sm">{application.applicant.university}</p>
+                          <p className="text-xs text-muted-foreground">Class of {application.applicant.expectedGraduation}</p>
+                        </div>
+                      </TableCell>
                       <TableCell>{application.applicant.gpa}</TableCell>
-                      <TableCell>{application.applicant.major}</TableCell>
                       <TableCell>
                         <Badge variant="outline">{application.score}/100</Badge>
                       </TableCell>
                       <TableCell>{application.submittedAt}</TableCell>
                       <TableCell>{getApplicationStatusBadge(application.status)}</TableCell>
                       <TableCell>
-                        <Button variant="outline" size="sm">
-                          Review
-                        </Button>
+                        <div className="flex gap-2">
+                          <Button variant="outline" size="sm">
+                            Review
+                          </Button>
+                          <Button variant="outline" size="sm">
+                            Interview
+                          </Button>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -336,24 +352,68 @@ export default function Scholarships() {
           <div className="grid gap-4 md:grid-cols-2">
             <Card>
               <CardHeader>
-                <CardTitle>Application Trends</CardTitle>
+                <CardTitle>Application Funnel</CardTitle>
+                <CardDescription>Track applicants through the review process</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="text-center py-8 text-muted-foreground">
-                  <Calendar className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p>Analytics charts will be displayed here</p>
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm">Applications Received</span>
+                    <span className="font-bold">42</span>
+                  </div>
+                  <Progress value={100} className="h-2" />
+                  
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm">Initial Review Passed</span>
+                    <span className="font-bold">32</span>
+                  </div>
+                  <Progress value={76} className="h-2" />
+                  
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm">Final Review</span>
+                    <span className="font-bold">18</span>
+                  </div>
+                  <Progress value={43} className="h-2" />
+                  
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm">Awards Granted</span>
+                    <span className="font-bold">8</span>
+                  </div>
+                  <Progress value={19} className="h-2" />
                 </div>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader>
-                <CardTitle>Scholarship Performance</CardTitle>
+                <CardTitle>Category Performance</CardTitle>
+                <CardDescription>Scholarship success by category</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="text-center py-8 text-muted-foreground">
-                  <GraduationCap className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p>Performance metrics will be displayed here</p>
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <p className="font-medium">Technology</p>
+                      <p className="text-sm text-muted-foreground">24 applications</p>
+                    </div>
+                    <Badge variant="default">85% success</Badge>
+                  </div>
+                  
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <p className="font-medium">Leadership</p>
+                      <p className="text-sm text-muted-foreground">18 applications</p>
+                    </div>
+                    <Badge variant="secondary">72% success</Badge>
+                  </div>
+                  
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <p className="font-medium">Science</p>
+                      <p className="text-sm text-muted-foreground">0 applications</p>
+                    </div>
+                    <Badge variant="outline">N/A</Badge>
+                  </div>
                 </div>
               </CardContent>
             </Card>
