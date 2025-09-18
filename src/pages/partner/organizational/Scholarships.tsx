@@ -5,112 +5,103 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { GraduationCap, Users, DollarSign, Calendar, Eye, Edit, Plus, Building, Target } from "lucide-react";
+import { GraduationCap, Users, DollarSign, Calendar, Eye, Edit, Plus } from "lucide-react";
 
-const mockOrganizationalScholarships = [
+const mockScholarships = [
   {
-    id: "SCH-ORG-001",
-    title: "Corporate Leadership Excellence Program",
-    amount: 15000,
+    id: "SCH-001",
+    title: "Excellence in Technology Scholarship",
+    amount: 5000,
     status: "active",
-    applications: 42,
-    maxApplications: 100,
-    deadline: "2024-04-15",
-    createdAt: "2024-01-01",
-    category: "Leadership",
-    department: "HR Development",
-    targetRole: "Management Trainee"
-  },
-  {
-    id: "SCH-ORG-002",
-    title: "Technical Innovation Scholarship",
-    amount: 10000,
-    status: "active",
-    applications: 28,
+    applications: 24,
     maxApplications: 50,
-    deadline: "2024-03-30",
-    createdAt: "2024-01-05",
-    category: "Technology",
-    department: "Engineering",
-    targetRole: "Software Developer"
+    deadline: "2024-03-15",
+    createdAt: "2024-01-01",
+    category: "Technology"
   },
   {
-    id: "SCH-ORG-003",
-    title: "Marketing Excellence Award",
-    amount: 8000,
+    id: "SCH-002",
+    title: "Leadership Development Award",
+    amount: 3000,
     status: "closed",
-    applications: 35,
-    maxApplications: 40,
-    deadline: "2024-02-15",
-    createdAt: "2023-12-15",
-    category: "Marketing",
-    department: "Marketing",
-    targetRole: "Marketing Specialist"
+    applications: 18,
+    maxApplications: 25,
+    deadline: "2024-01-20",
+    createdAt: "2023-12-01",
+    category: "Leadership"
+  },
+  {
+    id: "SCH-003",
+    title: "Innovation in Science Grant",
+    amount: 7500,
+    status: "draft",
+    applications: 0,
+    maxApplications: 30,
+    deadline: "2024-06-01",
+    createdAt: "2024-01-10",
+    category: "Science"
   }
 ];
 
-const mockOrganizationalApplications = [
+const mockApplications = [
   {
-    id: "APP-ORG-001",
-    scholarshipId: "SCH-ORG-001",
-    scholarshipTitle: "Corporate Leadership Excellence Program",
+    id: "APP-001",
+    scholarshipId: "SCH-001",
+    scholarshipTitle: "Excellence in Technology Scholarship",
     applicant: {
-      name: "Alexandra Johnson",
-      email: "alex.j@email.com",
-      avatar: "/placeholder.svg",
-      gpa: 3.9,
-      major: "Business Administration",
-      university: "Stanford University",
-      expectedGraduation: "2024"
-    },
-    submittedAt: "2024-01-20",
-    status: "pending",
-    score: 92,
-    targetRole: "Management Trainee"
-  },
-  {
-    id: "APP-ORG-002", 
-    scholarshipId: "SCH-ORG-002",
-    scholarshipTitle: "Technical Innovation Scholarship",
-    applicant: {
-      name: "David Chen",
-      email: "d.chen@email.com",
+      name: "Sarah Johnson",
+      email: "sarah.j@email.com",
       avatar: "/placeholder.svg",
       gpa: 3.8,
       major: "Computer Science",
-      university: "MIT",
+      university: "Stanford University",
       expectedGraduation: "2024"
     },
     submittedAt: "2024-01-18",
-    status: "reviewed",
-    score: 88,
-    targetRole: "Software Developer"
+    status: "pending",
+    score: 85
   },
   {
-    id: "APP-ORG-003",
-    scholarshipId: "SCH-ORG-001", 
-    scholarshipTitle: "Corporate Leadership Excellence Program",
+    id: "APP-002", 
+    scholarshipId: "SCH-001",
+    scholarshipTitle: "Excellence in Technology Scholarship",
     applicant: {
-      name: "Maria Rodriguez",
-      email: "maria.r@email.com",
+      name: "Michael Chen",
+      email: "m.chen@email.com",
+      avatar: "/placeholder.svg",
+      gpa: 3.9,
+      major: "Software Engineering",
+      university: "MIT",
+      expectedGraduation: "2024"
+    },
+    submittedAt: "2024-01-16",
+    status: "reviewed",
+    score: 92
+  },
+  {
+    id: "APP-003",
+    scholarshipId: "SCH-002", 
+    scholarshipTitle: "Leadership Development Award",
+    applicant: {
+      name: "Emily Davis",
+      email: "emily.d@email.com",
       avatar: "/placeholder.svg",
       gpa: 3.7,
-      major: "International Business",
+      major: "Business Administration",
       university: "Harvard Business School",
       expectedGraduation: "2024"
     },
-    submittedAt: "2024-01-15",
+    submittedAt: "2024-01-12",
     status: "approved",
-    score: 90,
-    targetRole: "Management Trainee"
+    score: 88
   }
 ];
 
 export default function Scholarships() {
-  const totalScholarships = mockOrganizationalScholarships.length;
-  const activeScholarships = mockOrganizationalScholarships.filter(s => s.status === 'active').length;
-  const totalApplications = mockOrganizationalApplications.length;
-  const totalBudget = mockOrganizationalScholarships.reduce((sum, s) => sum + s.amount, 0);
+  const totalScholarships = mockScholarships.length;
+  const activeScholarships = mockScholarships.filter(s => s.status === 'active').length;
+  const totalApplications = mockApplications.length;
+  const totalAmount = mockScholarships.reduce((sum, s) => sum + s.amount, 0);
 
   const getStatusBadge = (status: string) => {
     const variants = {
@@ -145,14 +136,14 @@ export default function Scholarships() {
     <div className="container mx-auto p-6 space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold">Organization Scholarship Dashboard</h1>
+          <h1 className="text-3xl font-bold">Scholarship Dashboard</h1>
           <p className="text-muted-foreground">
-            Manage corporate scholarships and talent acquisition programs
+            Create and manage scholarships to support talented individuals
           </p>
         </div>
         <Button>
           <Plus className="h-4 w-4 mr-2" />
-          Create Scholarship Program
+          Create Scholarship
         </Button>
       </div>
 
@@ -160,80 +151,79 @@ export default function Scholarships() {
       <div className="grid gap-4 md:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Active Programs</CardTitle>
-            <Building className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">Total Scholarships</CardTitle>
+            <GraduationCap className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{activeScholarships}</div>
+            <div className="text-2xl font-bold">{totalScholarships}</div>
             <p className="text-xs text-muted-foreground">
-              of {totalScholarships} total programs
+              {activeScholarships} active
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Applications</CardTitle>
+            <CardTitle className="text-sm font-medium">Total Applications</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{totalApplications}</div>
             <p className="text-xs text-muted-foreground">
-              Potential hires
+              Across all scholarships
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Budget</CardTitle>
+            <CardTitle className="text-sm font-medium">Total Award Value</CardTitle>
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${totalBudget.toLocaleString()}</div>
+            <div className="text-2xl font-bold">${totalAmount.toLocaleString()}</div>
             <p className="text-xs text-muted-foreground">
-              Investment in talent
+              Available funding
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Success Rate</CardTitle>
-            <Target className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">This Month</CardTitle>
+            <Calendar className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">76%</div>
+            <div className="text-2xl font-bold">12</div>
             <p className="text-xs text-muted-foreground">
-              Application to hire
+              New applications
             </p>
           </CardContent>
         </Card>
       </div>
 
-      <Tabs defaultValue="programs" className="w-full">
+      <Tabs defaultValue="scholarships" className="w-full">
         <TabsList>
-          <TabsTrigger value="programs">Scholarship Programs</TabsTrigger>
-          <TabsTrigger value="applications">Candidate Applications</TabsTrigger>
-          <TabsTrigger value="analytics">Talent Analytics</TabsTrigger>
+          <TabsTrigger value="scholarships">My Scholarships</TabsTrigger>
+          <TabsTrigger value="applications">Applications</TabsTrigger>
+          <TabsTrigger value="analytics">Analytics</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="programs" className="space-y-4">
+        <TabsContent value="scholarships" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Corporate Scholarship Programs</CardTitle>
+              <CardTitle>Scholarship Management</CardTitle>
               <CardDescription>
-                Manage your organization's talent acquisition scholarships
+                Manage your published scholarships and their details
               </CardDescription>
             </CardHeader>
             <CardContent>
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Program Title</TableHead>
-                    <TableHead>Budget</TableHead>
-                    <TableHead>Department</TableHead>
-                    <TableHead>Target Role</TableHead>
+                    <TableHead>Title</TableHead>
+                    <TableHead>Amount</TableHead>
+                    <TableHead>Category</TableHead>
                     <TableHead>Applications</TableHead>
                     <TableHead>Deadline</TableHead>
                     <TableHead>Status</TableHead>
@@ -241,19 +231,16 @@ export default function Scholarships() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {mockOrganizationalScholarships.map((scholarship) => (
+                  {mockScholarships.map((scholarship) => (
                     <TableRow key={scholarship.id}>
                       <TableCell>
                         <div>
                           <p className="font-medium">{scholarship.title}</p>
-                          <p className="text-sm text-muted-foreground">{scholarship.category}</p>
+                          <p className="text-sm text-muted-foreground">{scholarship.id}</p>
                         </div>
                       </TableCell>
                       <TableCell className="font-medium">${scholarship.amount.toLocaleString()}</TableCell>
-                      <TableCell>{scholarship.department}</TableCell>
-                      <TableCell>
-                        <Badge variant="outline">{scholarship.targetRole}</Badge>
-                      </TableCell>
+                      <TableCell>{scholarship.category}</TableCell>
                       <TableCell>
                         <div className="space-y-1">
                           <div className="flex justify-between text-sm">
@@ -289,27 +276,27 @@ export default function Scholarships() {
         <TabsContent value="applications" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Candidate Applications</CardTitle>
+              <CardTitle>Scholarship Applications</CardTitle>
               <CardDescription>
-                Review and evaluate scholarship applicants for potential hiring
+                Review and manage applications for your scholarships
               </CardDescription>
             </CardHeader>
             <CardContent>
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Candidate</TableHead>
-                    <TableHead>Program</TableHead>
+                    <TableHead>Applicant</TableHead>
+                    <TableHead>Scholarship</TableHead>
                     <TableHead>University</TableHead>
-                    <TableHead>Target Role</TableHead>
                     <TableHead>GPA</TableHead>
                     <TableHead>Score</TableHead>
+                    <TableHead>Submitted</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead>Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {mockOrganizationalApplications.map((application) => (
+                  {mockApplications.map((application) => (
                     <TableRow key={application.id}>
                       <TableCell>
                         <div className="flex items-center gap-3">
@@ -337,13 +324,11 @@ export default function Scholarships() {
                           <p className="text-xs text-muted-foreground">Class of {application.applicant.expectedGraduation}</p>
                         </div>
                       </TableCell>
-                      <TableCell>
-                        <Badge variant="secondary">{application.targetRole}</Badge>
-                      </TableCell>
                       <TableCell>{application.applicant.gpa}</TableCell>
                       <TableCell>
                         <Badge variant="outline">{application.score}/100</Badge>
                       </TableCell>
+                      <TableCell>{application.submittedAt}</TableCell>
                       <TableCell>{getApplicationStatusBadge(application.status)}</TableCell>
                       <TableCell>
                         <div className="flex gap-2">
@@ -368,66 +353,66 @@ export default function Scholarships() {
             <Card>
               <CardHeader>
                 <CardTitle>Application Funnel</CardTitle>
-                <CardDescription>Track candidates through the hiring process</CardDescription>
+                <CardDescription>Track applicants through the review process</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   <div className="flex justify-between items-center">
                     <span className="text-sm">Applications Received</span>
-                    <span className="font-bold">105</span>
+                    <span className="font-bold">42</span>
                   </div>
                   <Progress value={100} className="h-2" />
                   
                   <div className="flex justify-between items-center">
                     <span className="text-sm">Initial Review Passed</span>
-                    <span className="font-bold">78</span>
+                    <span className="font-bold">32</span>
                   </div>
-                  <Progress value={74} className="h-2" />
+                  <Progress value={76} className="h-2" />
                   
                   <div className="flex justify-between items-center">
-                    <span className="text-sm">Interviews Scheduled</span>
-                    <span className="font-bold">45</span>
+                    <span className="text-sm">Final Review</span>
+                    <span className="font-bold">18</span>
                   </div>
                   <Progress value={43} className="h-2" />
                   
                   <div className="flex justify-between items-center">
-                    <span className="text-sm">Offers Extended</span>
-                    <span className="font-bold">12</span>
+                    <span className="text-sm">Awards Granted</span>
+                    <span className="font-bold">8</span>
                   </div>
-                  <Progress value={11} className="h-2" />
+                  <Progress value={19} className="h-2" />
                 </div>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader>
-                <CardTitle>Department Performance</CardTitle>
-                <CardDescription>Scholarship success by department</CardDescription>
+                <CardTitle>Category Performance</CardTitle>
+                <CardDescription>Scholarship success by category</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   <div className="flex justify-between items-center">
                     <div>
-                      <p className="font-medium">Engineering</p>
-                      <p className="text-sm text-muted-foreground">28 applications</p>
+                      <p className="font-medium">Technology</p>
+                      <p className="text-sm text-muted-foreground">24 applications</p>
                     </div>
-                    <Badge variant="default">92% success</Badge>
+                    <Badge variant="default">85% success</Badge>
                   </div>
                   
                   <div className="flex justify-between items-center">
                     <div>
-                      <p className="font-medium">HR Development</p>
-                      <p className="text-sm text-muted-foreground">42 applications</p>
+                      <p className="font-medium">Leadership</p>
+                      <p className="text-sm text-muted-foreground">18 applications</p>
                     </div>
-                    <Badge variant="secondary">76% success</Badge>
+                    <Badge variant="secondary">72% success</Badge>
                   </div>
                   
                   <div className="flex justify-between items-center">
                     <div>
-                      <p className="font-medium">Marketing</p>
-                      <p className="text-sm text-muted-foreground">35 applications</p>
+                      <p className="font-medium">Science</p>
+                      <p className="text-sm text-muted-foreground">0 applications</p>
                     </div>
-                    <Badge variant="outline">68% success</Badge>
+                    <Badge variant="outline">N/A</Badge>
                   </div>
                 </div>
               </CardContent>
