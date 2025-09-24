@@ -1,7 +1,9 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { BarChart3, Download, Eye, Calendar, TrendingUp, Building, Users } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Progress } from "@/components/ui/progress";
+import { BarChart3, Download, Lock, CheckCircle } from "lucide-react";
+import { useState } from "react";
 
 const strategicReports = [
   {
@@ -78,196 +80,132 @@ const reportTypes = [
 ];
 
 export default function StrategicReports() {
+  // Simulate current affiliation count - in real app this would come from an API/context
+  const affiliatedFounders = 35; // Change this to 50+ to see unlocked state
+  const requiredAffiliations = 50;
+  const isUnlocked = affiliatedFounders >= requiredAffiliations;
+  const progressPercentage = (affiliatedFounders / requiredAffiliations) * 100;
+  
+  // State for report selection in unlocked view
+  const [selectedReport, setSelectedReport] = useState<string>("");
+
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Strategic Reports</h1>
-          <p className="text-muted-foreground">
-            Request high-level portfolio reports and purchase ecosystem-level data insights.
-          </p>
+      <div className="text-center mb-8">
+        <h1 className="text-3xl font-bold tracking-tight mb-2">
+          {isUnlocked ? "Your Report Library" : "Unlock Your Strategic Reports"}
+        </h1>
+        <p className="text-muted-foreground max-w-2xl mx-auto">
+          {isUnlocked 
+            ? "Congratulations on unlocking strategic reports! Select a report from the library below to download."
+            : "Strategic reports are a premium feature unlocked for our most engaged partners. Refer 50 founders who complete an assessment to gain access to our library of pre-made data insight reports."
+          }
+        </p>
+      </div>
+
+      {!isUnlocked ? (
+        // Locked State View
+        <div className="max-w-2xl mx-auto">
+          <Card className="border-2 border-dashed">
+            <CardHeader className="text-center pb-4">
+              <div className="mx-auto w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-4">
+                <Lock className="h-8 w-8 text-muted-foreground" />
+              </div>
+              <CardTitle className="text-xl">Progress Towards Unlocking</CardTitle>
+              <CardDescription>
+                Keep referring founders to unlock exclusive strategic reports
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="text-center">
+                <div className="text-4xl font-bold mb-2">
+                  {affiliatedFounders} / {requiredAffiliations}
+                </div>
+                <p className="text-sm text-muted-foreground">Affiliated Founders</p>
+              </div>
+              
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span>Progress</span>
+                  <span>{Math.round(progressPercentage)}%</span>
+                </div>
+                <Progress value={progressPercentage} className="h-3" />
+              </div>
+              
+              <div className="bg-muted/50 p-4 rounded-lg">
+                <p className="text-sm text-center text-muted-foreground">
+                  You need <span className="font-medium text-foreground">{requiredAffiliations - affiliatedFounders} more affiliated founders</span> to unlock strategic reports
+                </p>
+              </div>
+            </CardContent>
+          </Card>
         </div>
-        <Button>
-          <Calendar className="mr-2 h-4 w-4" />
-          Request New Report
-        </Button>
-      </div>
-
-      <div className="grid gap-4 md:grid-cols-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Reports</CardTitle>
-            <BarChart3 className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">24</div>
-            <p className="text-xs text-muted-foreground">
-              Generated this year
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Companies Covered</CardTitle>
-            <Building className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">28</div>
-            <p className="text-xs text-muted-foreground">
-              In latest portfolio report
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Key Insights</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">47</div>
-            <p className="text-xs text-muted-foreground">
-              Actionable insights delivered
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Report Value</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">$52K</div>
-            <p className="text-xs text-muted-foreground">
-              Total reports purchased
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Recent Strategic Reports</CardTitle>
-          <CardDescription>
-            Your organization's strategic intelligence reports and analyses
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {strategicReports.map((report) => (
-              <div key={report.id} className="flex items-center justify-between p-4 border rounded-lg">
-                <div className="flex items-center space-x-4 flex-1">
-                  <div className="p-2 bg-primary/10 rounded-lg">
-                    <BarChart3 className="h-6 w-6 text-primary" />
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center space-x-2 mb-1">
-                      <h3 className="font-medium">{report.title}</h3>
-                      <Badge variant={
-                        report.status === 'Complete' ? 'default' : 
-                        report.status === 'Processing' ? 'secondary' : 'outline'
-                      }>
-                        {report.status}
-                      </Badge>
-                    </div>
-                    <p className="text-sm text-muted-foreground mb-2">{report.description}</p>
-                    <div className="flex items-center space-x-4 text-xs text-muted-foreground">
-                      <span>Type: {report.type}</span>
-                      <span>Date: {report.date}</span>
-                      <span>Companies: {report.companies}</span>
-                      <span>Size: {report.fileSize}</span>
-                      {report.insights > 0 && <span>Insights: {report.insights}</span>}
-                    </div>
-                  </div>
+      ) : (
+        // Unlocked State View
+        <div className="max-w-2xl mx-auto">
+          <Card>
+            <CardHeader className="text-center pb-4">
+              <div className="mx-auto w-16 h-16 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center mb-4">
+                <CheckCircle className="h-8 w-8 text-green-600 dark:text-green-400" />
+              </div>
+              <CardTitle className="text-xl">Strategic Reports Unlocked!</CardTitle>
+              <CardDescription>
+                Choose from our library of pre-made strategic reports
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="space-y-4">
+                <div>
+                  <label className="text-sm font-medium mb-2 block">Select Report</label>
+                  <Select value={selectedReport} onValueChange={setSelectedReport}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Choose a report to download..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {strategicReports.map((report) => (
+                        <SelectItem key={report.id} value={report.id.toString()}>
+                          {report.title}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
                 
-                <div className="flex space-x-2">
-                  <Button size="sm" variant="outline" disabled={report.status !== 'Complete'}>
-                    <Eye className="mr-2 h-4 w-4" />
-                    Preview
-                  </Button>
-                  <Button size="sm" disabled={report.status !== 'Complete'}>
-                    <Download className="mr-2 h-4 w-4" />
-                    Download
-                  </Button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Available Report Types</CardTitle>
-          <CardDescription>
-            Choose from our strategic intelligence offerings
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid gap-4 md:grid-cols-2">
-            {reportTypes.map((type) => (
-              <div key={type.name} className="p-4 border rounded-lg hover:bg-muted/50 transition-colors">
-                <div className="flex justify-between items-start mb-2">
-                  <h3 className="font-medium">{type.name}</h3>
-                  <div className="text-right">
-                    <div className="font-medium text-primary">{type.price}</div>
-                    <div className="text-xs text-muted-foreground">{type.frequency}</div>
-                  </div>
-                </div>
-                <p className="text-sm text-muted-foreground mb-3">{type.description}</p>
-                <Button size="sm" variant="outline" className="w-full">
-                  Request Report
+                <Button 
+                  className="w-full" 
+                  size="lg"
+                  disabled={!selectedReport}
+                >
+                  <Download className="mr-2 h-4 w-4" />
+                  Download Report
                 </Button>
               </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Enterprise Data Packages</CardTitle>
-          <CardDescription>
-            Access ecosystem-level data and benchmarking insights
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid gap-4 md:grid-cols-3">
-            <div className="p-4 border rounded-lg text-center">
-              <BarChart3 className="h-8 w-8 text-primary mx-auto mb-2" />
-              <h3 className="font-medium mb-1">Sector Benchmarks</h3>
-              <p className="text-sm text-muted-foreground mb-3">
-                Performance metrics across industry sectors
-              </p>
-              <div className="text-lg font-medium text-primary mb-2">$5,000</div>
-              <Button size="sm" variant="outline" className="w-full">Purchase</Button>
-            </div>
-            
-            <div className="p-4 border rounded-lg text-center">
-              <TrendingUp className="h-8 w-8 text-primary mx-auto mb-2" />
-              <h3 className="font-medium mb-1">Market Intelligence</h3>
-              <p className="text-sm text-muted-foreground mb-3">
-                Comprehensive market trends and forecasts
-              </p>
-              <div className="text-lg font-medium text-primary mb-2">$8,500</div>
-              <Button size="sm" variant="outline" className="w-full">Purchase</Button>
-            </div>
-            
-            <div className="p-4 border rounded-lg text-center">
-              <Building className="h-8 w-8 text-primary mx-auto mb-2" />
-              <h3 className="font-medium mb-1">Ecosystem Data</h3>
-              <p className="text-sm text-muted-foreground mb-3">
-                Complete startup ecosystem analytics
-              </p>
-              <div className="text-lg font-medium text-primary mb-2">$12,000</div>
-              <Button size="sm" variant="outline" className="w-full">Purchase</Button>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+              
+              {selectedReport && (
+                <div className="bg-muted/50 p-4 rounded-lg">
+                  {(() => {
+                    const report = strategicReports.find(r => r.id.toString() === selectedReport);
+                    return report ? (
+                      <div className="space-y-2">
+                        <div className="flex items-center space-x-2">
+                          <BarChart3 className="h-4 w-4 text-primary" />
+                          <span className="font-medium">{report.title}</span>
+                        </div>
+                        <p className="text-sm text-muted-foreground">{report.description}</p>
+                        <div className="flex items-center space-x-4 text-xs text-muted-foreground">
+                          <span>Type: {report.type}</span>
+                          <span>Date: {report.date}</span>
+                          <span>Companies: {report.companies}</span>
+                        </div>
+                      </div>
+                    ) : null;
+                  })()}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </div>
   );
 }
