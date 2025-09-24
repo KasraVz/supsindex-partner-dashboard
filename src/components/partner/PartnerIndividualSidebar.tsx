@@ -3,7 +3,6 @@ import {
   LayoutDashboard,
   User,
   Users,
-  FileText,
   DollarSign,
   Briefcase,
   TrendingUp,
@@ -30,7 +29,6 @@ const mainItems = [
 
 const affiliationAnalyticsItems = [
   { title: "Affiliated Candidates", url: "/individual/candidates", icon: Users },
-  { title: "Candidate Reports", url: "/individual/reports", icon: FileText },
   { title: "Affiliations & Earnings", url: "/individual/earnings", icon: TrendingUp },
   { title: "Money Claims", url: "/individual/claims", icon: CreditCard },
 ];

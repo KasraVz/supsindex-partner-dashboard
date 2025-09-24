@@ -3,7 +3,6 @@ import {
   LayoutDashboard,
   User,
   Users,
-  FileText,
   DollarSign,
   Briefcase,
   Building,
@@ -32,7 +31,6 @@ const mainItems = [
 
 const affiliationAnalyticsItems = [
   { title: "My Candidates", url: "/organizational/candidates", icon: Users },
-  { title: "Candidate Reports", url: "/organizational/reports", icon: FileText },
   { title: "Affiliations", url: "/organizational/affiliations", icon: TrendingUp },
 ];
 

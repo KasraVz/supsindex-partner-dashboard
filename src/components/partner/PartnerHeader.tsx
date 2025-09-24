@@ -122,11 +122,6 @@ export function PartnerHeader({
                 Affiliations & Earnings
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link to={`/${partnerType}/reports`} className="w-full">
-                View Reports
-              </Link>
-            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
 

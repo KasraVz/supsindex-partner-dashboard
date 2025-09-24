@@ -12,7 +12,6 @@ import NotFound from "./pages/NotFound";
 // Partner pages - Individual
 import IndividualPartnerDashboard from "@/pages/partner/individual/Dashboard";
 import MyCandidates from "@/pages/partner/individual/Candidates";
-import CandidateReports from "@/pages/partner/individual/Reports"; 
 import AffiliationsAndEarnings from "@/pages/partner/individual/Earnings";
 import IndividualClaims from "@/pages/partner/individual/Claims";
 import IndividualSupport from "@/pages/partner/individual/Support";
@@ -50,7 +49,6 @@ const App = () => (
                 <Route path="dashboard" element={<IndividualPartnerDashboard />} />
                 <Route path="fast-track" element={<IndividualFastTrack />} />
                 <Route path="candidates" element={<MyCandidates />} />
-                <Route path="reports" element={<CandidateReports />} />
                 <Route path="earnings" element={<AffiliationsAndEarnings />} />
                 <Route path="claims" element={<IndividualClaims />} />
                 <Route path="scholarships" element={<IndividualScholarships />} />
@@ -64,7 +62,6 @@ const App = () => (
                 <Route path="dashboard" element={<OrganizationalPartnerDashboard />} />
                 <Route path="fast-track" element={<OrganizationalFastTrack />} />
                 <Route path="candidates" element={<MyCandidates />} />
-                <Route path="reports" element={<CandidateReports />} />
                 <Route path="affiliations" element={<OrganizationalAffiliations />} />
                 <Route path="scholarships" element={<OrganizationalScholarships />} />
                 <Route path="profile" element={<OrganizationalProfile />} />
