@@ -162,42 +162,8 @@ export default function IndividualProfile() {
           </Card>
 
           <Card>
-            <CardHeader>
-              <CardTitle>Achievements & Certifications</CardTitle>
-              <CardDescription>
-                Showcase your credentials and accomplishments
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between p-3 border rounded-lg">
-                  <div className="flex items-center space-x-3">
-                    <Award className="h-5 w-5 text-primary" />
-                    <div>
-                      <p className="font-medium">Certified Business Advisor</p>
-                      <p className="text-sm text-muted-foreground">Small Business Administration</p>
-                    </div>
-                  </div>
-                  <Badge variant="outline">2023</Badge>
-                </div>
-                
-                <div className="flex items-center justify-between p-3 border rounded-lg">
-                  <div className="flex items-center space-x-3">
-                    <Briefcase className="h-5 w-5 text-primary" />
-                    <div>
-                      <p className="font-medium">Top Mentor Award</p>
-                      <p className="text-sm text-muted-foreground">Startup Accelerator Network</p>
-                    </div>
-                  </div>
-                  <Badge variant="outline">2022</Badge>
-                </div>
-                
-                <Button variant="outline" className="w-full">
-                  <Award className="mr-2 h-4 w-4" />
-                  Add New Achievement
-                </Button>
-              </div>
-            </CardContent>
+            
+            
           </Card>
 
           <div className="flex justify-end space-x-4">
