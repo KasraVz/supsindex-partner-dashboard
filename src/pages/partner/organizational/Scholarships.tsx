@@ -176,29 +176,54 @@ const mockApplications = [
   }
 ];
 
-// Mock analytics data
-const funnelData = [
-  { stage: "Applications Received", value: 156, color: "#3b82f6" },
-  { stage: "Shortlisted", value: 98, color: "#8b5cf6" },
-  { stage: "Final Review", value: 45, color: "#f59e0b" },
-  { stage: "Accepted", value: 18, color: "#10b981" }
+// Mock founder-centric analytics data
+const foundersEnrolledData = [
+  { founderId: "F-001", name: "Sarah Johnson", scholarshipId: "SCH-001", assessmentStarted: true, assessmentCompleted: true, assessmentScore: 87, enrolledAt: "2024-01-18", source: "Social Media" },
+  { founderId: "F-002", name: "Michael Chen", scholarshipId: "SCH-001", assessmentStarted: true, assessmentCompleted: true, assessmentScore: 92, enrolledAt: "2024-01-16", source: "Partner Referral" },
+  { founderId: "F-003", name: "Emily Davis", scholarshipId: "SCH-003", assessmentStarted: true, assessmentCompleted: true, assessmentScore: 85, enrolledAt: "2024-01-12", source: "Direct Application" },
+  { founderId: "F-004", name: "David Rodriguez", scholarshipId: "SCH-001", assessmentStarted: true, assessmentCompleted: false, assessmentScore: null, enrolledAt: "2024-01-10", source: "Online Ad" },
+  { founderId: "F-005", name: "Lisa Wang", scholarshipId: "SCH-001", assessmentStarted: true, assessmentCompleted: true, assessmentScore: 89, enrolledAt: "2024-01-08", source: "Partner Referral" },
+  { founderId: "F-006", name: "Alex Thompson", scholarshipId: "SCH-002", assessmentStarted: false, assessmentCompleted: false, assessmentScore: null, enrolledAt: "2024-01-05", source: "Community Event" },
+  { founderId: "F-007", name: "Maria Garcia", scholarshipId: "SCH-003", assessmentStarted: true, assessmentCompleted: true, assessmentScore: 91, enrolledAt: "2024-01-02", source: "Partner Referral" },
+  { founderId: "F-008", name: "James Wilson", scholarshipId: "SCH-001", assessmentStarted: true, assessmentCompleted: false, assessmentScore: null, enrolledAt: "2023-12-28", source: "Social Media" },
 ];
 
-const sourceData = [
-  { name: "Social Media", value: 45, color: "#3b82f6" },
-  { name: "Partner Referral", value: 38, color: "#8b5cf6" },
-  { name: "Direct Traffic", value: 32, color: "#f59e0b" },
-  { name: "Search Engine", value: 28, color: "#10b981" },
-  { name: "Email Campaign", value: 13, color: "#ef4444" }
+const sourceChannelData = [
+  { name: "Partner Referral", acceptedFounders: 12, totalFounders: 18, color: "#3b82f6" },
+  { name: "Social Media", acceptedFounders: 8, totalFounders: 15, color: "#8b5cf6" },
+  { name: "Direct Application", acceptedFounders: 6, totalFounders: 12, color: "#f59e0b" },
+  { name: "Community Event", acceptedFounders: 4, totalFounders: 8, color: "#10b981" },
+  { name: "Online Ad", acceptedFounders: 2, totalFounders: 5, color: "#ef4444" }
 ];
 
-const performanceData = [
-  { month: "Aug", applications: 45, accepted: 12, conversionRate: 26.7 },
-  { month: "Sep", applications: 52, accepted: 15, conversionRate: 28.8 },
-  { month: "Oct", applications: 38, accepted: 10, conversionRate: 26.3 },
-  { month: "Nov", applications: 61, accepted: 18, conversionRate: 29.5 },
-  { month: "Dec", applications: 48, accepted: 14, conversionRate: 29.2 },
-  { month: "Jan", applications: 56, accepted: 16, conversionRate: 28.6 }
+const assessmentTimelineData = [
+  { month: "Aug", assessmentsStarted: 25, assessmentsCompleted: 18 },
+  { month: "Sep", assessmentsStarted: 32, assessmentsCompleted: 24 },
+  { month: "Oct", assessmentsStarted: 28, assessmentsCompleted: 22 },
+  { month: "Nov", assessmentsStarted: 35, assessmentsCompleted: 28 },
+  { month: "Dec", assessmentsStarted: 30, assessmentsCompleted: 25 },
+  { month: "Jan", assessmentsStarted: 38, assessmentsCompleted: 32 }
+];
+
+const scholarshipPerformanceData = [
+  { 
+    title: "Tech Founders Assessment Sponsorship",
+    foundersAccepted: 32,
+    foundersCompleted: 28,
+    completionRate: 87.5
+  },
+  {
+    title: "All-in-One Founder Assessment", 
+    foundersAccepted: 18,
+    foundersCompleted: 15,
+    completionRate: 83.3
+  },
+  {
+    title: "Growth Stage Leadership Program",
+    foundersAccepted: 12,
+    foundersCompleted: 8,
+    completionRate: 66.7
+  }
 ];
 
 const COLORS = ["#3b82f6", "#8b5cf6", "#f59e0b", "#10b981", "#ef4444"];
@@ -300,20 +325,25 @@ export default function Scholarships() {
     ? applications.filter(app => app.source === selectedSource)
     : applications;
 
-  // Analytics calculations
-  const overallConversionRate = applications.length > 0 
-    ? ((applications.filter(a => a.status === 'accepted').length / applications.length) * 100).toFixed(1)
+  // Founder-centric analytics calculations
+  const totalFoundersEnrolled = foundersEnrolledData.length;
+  
+  const averageCompletionRate = foundersEnrolledData.length > 0
+    ? ((foundersEnrolledData.filter(f => f.assessmentCompleted).length / foundersEnrolledData.length) * 100).toFixed(1)
     : "0";
 
-  const avgDecisionTime = applications.filter(a => a.decisionTime).length > 0
-    ? (applications.filter(a => a.decisionTime).reduce((sum, a) => sum + (a.decisionTime || 0), 0) / applications.filter(a => a.decisionTime).length).toFixed(1)
+  const topPerformingSource = sourceChannelData.reduce((top, current) => 
+    current.acceptedFounders > top.acceptedFounders ? current : top
+  ).name;
+
+  const averageAssessmentScore = foundersEnrolledData.filter(f => f.assessmentScore !== null).length > 0
+    ? (foundersEnrolledData.filter(f => f.assessmentScore !== null).reduce((sum, f) => sum + (f.assessmentScore || 0), 0) / 
+       foundersEnrolledData.filter(f => f.assessmentScore !== null).length).toFixed(1)
     : "0";
 
-  const topScholarship = scholarships.reduce((top, current) => 
-    applications.filter(a => a.scholarshipId === current.id && a.status === 'accepted').length > 
-    applications.filter(a => a.scholarshipId === top.id && a.status === 'accepted').length 
-    ? current : top
-  , scholarships[0]);
+  const [selectedSourceFilter, setSelectedSourceFilter] = useState<string | null>(null);
+  const [selectedScholarshipFilter, setSelectedScholarshipFilter] = useState<string | null>(null);
+  const [sortBy, setSortBy] = useState<'accepted' | 'completed'>('accepted');
 
   const getStatusBadge = (status: string) => {
     const variants = {
@@ -852,165 +882,251 @@ export default function Scholarships() {
         </TabsContent>
 
         <TabsContent value="analytics" className="space-y-6">
-          {/* KPI Cards */}
-          <div className="grid gap-4 md:grid-cols-3">
+          {/* Founder-Centric KPI Cards */}
+          <div className="grid gap-4 md:grid-cols-4">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Overall Conversion Rate</CardTitle>
+                <CardTitle className="text-sm font-medium">Total Founders Enrolled</CardTitle>
+                <Users className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{totalFoundersEnrolled}</div>
+                <p className="text-xs text-muted-foreground">
+                  Paid assessments for founders
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Avg Assessment Completion</CardTitle>
                 <TrendingUp className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{overallConversionRate}%</div>
+                <div className="text-2xl font-bold">{averageCompletionRate}%</div>
                 <p className="text-xs text-muted-foreground">
-                  {applications.filter(a => a.status === 'accepted').length} of {applications.length} applicants accepted
+                  {foundersEnrolledData.filter(f => f.assessmentCompleted).length} of {totalFoundersEnrolled} completed
                 </p>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Avg Time to Decision</CardTitle>
-                <Clock className="h-4 w-4 text-muted-foreground" />
+                <CardTitle className="text-sm font-medium">Top Performing Source</CardTitle>
+                <BarChart3 className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{avgDecisionTime} days</div>
+                <div className="text-lg font-bold">{topPerformingSource}</div>
                 <p className="text-xs text-muted-foreground">
-                  From submission to final decision
+                  {sourceChannelData.find(s => s.name === topPerformingSource)?.acceptedFounders} accepted founders
                 </p>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Top Performing Program</CardTitle>
+                <CardTitle className="text-sm font-medium">Avg Assessment Score</CardTitle>
                 <Award className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-lg font-bold truncate">{topScholarship?.title}</div>
+                <div className="text-2xl font-bold">{averageAssessmentScore}</div>
                 <p className="text-xs text-muted-foreground">
-                  {applications.filter(a => a.scholarshipId === topScholarship?.id && a.status === 'accepted').length} acceptances
+                  For accepted founders only
                 </p>
               </CardContent>
             </Card>
           </div>
 
           <div className="grid gap-6 md:grid-cols-2">
-            {/* Scholarship Funnel Analysis */}
+            {/* Founder Origin / Sourcing Channel Effectiveness */}
             <Card>
               <CardHeader>
-                <CardTitle>Application Funnel Analysis</CardTitle>
-                <CardDescription>Visualize the complete application process</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ResponsiveContainer width="100%" height={300}>
-                  <BarChart data={funnelData} layout="horizontal">
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis type="number" />
-                    <YAxis dataKey="stage" type="category" width={100} />
-                    <Tooltip />
-                    <Bar dataKey="value" fill="#3b82f6" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </CardContent>
-            </Card>
-
-            {/* Applicant Source Breakdown */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Applicant Source Breakdown</CardTitle>
-                <CardDescription>Click segments to filter applications below</CardDescription>
+                <CardTitle>Founder Origin / Sourcing Channel Effectiveness</CardTitle>
+                <CardDescription>Breakdown of accepted founders by source channel</CardDescription>
               </CardHeader>
               <CardContent>
                 <ResponsiveContainer width="100%" height={300}>
                   <PieChart>
                     <Pie
-                      data={sourceData}
+                      data={sourceChannelData}
                       cx="50%"
                       cy="50%"
                       innerRadius={60}
                       outerRadius={100}
                       paddingAngle={5}
-                      dataKey="value"
+                      dataKey="acceptedFounders"
                       onClick={(data) => {
-                        setSelectedSource(selectedSource === data.name ? null : data.name);
+                        setSelectedSourceFilter(selectedSourceFilter === data.name ? null : data.name);
                       }}
                       className="cursor-pointer"
                     >
-                      {sourceData.map((entry, index) => (
+                      {sourceChannelData.map((entry, index) => (
                         <Cell 
                           key={`cell-${index}`} 
                           fill={entry.color}
-                          stroke={selectedSource === entry.name ? "#000" : "none"}
-                          strokeWidth={selectedSource === entry.name ? 2 : 0}
+                          stroke={selectedSourceFilter === entry.name ? "#000" : "none"}
+                          strokeWidth={selectedSourceFilter === entry.name ? 2 : 0}
                         />
                       ))}
                     </Pie>
-                    <Tooltip />
+                    <Tooltip 
+                      formatter={(value, name) => [`${value} founders`, 'Accepted Founders']}
+                    />
                     <Legend />
                   </PieChart>
                 </ResponsiveContainer>
-                {selectedSource && (
-                  <p className="text-sm text-center mt-2 font-medium">
-                    Filtering by: {selectedSource}
-                  </p>
+                {selectedSourceFilter && (
+                  <div className="text-sm text-center mt-2">
+                    <p className="font-medium">Source: {selectedSourceFilter}</p>
+                    <p className="text-muted-foreground">
+                      {sourceChannelData.find(s => s.name === selectedSourceFilter)?.acceptedFounders} accepted / {' '}
+                      {sourceChannelData.find(s => s.name === selectedSourceFilter)?.totalFounders} total founders
+                    </p>
+                  </div>
                 )}
+              </CardContent>
+            </Card>
+
+            {/* Top Scholarships by Enrollment & Engagement */}
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between">
+                <div>
+                  <CardTitle>Top Scholarships by Enrollment & Engagement</CardTitle>
+                  <CardDescription>Performance comparison across programs</CardDescription>
+                </div>
+                <Select value={sortBy} onValueChange={(value: 'accepted' | 'completed') => setSortBy(value)}>
+                  <SelectTrigger className="w-32">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="accepted">By Accepted</SelectItem>
+                    <SelectItem value="completed">By Completed</SelectItem>
+                  </SelectContent>
+                </Select>
+              </CardHeader>
+              <CardContent>
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart 
+                    data={[...scholarshipPerformanceData].sort((a, b) => 
+                      sortBy === 'accepted' ? b.foundersAccepted - a.foundersAccepted : b.foundersCompleted - a.foundersCompleted
+                    )} 
+                    layout="horizontal"
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis type="number" />
+                    <YAxis dataKey="title" type="category" width={120} />
+                    <Tooltip />
+                    <Legend />
+                    <Bar dataKey="foundersAccepted" fill="#3b82f6" name="Founders Accepted" />
+                    <Bar dataKey="foundersCompleted" fill="#10b981" name="Assessments Completed" />
+                  </BarChart>
+                </ResponsiveContainer>
               </CardContent>
             </Card>
           </div>
 
-          {/* Performance Over Time */}
+          {/* Assessment Engagement Timeline */}
           <Card>
-            <CardHeader>
-              <CardTitle>Performance Over Time</CardTitle>
-              <CardDescription>Track key metrics over the past 6 months</CardDescription>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <div>
+                <CardTitle>Assessment Engagement Timeline</CardTitle>
+                <CardDescription>Track assessment activity for sponsored founders over time</CardDescription>
+              </div>
+              <Select value={selectedScholarshipFilter || "all"} onValueChange={(value) => setSelectedScholarshipFilter(value === "all" ? null : value)}>
+                <SelectTrigger className="w-48">
+                  <SelectValue placeholder="Filter by scholarship" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Scholarships</SelectItem>
+                  {scholarships.map((scholarship) => (
+                    <SelectItem key={scholarship.id} value={scholarship.id}>{scholarship.title}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={400}>
-                <LineChart data={performanceData}>
+                <LineChart data={assessmentTimelineData}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="month" />
-                  <YAxis yAxisId="left" />
-                  <YAxis yAxisId="right" orientation="right" />
+                  <YAxis />
                   <Tooltip />
                   <Legend />
-                  <Bar yAxisId="left" dataKey="applications" fill="#8884d8" name="Applications" />
-                  <Bar yAxisId="left" dataKey="accepted" fill="#82ca9d" name="Accepted" />
-                  <Line yAxisId="right" type="monotone" dataKey="conversionRate" stroke="#ff7300" name="Conversion Rate %" />
+                  <Line 
+                    type="monotone" 
+                    dataKey="assessmentsStarted" 
+                    stroke="#3b82f6" 
+                    strokeWidth={2}
+                    name="Assessments Started" 
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="assessmentsCompleted" 
+                    stroke="#10b981" 
+                    strokeWidth={2}
+                    name="Assessments Completed" 
+                  />
                 </LineChart>
               </ResponsiveContainer>
             </CardContent>
           </Card>
 
-          {/* Filtered Applications Table */}
-          {selectedSource && (
+          {/* Filtered Founder Details */}
+          {selectedSourceFilter && (
             <Card>
               <CardHeader>
-                <CardTitle>Applications from {selectedSource}</CardTitle>
+                <CardTitle>Founders from {selectedSourceFilter}</CardTitle>
                 <CardDescription>
-                  Showing {filteredApplicationsBySource.length} applications from this source
+                  Detailed view of founders sourced through {selectedSourceFilter}
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Applicant</TableHead>
-                      <TableHead>Startup</TableHead>
-                      <TableHead>Program</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead>Submitted</TableHead>
+                      <TableHead>Founder Name</TableHead>
+                      <TableHead>Scholarship Program</TableHead>
+                      <TableHead>Assessment Status</TableHead>
+                      <TableHead>Assessment Score</TableHead>
+                      <TableHead>Enrolled Date</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {filteredApplicationsBySource.map((application) => (
-                      <TableRow key={application.id}>
-                        <TableCell className="font-medium">{application.applicant.name}</TableCell>
-                        <TableCell>{application.applicant.startupName}</TableCell>
-                        <TableCell>{application.scholarshipTitle}</TableCell>
-                        <TableCell>{getApplicationStatusBadge(application.status)}</TableCell>
-                        <TableCell>{application.submittedAt}</TableCell>
-                      </TableRow>
-                    ))}
+                    {foundersEnrolledData
+                      .filter(founder => founder.source === selectedSourceFilter)
+                      .map((founder) => (
+                        <TableRow key={founder.founderId}>
+                          <TableCell className="font-medium">{founder.name}</TableCell>
+                          <TableCell>
+                            {scholarships.find(s => s.id === founder.scholarshipId)?.title || 'N/A'}
+                          </TableCell>
+                          <TableCell>
+                            <Badge variant={founder.assessmentCompleted ? "default" : founder.assessmentStarted ? "secondary" : "outline"}>
+                              {founder.assessmentCompleted ? "Completed" : founder.assessmentStarted ? "In Progress" : "Not Started"}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            {founder.assessmentScore ? (
+                              <div className="flex items-center gap-2">
+                                <span className="font-medium">{founder.assessmentScore}/100</span>
+                                <div className="flex">
+                                  {Array.from({ length: 5 }, (_, i) => (
+                                    <Award 
+                                      key={i} 
+                                      className={`h-3 w-3 ${
+                                        i < Math.floor(founder.assessmentScore / 20) ? "text-yellow-500 fill-current" : "text-gray-300"
+                                      }`} 
+                                    />
+                                  ))}
+                                </div>
+                              </div>
+                            ) : (
+                              <span className="text-muted-foreground">N/A</span>
+                            )}
+                          </TableCell>
+                          <TableCell>{founder.enrolledAt}</TableCell>
+                        </TableRow>
+                      ))}
                   </TableBody>
                 </Table>
               </CardContent>
