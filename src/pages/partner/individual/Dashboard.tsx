@@ -103,10 +103,10 @@ export default function IndividualPartnerDashboard() {
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-sm">Scholarship Coupons</span>
-                <span className="text-sm font-medium">$800</span>
+                <span className="text-sm font-medium">Generated Scholarships</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-sm">Program Enrollments</span>
+                
                 <span className="text-sm font-medium">$340</span>
               </div>
               <div className="border-t pt-4">
