@@ -40,7 +40,7 @@ const profileItems = [
 ];
 
 const scholarshipItems = [
-  { title: "Organization Scholarships", url: "/organizational/scholarships", icon: GraduationCap },
+  { title: "Scholarships", url: "/organizational/scholarships", icon: GraduationCap },
 ];
 
 const organizationItems = [
