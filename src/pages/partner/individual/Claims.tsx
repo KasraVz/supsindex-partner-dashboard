@@ -48,42 +48,48 @@ const mockTransactions = [
     date: "2024-01-20",
     type: "Affiliation Commission",
     amount: 45.00,
-    status: "Available"
+    status: "Available",
+    affiliationCode: "TECH2024"
   },
   {
     id: "TXN-002", 
     date: "2024-01-19",
     type: "Affiliation Commission",
     amount: 35.00,
-    status: "Available"
+    status: "Available",
+    affiliationCode: "STARTUP2024"
   },
   {
     id: "TXN-003",
     date: "2024-01-18", 
     type: "Scholarship Bonus",
     amount: 100.00,
-    status: "Available"
+    status: "Available",
+    affiliationCode: null
   },
   {
     id: "TXN-004",
     date: "2024-01-15",
     type: "Affiliation Commission",
     amount: 25.00,
-    status: "Claimed"
+    status: "Claimed",
+    affiliationCode: "TECH2024"
   },
   {
     id: "TXN-005",
     date: "2024-01-12",
     type: "Affiliation Commission", 
     amount: 65.00,
-    status: "Claimed"
+    status: "Claimed",
+    affiliationCode: "BUSINESS2024"
   },
   {
     id: "TXN-006",
     date: "2024-01-10",
     type: "Scholarship Bonus",
     amount: 75.00,
-    status: "Available"
+    status: "Available",
+    affiliationCode: null
   }
 ];
 const mockPayoutMethods = [{
@@ -108,6 +114,8 @@ export default function Claims() {
   const [transactionStatusFilter, setTransactionStatusFilter] = useState<string>("all");
   const [transactionSortBy, setTransactionSortBy] = useState<string>("date");
   const [transactionSortOrder, setTransactionSortOrder] = useState<"asc" | "desc">("desc");
+  const [claimAmount, setClaimAmount] = useState<string>("");
+  const [selectedPayoutMethod, setSelectedPayoutMethod] = useState<string>("PM-001");
 
   const totalEarnings = 2450.00;
   const processingClaims = 1100.00; // Updated from pendingClaims
@@ -202,6 +210,7 @@ export default function Claims() {
     const exportData = filteredTransactions.map(transaction => ({
       "Date": transaction.date,
       "Type": transaction.type,
+      "Affiliation Code": transaction.affiliationCode || "N/A",
       "Amount": `$${transaction.amount.toFixed(2)}`,
       "Status": transaction.status
     }));
@@ -218,11 +227,25 @@ export default function Claims() {
     });
   };
 
-  const handleClaimComplete = () => {
+  const handleClaimSubmit = () => {
+    const amount = parseFloat(claimAmount);
+    if (!claimAmount || amount <= 0 || amount > availableBalance) {
+      toast({
+        title: "Invalid amount",
+        description: "Please enter a valid amount within your available balance.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const selectedMethod = mockPayoutMethods.find(m => m.id === selectedPayoutMethod);
+    
     toast({
-      title: "Claim completed!",
-      description: "Your funds have been successfully transferred to your account.",
+      title: "Claim submitted successfully!",
+      description: `$${amount.toFixed(2)} will be transferred to your ${selectedMethod?.type} account.`,
     });
+    
+    setClaimAmount("");
   };
   return <div className="container mx-auto p-6 space-y-6">
       <div>
@@ -424,6 +447,7 @@ export default function Claims() {
                   <TableRow>
                     <TableHead>Date</TableHead>
                     <TableHead>Type</TableHead>
+                    <TableHead>Affiliation Code</TableHead>
                     <TableHead>Amount</TableHead>
                     <TableHead>Status</TableHead>
                   </TableRow>
@@ -433,6 +457,13 @@ export default function Claims() {
                     <TableRow key={transaction.id}>
                       <TableCell>{transaction.date}</TableCell>
                       <TableCell>{transaction.type}</TableCell>
+                      <TableCell>
+                        {transaction.affiliationCode ? (
+                          <Badge variant="outline">{transaction.affiliationCode}</Badge>
+                        ) : (
+                          <span className="text-muted-foreground">N/A</span>
+                        )}
+                      </TableCell>
                       <TableCell>${transaction.amount.toFixed(2)}</TableCell>
                       <TableCell>
                         <Badge variant={transaction.status === "Available" ? "default" : "secondary"}>
@@ -456,7 +487,8 @@ export default function Claims() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              {mockPayoutMethods.map(method => <div key={method.id} className="flex items-center justify-between p-4 border rounded-lg">
+              {mockPayoutMethods.map(method => (
+                <div key={method.id} className="flex items-center justify-between p-4 border rounded-lg">
                   <div className="flex items-center gap-3">
                     <CreditCard className="h-5 w-5 text-muted-foreground" />
                     <div>
@@ -466,13 +498,32 @@ export default function Claims() {
                   </div>
                   <div className="flex items-center gap-2">
                     {method.default && <Badge variant="secondary">Default</Badge>}
-                    <Button variant="outline" size="sm">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => {
+                        toast({
+                          title: "Edit payout method",
+                          description: "Payout method editing functionality would be implemented here.",
+                        });
+                      }}
+                    >
                       Edit
                     </Button>
                   </div>
-                </div>)}
+                </div>
+              ))}
               <Separator />
-              <Button variant="outline" className="w-full">
+              <Button 
+                variant="outline" 
+                className="w-full"
+                onClick={() => {
+                  toast({
+                    title: "Add payout method",
+                    description: "New payout method setup would be implemented here.",
+                  });
+                }}
+              >
                 Add New Payout Method
               </Button>
             </CardContent>
@@ -499,22 +550,54 @@ export default function Claims() {
               </div>
               
               <div className="space-y-2">
-                <label className="text-sm font-medium">Payout Method</label>
-                <div className="p-3 border rounded-lg">
-                  <div className="flex items-center gap-3">
-                    <CreditCard className="h-4 w-4" />
-                    <span>Bank Transfer - ****1234</span>
-                    <Badge variant="secondary" className="ml-auto">Default</Badge>
-                  </div>
+                <label className="text-sm font-medium">Claim Amount</label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground">$</span>
+                  <Input
+                    type="number"
+                    placeholder="0.00"
+                    value={claimAmount}
+                    onChange={(e) => setClaimAmount(e.target.value)}
+                    className="pl-8"
+                    max={availableBalance}
+                    min="0"
+                    step="0.01"
+                  />
                 </div>
+                <p className="text-xs text-muted-foreground">
+                  Maximum: ${availableBalance.toFixed(2)}
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Payout Method</label>
+                <Select value={selectedPayoutMethod} onValueChange={setSelectedPayoutMethod}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select payout method" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {mockPayoutMethods.map(method => (
+                      <SelectItem key={method.id} value={method.id}>
+                        <div className="flex items-center gap-2">
+                          <CreditCard className="h-4 w-4" />
+                          <span>{method.type} - {method.account}</span>
+                          {method.default && <Badge variant="secondary">Default</Badge>}
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
               <Button 
                 className="w-full" 
-                disabled={availableBalance <= 0}
-                onClick={handleClaimComplete}
+                disabled={!claimAmount || parseFloat(claimAmount) <= 0 || parseFloat(claimAmount) > availableBalance}
+                onClick={handleClaimSubmit}
               >
-                Claim ${availableBalance.toFixed(2)}
+                {claimAmount && parseFloat(claimAmount) > 0 
+                  ? `Claim $${parseFloat(claimAmount).toFixed(2)}`
+                  : "Enter amount to claim"
+                }
               </Button>
               
               <p className="text-xs text-muted-foreground text-center">
