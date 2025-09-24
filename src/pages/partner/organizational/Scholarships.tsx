@@ -8,9 +8,31 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Switch } from "@/components/ui/switch";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { GraduationCap, Users, DollarSign, Calendar, Eye, Edit, Plus, Building, ExternalLink } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { GraduationCap, Users, DollarSign, Calendar, Eye, Edit, Plus, Building, ExternalLink, BarChart3, TrendingUp, Clock, Award, Info } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, PieChart, Pie, Cell, LineChart, Line, Legend } from "recharts";
+
+// Form validation schema
+const scholarshipFormSchema = z.object({
+  title: z.string().trim().min(1, "Title is required").max(100, "Title must be less than 100 characters"),
+  associatedTests: z.array(z.string()).min(1, "At least one test must be selected"),
+  description: z.string().trim().min(1, "Description is required").max(500, "Description must be less than 500 characters"),
+  rules: z.string().trim().min(1, "Rules are required").max(500, "Rules must be less than 500 characters"),
+  acceptanceCriteria: z.string().trim().min(1, "Acceptance criteria are required").max(300, "Acceptance criteria must be less than 300 characters"),
+  maxApplications: z.number().min(1, "Must allow at least 1 application").max(1000, "Cannot exceed 1000 applications")
+});
+
+type ScholarshipFormData = z.infer<typeof scholarshipFormSchema>;
 
 const mockScholarships = [
   {
@@ -68,7 +90,9 @@ const mockApplications = [
       teamSize: "3 co-founders"
     },
     submittedAt: "2024-01-18",
-    status: "pending"
+    status: "pending",
+    source: "Social Media",
+    decisionTime: null
   },
   {
     id: "APP-002", 
@@ -86,7 +110,9 @@ const mockApplications = [
       teamSize: "5 employees"
     },
     submittedAt: "2024-01-16",
-    status: "pending"
+    status: "pending",
+    source: "Partner Referral",
+    decisionTime: null
   },
   {
     id: "APP-003",
@@ -104,7 +130,9 @@ const mockApplications = [
       teamSize: "2 co-founders"
     },
     submittedAt: "2024-01-12",
-    status: "accepted"
+    status: "accepted",
+    source: "Direct Traffic",
+    decisionTime: 3
   },
   {
     id: "APP-004",
@@ -122,15 +150,80 @@ const mockApplications = [
       teamSize: "8 employees"
     },
     submittedAt: "2024-01-10",
-    status: "rejected"
+    status: "rejected",
+    source: "Social Media", 
+    decisionTime: 2
+  },
+  {
+    id: "APP-005",
+    scholarshipId: "SCH-001",
+    scholarshipTitle: "Tech Founders Assessment Sponsorship",
+    applicant: {
+      name: "Lisa Wang",
+      email: "lisa@edtech.co",
+      avatar: "/placeholder.svg",
+      startupName: "EduTech Solutions",
+      pitch: "AI-powered personalized learning platform for K-12 students.",
+      website: "https://edutech.co",
+      industry: "EdTech",
+      stage: "Seed",
+      teamSize: "6 employees"
+    },
+    submittedAt: "2024-01-08",
+    status: "accepted",
+    source: "Partner Referral",
+    decisionTime: 4
   }
 ];
+
+// Mock analytics data
+const funnelData = [
+  { stage: "Applications Received", value: 156, color: "#3b82f6" },
+  { stage: "Shortlisted", value: 98, color: "#8b5cf6" },
+  { stage: "Final Review", value: 45, color: "#f59e0b" },
+  { stage: "Accepted", value: 18, color: "#10b981" }
+];
+
+const sourceData = [
+  { name: "Social Media", value: 45, color: "#3b82f6" },
+  { name: "Partner Referral", value: 38, color: "#8b5cf6" },
+  { name: "Direct Traffic", value: 32, color: "#f59e0b" },
+  { name: "Search Engine", value: 28, color: "#10b981" },
+  { name: "Email Campaign", value: 13, color: "#ef4444" }
+];
+
+const performanceData = [
+  { month: "Aug", applications: 45, accepted: 12, conversionRate: 26.7 },
+  { month: "Sep", applications: 52, accepted: 15, conversionRate: 28.8 },
+  { month: "Oct", applications: 38, accepted: 10, conversionRate: 26.3 },
+  { month: "Nov", applications: 61, accepted: 18, conversionRate: 29.5 },
+  { month: "Dec", applications: 48, accepted: 14, conversionRate: 29.2 },
+  { month: "Jan", applications: 56, accepted: 16, conversionRate: 28.6 }
+];
+
+const COLORS = ["#3b82f6", "#8b5cf6", "#f59e0b", "#10b981", "#ef4444"];
 
 export default function Scholarships() {
   const [scholarships, setScholarships] = useState(mockScholarships);
   const [applications, setApplications] = useState(mockApplications);
   const [selectedApplication, setSelectedApplication] = useState<typeof mockApplications[0] | null>(null);
+  const [selectedScholarship, setSelectedScholarship] = useState<typeof mockScholarships[0] | null>(null);
+  const [selectedSource, setSelectedSource] = useState<string | null>(null);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const { toast } = useToast();
+
+  const form = useForm<ScholarshipFormData>({
+    resolver: zodResolver(scholarshipFormSchema),
+    defaultValues: {
+      title: "",
+      associatedTests: [],
+      description: "",
+      rules: "",
+      acceptanceCriteria: "",
+      maxApplications: 25
+    }
+  });
 
   const totalScholarships = scholarships.length;
   const activeScholarships = scholarships.filter(s => s.status === 'active').length;
@@ -161,7 +254,7 @@ export default function Scholarships() {
   const handleAcceptApplication = (applicationId: string) => {
     setApplications(prev =>
       prev.map(app =>
-        app.id === applicationId ? { ...app, status: 'accepted' } : app
+        app.id === applicationId ? { ...app, status: 'accepted', decisionTime: Math.floor(Math.random() * 5) + 1 } : app
       )
     );
     toast({
@@ -174,7 +267,7 @@ export default function Scholarships() {
   const handleRejectApplication = (applicationId: string) => {
     setApplications(prev =>
       prev.map(app =>
-        app.id === applicationId ? { ...app, status: 'rejected' } : app
+        app.id === applicationId ? { ...app, status: 'rejected', decisionTime: Math.floor(Math.random() * 5) + 1 } : app
       )
     );
     toast({
@@ -183,6 +276,44 @@ export default function Scholarships() {
     });
     setSelectedApplication(null);
   };
+
+  const onCreateScholarship = (data: ScholarshipFormData) => {
+    const newScholarship = {
+      id: `SCH-${String(scholarships.length + 1).padStart(3, '0')}`,
+      ...data,
+      status: "active" as const,
+      applications: 0,
+      createdAt: new Date().toISOString().split('T')[0]
+    };
+    
+    setScholarships(prev => [...prev, newScholarship]);
+    setIsCreateModalOpen(false);
+    form.reset();
+    
+    toast({
+      title: "Scholarship created successfully!",
+      description: "Your new sponsorship program is now active and accepting applications.",
+    });
+  };
+
+  const filteredApplicationsBySource = selectedSource 
+    ? applications.filter(app => app.source === selectedSource)
+    : applications;
+
+  // Analytics calculations
+  const overallConversionRate = applications.length > 0 
+    ? ((applications.filter(a => a.status === 'accepted').length / applications.length) * 100).toFixed(1)
+    : "0";
+
+  const avgDecisionTime = applications.filter(a => a.decisionTime).length > 0
+    ? (applications.filter(a => a.decisionTime).reduce((sum, a) => sum + (a.decisionTime || 0), 0) / applications.filter(a => a.decisionTime).length).toFixed(1)
+    : "0";
+
+  const topScholarship = scholarships.reduce((top, current) => 
+    applications.filter(a => a.scholarshipId === current.id && a.status === 'accepted').length > 
+    applications.filter(a => a.scholarshipId === top.id && a.status === 'accepted').length 
+    ? current : top
+  , scholarships[0]);
 
   const getStatusBadge = (status: string) => {
     const variants = {
@@ -220,10 +351,151 @@ export default function Scholarships() {
             Sponsor assessments for promising startup founders and manage your talent pipeline
           </p>
         </div>
-        <Button>
-          <Plus className="h-4 w-4 mr-2" />
-          Create New Sponsorship
-        </Button>
+        <Dialog open={isCreateModalOpen} onOpenChange={setIsCreateModalOpen}>
+          <DialogTrigger asChild>
+            <Button>
+              <Plus className="h-4 w-4 mr-2" />
+              Create New Sponsorship
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle>Create New Sponsorship Program</DialogTitle>
+              <DialogDescription>
+                Define a new assessment sponsorship program for startup founders
+              </DialogDescription>
+            </DialogHeader>
+            
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onCreateScholarship)} className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="title"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Program Title</FormLabel>
+                      <FormControl>
+                        <Input placeholder="e.g., Early Stage Founder Assessment Program" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="associatedTests"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Associated Assessment Tests</FormLabel>
+                      <div className="grid grid-cols-2 gap-3 mt-2">
+                        {["FPA", "EEA", "GEB", "All-in-One Package"].map((test) => (
+                          <div key={test} className="flex items-center space-x-2">
+                            <Checkbox
+                              id={test}
+                              checked={field.value?.includes(test)}
+                              onCheckedChange={(checked) => {
+                                const updatedTests = checked
+                                  ? [...(field.value || []), test]
+                                  : field.value?.filter(t => t !== test) || [];
+                                field.onChange(updatedTests);
+                              }}
+                            />
+                            <Label htmlFor={test} className="text-sm font-medium">
+                              {test}
+                            </Label>
+                          </div>
+                        ))}
+                      </div>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="description"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Public Description</FormLabel>
+                      <FormControl>
+                        <Textarea 
+                          placeholder="Describe this program for potential applicants..."
+                          rows={3}
+                          {...field} 
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="rules"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Application Rules & Eligibility</FormLabel>
+                      <FormControl>
+                        <Textarea 
+                          placeholder="Define eligibility criteria and application rules..."
+                          rows={3}
+                          {...field} 
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="acceptanceCriteria"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Internal Acceptance Criteria</FormLabel>
+                      <FormControl>
+                        <Textarea 
+                          placeholder="Internal guidelines for evaluating applications..."
+                          rows={2}
+                          {...field} 
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="maxApplications"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Maximum Applications</FormLabel>
+                      <FormControl>
+                        <Input 
+                          type="number" 
+                          {...field}
+                          onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <DialogFooter>
+                  <Button type="button" variant="outline" onClick={() => setIsCreateModalOpen(false)}>
+                    Cancel
+                  </Button>
+                  <Button type="submit">
+                    Create Program
+                  </Button>
+                </DialogFooter>
+              </form>
+            </Form>
+          </DialogContent>
+        </Dialog>
       </div>
 
       {/* Overview Cards */}
@@ -302,9 +574,8 @@ export default function Scholarships() {
                   <TableRow>
                     <TableHead>Title</TableHead>
                     <TableHead>Associated Tests</TableHead>
-                    <TableHead>Description & Rules</TableHead>
-                    <TableHead>Acceptance Criteria</TableHead>
                     <TableHead>Status & Actions</TableHead>
+                    <TableHead>Details</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -327,37 +598,91 @@ export default function Scholarships() {
                           ))}
                         </div>
                       </TableCell>
-                      <TableCell className="max-w-xs">
-                        <div className="space-y-2">
-                          <p className="text-sm font-medium">Description:</p>
-                          <p className="text-xs text-muted-foreground">{scholarship.description}</p>
-                          <p className="text-sm font-medium">Rules:</p>
-                          <p className="text-xs text-muted-foreground">{scholarship.rules}</p>
+                      <TableCell>
+                        <div className="flex items-center space-x-2">
+                          <Switch
+                            checked={scholarship.status === 'active'}
+                            onCheckedChange={(checked) => 
+                              toggleScholarshipStatus(scholarship.id, checked ? 'active' : 'inactive')
+                            }
+                          />
+                          <span className="text-sm">{scholarship.status === 'active' ? 'Active' : 'Inactive'}</span>
                         </div>
-                      </TableCell>
-                      <TableCell className="max-w-xs">
-                        <p className="text-xs text-muted-foreground">{scholarship.acceptanceCriteria}</p>
                       </TableCell>
                       <TableCell>
-                        <div className="space-y-3">
-                          <div className="flex items-center space-x-2">
-                            <Switch
-                              checked={scholarship.status === 'active'}
-                              onCheckedChange={(checked) => 
-                                toggleScholarshipStatus(scholarship.id, checked ? 'active' : 'inactive')
-                              }
-                            />
-                            <span className="text-sm">{scholarship.status === 'active' ? 'Active' : 'Inactive'}</span>
-                          </div>
-                          <div className="flex gap-2">
-                            <Button variant="outline" size="sm">
-                              <Eye className="h-4 w-4" />
+                        <Dialog open={isDetailsModalOpen && selectedScholarship?.id === scholarship.id} 
+                                onOpenChange={(open) => {
+                                  setIsDetailsModalOpen(open);
+                                  if (!open) setSelectedScholarship(null);
+                                }}>
+                          <DialogTrigger asChild>
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              onClick={() => setSelectedScholarship(scholarship)}
+                            >
+                              <Info className="h-4 w-4 mr-2" />
+                              View Details
                             </Button>
-                            <Button variant="outline" size="sm">
-                              <Edit className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </div>
+                          </DialogTrigger>
+                          <DialogContent className="max-w-2xl">
+                            <DialogHeader>
+                              <DialogTitle>{scholarship.title}</DialogTitle>
+                              <DialogDescription>
+                                Complete program details and acceptance criteria
+                              </DialogDescription>
+                            </DialogHeader>
+                            
+                            <div className="space-y-6">
+                              <div className="grid gap-4 md:grid-cols-2">
+                                <div className="space-y-3">
+                                  <h4 className="font-medium">Program Information</h4>
+                                  <div className="space-y-2 text-sm">
+                                    <p><strong>Program ID:</strong> {scholarship.id}</p>
+                                    <p><strong>Status:</strong> {getStatusBadge(scholarship.status)}</p>
+                                    <p><strong>Applications:</strong> {scholarship.applications}/{scholarship.maxApplications}</p>
+                                    <p><strong>Created:</strong> {scholarship.createdAt}</p>
+                                  </div>
+                                </div>
+                                
+                                <div className="space-y-3">
+                                  <h4 className="font-medium">Associated Tests</h4>
+                                  <div className="flex flex-wrap gap-2">
+                                    {scholarship.associatedTests.map((test) => (
+                                      <Badge key={test} variant="secondary">
+                                        {test}
+                                      </Badge>
+                                    ))}
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="space-y-4">
+                                <div>
+                                  <h4 className="font-medium mb-2">Description</h4>
+                                  <p className="text-sm text-muted-foreground">{scholarship.description}</p>
+                                </div>
+                                
+                                <div>
+                                  <h4 className="font-medium mb-2">Application Rules</h4>
+                                  <p className="text-sm text-muted-foreground">{scholarship.rules}</p>
+                                </div>
+                                
+                                <div>
+                                  <h4 className="font-medium mb-2">Acceptance Criteria (Internal)</h4>
+                                  <p className="text-sm text-muted-foreground">{scholarship.acceptanceCriteria}</p>
+                                </div>
+                              </div>
+                            </div>
+
+                            <DialogFooter>
+                              <Button variant="outline">
+                                <Edit className="h-4 w-4 mr-2" />
+                                Edit Program
+                              </Button>
+                            </DialogFooter>
+                          </DialogContent>
+                        </Dialog>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -526,76 +851,171 @@ export default function Scholarships() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="analytics" className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2">
+        <TabsContent value="analytics" className="space-y-6">
+          {/* KPI Cards */}
+          <div className="grid gap-4 md:grid-cols-3">
             <Card>
-              <CardHeader>
-                <CardTitle>Application Funnel</CardTitle>
-                <CardDescription>Track applicants through the review process</CardDescription>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Overall Conversion Rate</CardTitle>
+                <TrendingUp className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm">Applications Received</span>
-                    <span className="font-bold">42</span>
-                  </div>
-                  <Progress value={100} className="h-2" />
-                  
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm">Initial Review Passed</span>
-                    <span className="font-bold">32</span>
-                  </div>
-                  <Progress value={76} className="h-2" />
-                  
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm">Final Review</span>
-                    <span className="font-bold">18</span>
-                  </div>
-                  <Progress value={43} className="h-2" />
-                  
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm">Awards Granted</span>
-                    <span className="font-bold">8</span>
-                  </div>
-                  <Progress value={19} className="h-2" />
-                </div>
+                <div className="text-2xl font-bold">{overallConversionRate}%</div>
+                <p className="text-xs text-muted-foreground">
+                  {applications.filter(a => a.status === 'accepted').length} of {applications.length} applicants accepted
+                </p>
               </CardContent>
             </Card>
 
             <Card>
-              <CardHeader>
-                <CardTitle>Category Performance</CardTitle>
-                <CardDescription>Scholarship success by category</CardDescription>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Avg Time to Decision</CardTitle>
+                <Clock className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <p className="font-medium">Technology</p>
-                      <p className="text-sm text-muted-foreground">24 applications</p>
-                    </div>
-                    <Badge variant="default">85% success</Badge>
-                  </div>
-                  
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <p className="font-medium">Leadership</p>
-                      <p className="text-sm text-muted-foreground">18 applications</p>
-                    </div>
-                    <Badge variant="secondary">72% success</Badge>
-                  </div>
-                  
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <p className="font-medium">Science</p>
-                      <p className="text-sm text-muted-foreground">0 applications</p>
-                    </div>
-                    <Badge variant="outline">N/A</Badge>
-                  </div>
-                </div>
+                <div className="text-2xl font-bold">{avgDecisionTime} days</div>
+                <p className="text-xs text-muted-foreground">
+                  From submission to final decision
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Top Performing Program</CardTitle>
+                <Award className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-lg font-bold truncate">{topScholarship?.title}</div>
+                <p className="text-xs text-muted-foreground">
+                  {applications.filter(a => a.scholarshipId === topScholarship?.id && a.status === 'accepted').length} acceptances
+                </p>
               </CardContent>
             </Card>
           </div>
+
+          <div className="grid gap-6 md:grid-cols-2">
+            {/* Scholarship Funnel Analysis */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Application Funnel Analysis</CardTitle>
+                <CardDescription>Visualize the complete application process</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={funnelData} layout="horizontal">
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis type="number" />
+                    <YAxis dataKey="stage" type="category" width={100} />
+                    <Tooltip />
+                    <Bar dataKey="value" fill="#3b82f6" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+
+            {/* Applicant Source Breakdown */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Applicant Source Breakdown</CardTitle>
+                <CardDescription>Click segments to filter applications below</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ResponsiveContainer width="100%" height={300}>
+                  <PieChart>
+                    <Pie
+                      data={sourceData}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={60}
+                      outerRadius={100}
+                      paddingAngle={5}
+                      dataKey="value"
+                      onClick={(data) => {
+                        setSelectedSource(selectedSource === data.name ? null : data.name);
+                      }}
+                      className="cursor-pointer"
+                    >
+                      {sourceData.map((entry, index) => (
+                        <Cell 
+                          key={`cell-${index}`} 
+                          fill={entry.color}
+                          stroke={selectedSource === entry.name ? "#000" : "none"}
+                          strokeWidth={selectedSource === entry.name ? 2 : 0}
+                        />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                    <Legend />
+                  </PieChart>
+                </ResponsiveContainer>
+                {selectedSource && (
+                  <p className="text-sm text-center mt-2 font-medium">
+                    Filtering by: {selectedSource}
+                  </p>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Performance Over Time */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Performance Over Time</CardTitle>
+              <CardDescription>Track key metrics over the past 6 months</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={400}>
+                <LineChart data={performanceData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="month" />
+                  <YAxis yAxisId="left" />
+                  <YAxis yAxisId="right" orientation="right" />
+                  <Tooltip />
+                  <Legend />
+                  <Bar yAxisId="left" dataKey="applications" fill="#8884d8" name="Applications" />
+                  <Bar yAxisId="left" dataKey="accepted" fill="#82ca9d" name="Accepted" />
+                  <Line yAxisId="right" type="monotone" dataKey="conversionRate" stroke="#ff7300" name="Conversion Rate %" />
+                </LineChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+
+          {/* Filtered Applications Table */}
+          {selectedSource && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Applications from {selectedSource}</CardTitle>
+                <CardDescription>
+                  Showing {filteredApplicationsBySource.length} applications from this source
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Applicant</TableHead>
+                      <TableHead>Startup</TableHead>
+                      <TableHead>Program</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Submitted</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredApplicationsBySource.map((application) => (
+                      <TableRow key={application.id}>
+                        <TableCell className="font-medium">{application.applicant.name}</TableCell>
+                        <TableCell>{application.applicant.startupName}</TableCell>
+                        <TableCell>{application.scholarshipTitle}</TableCell>
+                        <TableCell>{getApplicationStatusBadge(application.status)}</TableCell>
+                        <TableCell>{application.submittedAt}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+          )}
         </TabsContent>
       </Tabs>
     </div>
