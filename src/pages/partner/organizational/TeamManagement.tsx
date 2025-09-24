@@ -5,7 +5,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { UserPlus, Mail, MoreHorizontal, Edit, Save, X } from "lucide-react";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import { UserPlus, Mail, MoreHorizontal, Edit, Save, X, Activity, Trash2 } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,8 +15,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 
-const teamMembers = [
+const initialTeamMembers = [
   {
     id: 1,
     name: "John Smith",
@@ -56,6 +59,29 @@ const teamMembers = [
     status: "Inactive"
   }
 ];
+
+const mockActivityData = {
+  1: [
+    { date: "2024-01-15", action: "Created new scholarship program 'FinTech Founders 2024'" },
+    { date: "2024-01-14", action: "Approved application from TechCorp Solutions" },
+    { date: "2024-01-13", action: "Updated team permissions for Evaluator role" }
+  ],
+  2: [
+    { date: "2024-01-15", action: "Reviewed application for NextGen AI" },
+    { date: "2024-01-14", action: "Accepted founder application from Jane Smith" },
+    { date: "2024-01-13", action: "Rejected application from StartupX due to incomplete assessment" }
+  ],
+  3: [
+    { date: "2024-01-15", action: "Generated strategic report for Q1 2024" },
+    { date: "2024-01-14", action: "Analyzed founder assessment data" },
+    { date: "2024-01-13", action: "Requested custom test for blockchain assessment" }
+  ],
+  4: [
+    { date: "2024-01-10", action: "Reviewed applications batch #47" },
+    { date: "2024-01-09", action: "Updated founder evaluation criteria" },
+    { date: "2024-01-08", action: "Logged in to review pending applications" }
+  ]
+};
 
 const defaultRolePermissions = {
   "Admin": {
@@ -111,9 +137,62 @@ const permissionCategories = {
 };
 
 export default function TeamManagement() {
+  const { toast } = useToast();
+  const [teamMembers, setTeamMembers] = useState(initialTeamMembers);
+  
+  // Form state
+  const [inviteEmail, setInviteEmail] = useState("");
+  const [inviteRole, setInviteRole] = useState("");
+  
+  // Modal states
   const [isEditingPermissions, setIsEditingPermissions] = useState(false);
+  const [editingMember, setEditingMember] = useState(null);
+  const [viewingActivity, setViewingActivity] = useState(null);
+  const [removingMember, setRemovingMember] = useState(null);
+  
+  // Permissions state
   const [rolePermissions, setRolePermissions] = useState(defaultRolePermissions);
   const [tempRolePermissions, setTempRolePermissions] = useState(defaultRolePermissions);
+  const [memberPermissions, setMemberPermissions] = useState({});
+
+  const validateEmail = (email) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+  };
+
+  const handleInviteMember = () => {
+    if (!validateEmail(inviteEmail) || !inviteRole) {
+      toast({
+        title: "Invalid Input",
+        description: "Please enter a valid email address and select a role.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const newMember = {
+      id: Math.max(...teamMembers.map(m => m.id)) + 1,
+      name: inviteEmail.split('@')[0].replace(/[._]/g, ' ').split(' ').map(word => 
+        word.charAt(0).toUpperCase() + word.slice(1)).join(' '),
+      email: inviteEmail,
+      role: inviteRole,
+      permissions: Object.entries(defaultRolePermissions[inviteRole])
+        .filter(([, enabled]) => enabled)
+        .map(([permission]) => permission),
+      joinDate: new Date().toLocaleDateString('en-US', { month: 'short', year: 'numeric' }),
+      lastActive: "Never",
+      status: "Pending Invite"
+    };
+
+    setTeamMembers([...teamMembers, newMember]);
+    setInviteEmail("");
+    setInviteRole("");
+    
+    toast({
+      title: "Invitation Sent",
+      description: `Successfully sent invitation to ${inviteEmail}`,
+    });
+  };
 
   const handleEditPermissions = () => {
     setTempRolePermissions({ ...rolePermissions });
@@ -123,6 +202,10 @@ export default function TeamManagement() {
   const handleSavePermissions = () => {
     setRolePermissions({ ...tempRolePermissions });
     setIsEditingPermissions(false);
+    toast({
+      title: "Permissions Updated",
+      description: "Role permissions have been successfully updated.",
+    });
   };
 
   const handleCancelEdit = () => {
@@ -130,7 +213,7 @@ export default function TeamManagement() {
     setIsEditingPermissions(false);
   };
 
-  const handlePermissionChange = (role: string, permission: string, checked: boolean) => {
+  const handlePermissionChange = (role, permission, checked) => {
     setTempRolePermissions(prev => ({
       ...prev,
       [role]: {
@@ -139,6 +222,56 @@ export default function TeamManagement() {
       }
     }));
   };
+
+  const handleEditMember = (member) => {
+    setEditingMember({
+      ...member,
+      tempRole: member.role,
+      tempPermissions: { ...defaultRolePermissions[member.role] }
+    });
+  };
+
+  const handleSaveMemberEdit = () => {
+    setTeamMembers(prev => prev.map(member => 
+      member.id === editingMember.id 
+        ? {
+            ...member,
+            role: editingMember.tempRole,
+            permissions: Object.entries(editingMember.tempPermissions)
+              .filter(([, enabled]) => enabled)
+              .map(([permission]) => permission)
+          }
+        : member
+    ));
+    
+    setEditingMember(null);
+    toast({
+      title: "Member Updated",
+      description: `Successfully updated ${editingMember.name}'s role and permissions.`,
+    });
+  };
+
+  const handleMemberPermissionChange = (permission, checked) => {
+    setEditingMember(prev => ({
+      ...prev,
+      tempPermissions: {
+        ...prev.tempPermissions,
+        [permission]: checked
+      }
+    }));
+  };
+
+  const handleRemoveMember = () => {
+    setTeamMembers(prev => prev.filter(member => member.id !== removingMember.id));
+    toast({
+      title: "Member Removed",
+      description: `Successfully removed ${removingMember.name} from the team.`,
+    });
+    setRemovingMember(null);
+  };
+
+  const getActiveMembers = () => teamMembers.filter(member => member.status === 'Active').length;
+  const getPendingInvites = () => teamMembers.filter(member => member.status === 'Pending Invite').length;
 
   return (
     <div className="space-y-6">
@@ -162,9 +295,9 @@ export default function TeamManagement() {
             <UserPlus className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">4</div>
+            <div className="text-2xl font-bold">{teamMembers.length}</div>
             <p className="text-xs text-muted-foreground">
-              3 active, 1 inactive
+              {getActiveMembers()} active, {teamMembers.length - getActiveMembers()} inactive
             </p>
           </CardContent>
         </Card>
@@ -175,7 +308,7 @@ export default function TeamManagement() {
             <Mail className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">2</div>
+            <div className="text-2xl font-bold">{getPendingInvites()}</div>
             <p className="text-xs text-muted-foreground">
               Awaiting acceptance
             </p>
@@ -202,7 +335,10 @@ export default function TeamManagement() {
                   <div>
                     <div className="flex items-center space-x-2">
                       <p className="font-medium">{member.name}</p>
-                      <Badge variant={member.status === 'Active' ? 'default' : 'secondary'}>
+                      <Badge variant={
+                        member.status === 'Active' ? 'default' : 
+                        member.status === 'Pending Invite' ? 'secondary' : 'outline'
+                      }>
                         {member.status}
                       </Badge>
                     </div>
@@ -242,12 +378,23 @@ export default function TeamManagement() {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                      <DropdownMenuItem>Edit Permissions</DropdownMenuItem>
-                      <DropdownMenuItem>Change Role</DropdownMenuItem>
-                      <DropdownMenuItem>View Activity</DropdownMenuItem>
-                      <DropdownMenuItem className="text-red-600">
-                        Remove Member
+                      <DropdownMenuItem onClick={() => handleEditMember(member)}>
+                        <Edit className="mr-2 h-4 w-4" />
+                        Edit Permissions
                       </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setViewingActivity(member)}>
+                        <Activity className="mr-2 h-4 w-4" />
+                        View Activity
+                      </DropdownMenuItem>
+                      {member.role !== 'Admin' && (
+                        <DropdownMenuItem 
+                          className="text-red-600"
+                          onClick={() => setRemovingMember(member)}
+                        >
+                          <Trash2 className="mr-2 h-4 w-4" />
+                          Remove Member
+                        </DropdownMenuItem>
+                      )}
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </div>
@@ -268,11 +415,15 @@ export default function TeamManagement() {
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <label className="text-sm font-medium">Email Address</label>
-              <Input placeholder="colleague@company.com" />
+              <Input 
+                placeholder="colleague@company.com"
+                value={inviteEmail}
+                onChange={(e) => setInviteEmail(e.target.value)}
+              />
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium">Role</label>
-              <Select>
+              <Select value={inviteRole} onValueChange={setInviteRole}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select a role" />
                 </SelectTrigger>
@@ -283,7 +434,11 @@ export default function TeamManagement() {
                 </SelectContent>
               </Select>
             </div>
-            <Button className="w-full">
+            <Button 
+              className="w-full" 
+              onClick={handleInviteMember}
+              disabled={!validateEmail(inviteEmail) || !inviteRole}
+            >
               <Mail className="mr-2 h-4 w-4" />
               Send Invitation
             </Button>
@@ -342,7 +497,7 @@ export default function TeamManagement() {
                                   checked={permissions[permission]}
                                   disabled={role === 'Admin'}
                                   onCheckedChange={(checked) => 
-                                    handlePermissionChange(role, permission, checked as boolean)
+                                    handlePermissionChange(role, permission, checked)
                                   }
                                 />
                                 <label 
@@ -374,6 +529,143 @@ export default function TeamManagement() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Edit Member Modal */}
+      <Dialog open={!!editingMember} onOpenChange={() => setEditingMember(null)}>
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Edit Team Member</DialogTitle>
+            <DialogDescription>
+              Modify {editingMember?.name}'s role and permissions
+            </DialogDescription>
+          </DialogHeader>
+          
+          {editingMember && (
+            <div className="space-y-6">
+              <div className="flex items-center space-x-4">
+                <Avatar>
+                  <AvatarImage src="/placeholder.svg" />
+                  <AvatarFallback>
+                    {editingMember.name.split(' ').map(n => n[0]).join('')}
+                  </AvatarFallback>
+                </Avatar>
+                <div>
+                  <p className="font-medium">{editingMember.name}</p>
+                  <p className="text-sm text-muted-foreground">{editingMember.email}</p>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Role</label>
+                <Select 
+                  value={editingMember.tempRole} 
+                  onValueChange={(value) => setEditingMember(prev => ({ 
+                    ...prev, 
+                    tempRole: value,
+                    tempPermissions: { ...defaultRolePermissions[value] }
+                  }))}
+                  disabled={editingMember.role === 'Admin'}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Evaluator">Evaluator</SelectItem>
+                    <SelectItem value="Analyst">Analyst</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-4">
+                <h4 className="font-medium">Permissions</h4>
+                {Object.entries(permissionCategories).map(([category, categoryPermissions]) => (
+                  <div key={category} className="space-y-2">
+                    <h5 className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                      {category}
+                    </h5>
+                    <div className="space-y-2 pl-2">
+                      {categoryPermissions.map((permission) => (
+                        <div key={permission} className="flex items-center space-x-2">
+                          <Checkbox
+                            id={`edit-${permission}`}
+                            checked={editingMember.tempPermissions[permission]}
+                            onCheckedChange={(checked) => 
+                              handleMemberPermissionChange(permission, checked)
+                            }
+                          />
+                          <label 
+                            htmlFor={`edit-${permission}`}
+                            className="text-sm cursor-pointer"
+                          >
+                            {permission}
+                          </label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="flex justify-end space-x-2 pt-4 border-t">
+                <Button variant="outline" onClick={() => setEditingMember(null)}>
+                  Cancel
+                </Button>
+                <Button onClick={handleSaveMemberEdit}>
+                  Save Changes
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* View Activity Modal */}
+      <Dialog open={!!viewingActivity} onOpenChange={() => setViewingActivity(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Activity Log</DialogTitle>
+            <DialogDescription>
+              Recent activity for {viewingActivity?.name}
+            </DialogDescription>
+          </DialogHeader>
+          
+          {viewingActivity && (
+            <div className="space-y-4">
+              {mockActivityData[viewingActivity.id]?.map((activity, index) => (
+                <div key={index} className="flex items-start space-x-3 p-3 border rounded-lg">
+                  <Activity className="h-4 w-4 mt-0.5 text-muted-foreground" />
+                  <div className="flex-1">
+                    <p className="text-sm">{activity.action}</p>
+                    <p className="text-xs text-muted-foreground">{activity.date}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Remove Member Confirmation */}
+      <AlertDialog open={!!removingMember} onOpenChange={() => setRemovingMember(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Remove Team Member</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to remove {removingMember?.name} from your team? 
+              This action cannot be undone and they will lose access to all organizational resources.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={handleRemoveMember}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              Remove Member
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
