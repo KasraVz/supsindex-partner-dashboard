@@ -18,6 +18,7 @@ export interface AffiliationCode {
 
 export interface AffiliationUsage {
   id: string;
+  code_id: string;
   user_email: string;
   user_name: string;
   assessment_status: 'not_started' | 'in_progress' | 'completed';
@@ -146,6 +147,18 @@ export function useAffiliationCodes() {
   };
 }
 
+export interface CodePerformance {
+  id: string;
+  code: string;
+  name: string;
+  expiresAt?: string;
+  timesUsed: number;
+  conversionRate: number;
+  totalUsers: number;
+  paidUsers: number;
+  isActive: boolean;
+}
+
 export function useAffiliationUsage() {
   const [usage, setUsage] = useState<AffiliationUsage[]>([]);
   const [loading, setLoading] = useState(true);
@@ -182,5 +195,60 @@ export function useAffiliationUsage() {
     usage,
     loading,
     refetch: fetchUsage,
+  };
+}
+
+export function useCodePerformance() {
+  const { codes, loading: codesLoading } = useAffiliationCodes();
+  const { usage, loading: usageLoading } = useAffiliationUsage();
+  const [performance, setPerformance] = useState<CodePerformance[]>([]);
+  const loading = codesLoading || usageLoading;
+
+  useEffect(() => {
+    if (!loading && codes.length > 0) {
+      const codePerformanceMap: Record<string, CodePerformance> = {};
+      
+      // Initialize performance data for all codes
+      codes.forEach(code => {
+        codePerformanceMap[code.id] = {
+          id: code.id,
+          code: code.code,
+          name: code.name,
+          expiresAt: code.expires_at,
+          timesUsed: 0,
+          conversionRate: 0,
+          totalUsers: 0,
+          paidUsers: 0,
+          isActive: code.is_active,
+        };
+      });
+
+      // Calculate usage statistics for each code
+      usage.forEach(usageItem => {
+        const codeId = usageItem.code_id || '';
+        if (codePerformanceMap[codeId]) {
+          codePerformanceMap[codeId].timesUsed++;
+          codePerformanceMap[codeId].totalUsers++;
+          
+          if (usageItem.discount_amount && usageItem.discount_amount > 0) {
+            codePerformanceMap[codeId].paidUsers++;
+          }
+        }
+      });
+
+      // Calculate conversion rates
+      Object.values(codePerformanceMap).forEach(perf => {
+        if (perf.totalUsers > 0) {
+          perf.conversionRate = Math.round((perf.paidUsers / perf.totalUsers) * 100);
+        }
+      });
+
+      setPerformance(Object.values(codePerformanceMap));
+    }
+  }, [codes, usage, loading]);
+
+  return {
+    performance,
+    loading,
   };
 }

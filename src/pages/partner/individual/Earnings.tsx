@@ -4,7 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DollarSign, TrendingUp, Users, Award } from 'lucide-react';
 import { useAffiliationCodes, useAffiliationUsage } from '@/hooks/useAffiliationCodes';
 import { AffiliationCodesTable } from '@/components/affiliation/AffiliationCodesTable';
-import { UsageAnalyticsTable } from '@/components/affiliation/UsageAnalyticsTable';
+import { AffiliationCodePerformance } from '@/components/affiliation/AffiliationCodePerformance';
 
 export default function AffiliationsAndEarnings() {
   const { codes, loading: codesLoading } = useAffiliationCodes();
@@ -121,7 +121,7 @@ export default function AffiliationsAndEarnings() {
           </TabsContent>
           
           <TabsContent value="analytics" className="space-y-6">
-            <UsageAnalyticsTable />
+            <AffiliationCodePerformance />
           </TabsContent>
         </Tabs>
       </div>

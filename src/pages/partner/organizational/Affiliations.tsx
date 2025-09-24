@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Users, Target, Calendar, TestTube } from 'lucide-react';
 import { AffiliationCodesTable } from '@/components/affiliation/AffiliationCodesTable';
-import { UsageAnalyticsTable } from '@/components/affiliation/UsageAnalyticsTable';
+import { AffiliationCodePerformance } from '@/components/affiliation/AffiliationCodePerformance';
 import { useAffiliationCodes, useAffiliationUsage } from '@/hooks/useAffiliationCodes';
 
 export default function OrganizationalAffiliations() {
@@ -102,7 +102,7 @@ export default function OrganizationalAffiliations() {
           </TabsContent>
           
           <TabsContent value="analytics">
-            <UsageAnalyticsTable />
+            <AffiliationCodePerformance />
           </TabsContent>
         </Tabs>
       </div>
