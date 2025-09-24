@@ -5,56 +5,45 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { DollarSign, CreditCard, Clock, CheckCircle, AlertCircle } from "lucide-react";
-
-const mockClaims = [
-  {
-    id: "CLM-001",
-    amount: 450.00,
-    status: "pending",
-    date: "2024-01-15",
-    type: "Affiliation Earnings",
-    candidates: 15
-  },
-  {
-    id: "CLM-002", 
-    amount: 280.00,
-    status: "completed",
-    date: "2024-01-10",
-    type: "Affiliation Earnings",
-    candidates: 8
-  },
-  {
-    id: "CLM-003",
-    amount: 650.00,
-    status: "processing",
-    date: "2024-01-08",
-    type: "Affiliation Earnings", 
-    candidates: 22
-  }
-];
-
-const mockPayoutMethods = [
-  {
-    id: "PM-001",
-    type: "Bank Transfer",
-    account: "****1234",
-    status: "active",
-    default: true
-  },
-  {
-    id: "PM-002", 
-    type: "PayPal",
-    account: "john@example.com",
-    status: "active",
-    default: false
-  }
-];
-
+const mockClaims = [{
+  id: "CLM-001",
+  amount: 450.00,
+  status: "pending",
+  date: "2024-01-15",
+  type: "Affiliation Earnings",
+  candidates: 15
+}, {
+  id: "CLM-002",
+  amount: 280.00,
+  status: "completed",
+  date: "2024-01-10",
+  type: "Affiliation Earnings",
+  candidates: 8
+}, {
+  id: "CLM-003",
+  amount: 650.00,
+  status: "processing",
+  date: "2024-01-08",
+  type: "Affiliation Earnings",
+  candidates: 22
+}];
+const mockPayoutMethods = [{
+  id: "PM-001",
+  type: "Bank Transfer",
+  account: "****1234",
+  status: "active",
+  default: true
+}, {
+  id: "PM-002",
+  type: "PayPal",
+  account: "john@example.com",
+  status: "active",
+  default: false
+}];
 export default function Claims() {
   const totalEarnings = 2450.00;
   const pendingClaims = 450.00;
   const availableBalance = 320.00;
-
   const getStatusIcon = (status: string) => {
     switch (status) {
       case "completed":
@@ -67,23 +56,17 @@ export default function Claims() {
         return null;
     }
   };
-
   const getStatusBadge = (status: string) => {
     const variants = {
       completed: "default",
-      processing: "secondary", 
+      processing: "secondary",
       pending: "outline"
     } as const;
-    
-    return (
-      <Badge variant={variants[status as keyof typeof variants]}>
+    return <Badge variant={variants[status as keyof typeof variants]}>
         {status.charAt(0).toUpperCase() + status.slice(1)}
-      </Badge>
-    );
+      </Badge>;
   };
-
-  return (
-    <div className="container mx-auto p-6 space-y-6">
+  return <div className="container mx-auto p-6 space-y-6">
       <div>
         <h1 className="text-3xl font-bold">Money Claims</h1>
         <p className="text-muted-foreground">
@@ -106,18 +89,7 @@ export default function Claims() {
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Pending Claims</CardTitle>
-            <Clock className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">${pendingClaims.toFixed(2)}</div>
-            <p className="text-xs text-muted-foreground">
-              Awaiting processing
-            </p>
-          </CardContent>
-        </Card>
+        
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -161,8 +133,7 @@ export default function Claims() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {mockClaims.map((claim) => (
-                    <TableRow key={claim.id}>
+                  {mockClaims.map(claim => <TableRow key={claim.id}>
                       <TableCell className="font-medium">{claim.id}</TableCell>
                       <TableCell>{claim.date}</TableCell>
                       <TableCell>{claim.type}</TableCell>
@@ -174,8 +145,7 @@ export default function Claims() {
                           {getStatusBadge(claim.status)}
                         </div>
                       </TableCell>
-                    </TableRow>
-                  ))}
+                    </TableRow>)}
                 </TableBody>
               </Table>
             </CardContent>
@@ -191,8 +161,7 @@ export default function Claims() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              {mockPayoutMethods.map((method) => (
-                <div key={method.id} className="flex items-center justify-between p-4 border rounded-lg">
+              {mockPayoutMethods.map(method => <div key={method.id} className="flex items-center justify-between p-4 border rounded-lg">
                   <div className="flex items-center gap-3">
                     <CreditCard className="h-5 w-5 text-muted-foreground" />
                     <div>
@@ -201,15 +170,12 @@ export default function Claims() {
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    {method.default && (
-                      <Badge variant="secondary">Default</Badge>
-                    )}
+                    {method.default && <Badge variant="secondary">Default</Badge>}
                     <Button variant="outline" size="sm">
                       Edit
                     </Button>
                   </div>
-                </div>
-              ))}
+                </div>)}
               <Separator />
               <Button variant="outline" className="w-full">
                 Add New Payout Method
@@ -259,6 +225,5 @@ export default function Claims() {
           </Card>
         </TabsContent>
       </Tabs>
-    </div>
-  );
+    </div>;
 }
