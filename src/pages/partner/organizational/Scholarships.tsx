@@ -346,7 +346,7 @@ export default function Scholarships() {
     <div className="container mx-auto p-6 space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold">Founder Sponsorship Dashboard</h1>
+          <h1 className="text-3xl font-bold">Scholarships</h1>
           <p className="text-muted-foreground">
             Sponsor assessments for promising startup founders and manage your talent pipeline
           </p>
@@ -555,7 +555,7 @@ export default function Scholarships() {
 
       <Tabs defaultValue="scholarships" className="w-full">
         <TabsList>
-          <TabsTrigger value="scholarships">My Sponsorships</TabsTrigger>
+          <TabsTrigger value="scholarships">Scholarships</TabsTrigger>
           <TabsTrigger value="applications">Applications</TabsTrigger>
           <TabsTrigger value="analytics">Analytics</TabsTrigger>
         </TabsList>
