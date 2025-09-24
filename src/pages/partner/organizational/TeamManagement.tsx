@@ -3,13 +3,16 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
-import { UserPlus, Mail, Shield, Settings, MoreHorizontal } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { UserPlus, Mail, MoreHorizontal, Edit, Save, X } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useState } from "react";
 
 const teamMembers = [
   {
@@ -26,8 +29,8 @@ const teamMembers = [
     id: 2,
     name: "Sarah Johnson",
     email: "sarah@venture-capital.com", 
-    role: "Analyst",
-    permissions: ["View Portfolio", "Generate Reports"],
+    role: "Evaluator",
+    permissions: ["View Scholarships", "Accept/Reject Applications"],
     joinDate: "Feb 2024",
     lastActive: "1 day ago",
     status: "Active"
@@ -36,8 +39,8 @@ const teamMembers = [
     id: 3,
     name: "Mike Chen",
     email: "mike@venture-capital.com",
-    role: "Partner",
-    permissions: ["View All", "Strategic Reports", "Custom Tests"],
+    role: "Analyst",
+    permissions: ["View Strategic Reports", "View Custom Tests"],
     joinDate: "Dec 2023",
     lastActive: "3 hours ago",
     status: "Active"
@@ -46,22 +49,97 @@ const teamMembers = [
     id: 4,
     name: "Lisa Wang",
     email: "lisa@venture-capital.com",
-    role: "Associate",
-    permissions: ["View Assigned", "Basic Reports"],
+    role: "Evaluator",
+    permissions: ["View Applications", "View Scholarships"],
     joinDate: "Mar 2024",
     lastActive: "1 week ago",
     status: "Inactive"
   }
 ];
 
-const rolePermissions = {
-  "Admin": ["View All", "Edit All", "Team Management", "Billing", "Strategic Reports", "Custom Tests"],
-  "Partner": ["View All", "Strategic Reports", "Custom Tests", "Generate Reports"],
-  "Analyst": ["View Portfolio", "Generate Reports", "Request Custom Tests"],
-  "Associate": ["View Assigned", "Basic Reports"]
+const defaultRolePermissions = {
+  "Admin": {
+    "View Profile": true,
+    "Edit Profile": true,
+    "View Team Members": true,
+    "Invite & Manage Team Members": true,
+    "View Scholarships": true,
+    "Create & Edit Scholarships": true,
+    "View Applications": true,
+    "Accept/Reject Applications": true,
+    "View Custom Tests": true,
+    "Request Custom Tests": true,
+    "View Strategic Reports": true,
+    "Request Strategic Reports": true
+  },
+  "Evaluator": {
+    "View Profile": true,
+    "Edit Profile": false,
+    "View Team Members": true,
+    "Invite & Manage Team Members": false,
+    "View Scholarships": true,
+    "Create & Edit Scholarships": false,
+    "View Applications": true,
+    "Accept/Reject Applications": true,
+    "View Custom Tests": true,
+    "Request Custom Tests": false,
+    "View Strategic Reports": true,
+    "Request Strategic Reports": false
+  },
+  "Analyst": {
+    "View Profile": true,
+    "Edit Profile": false,
+    "View Team Members": true,
+    "Invite & Manage Team Members": false,
+    "View Scholarships": true,
+    "Create & Edit Scholarships": false,
+    "View Applications": true,
+    "Accept/Reject Applications": false,
+    "View Custom Tests": true,
+    "Request Custom Tests": false,
+    "View Strategic Reports": true,
+    "Request Strategic Reports": false
+  }
+};
+
+const permissionCategories = {
+  "Profile": ["View Profile", "Edit Profile"],
+  "Team Management": ["View Team Members", "Invite & Manage Team Members"],
+  "Scholarships": ["View Scholarships", "Create & Edit Scholarships", "View Applications", "Accept/Reject Applications"],
+  "Custom Tests": ["View Custom Tests", "Request Custom Tests"],
+  "Strategic Reports": ["View Strategic Reports", "Request Strategic Reports"]
 };
 
 export default function TeamManagement() {
+  const [isEditingPermissions, setIsEditingPermissions] = useState(false);
+  const [rolePermissions, setRolePermissions] = useState(defaultRolePermissions);
+  const [tempRolePermissions, setTempRolePermissions] = useState(defaultRolePermissions);
+
+  const handleEditPermissions = () => {
+    setTempRolePermissions({ ...rolePermissions });
+    setIsEditingPermissions(true);
+  };
+
+  const handleSavePermissions = () => {
+    setRolePermissions({ ...tempRolePermissions });
+    setIsEditingPermissions(false);
+  };
+
+  const handleCancelEdit = () => {
+    setTempRolePermissions({ ...rolePermissions });
+    setIsEditingPermissions(false);
+  };
+
+  const handlePermissionChange = (role: string, permission: string, checked: boolean) => {
+    setTempRolePermissions(prev => ({
+      ...prev,
+      [role]: {
+        ...prev[role],
+        [permission]: checked
+      }
+    }));
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -77,7 +155,7 @@ export default function TeamManagement() {
         </Button>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Members</CardTitle>
@@ -93,19 +171,6 @@ export default function TeamManagement() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Admins</CardTitle>
-            <Shield className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">1</div>
-            <p className="text-xs text-muted-foreground">
-              Full access permissions
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Pending Invites</CardTitle>
             <Mail className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
@@ -113,19 +178,6 @@ export default function TeamManagement() {
             <div className="text-2xl font-bold">2</div>
             <p className="text-xs text-muted-foreground">
               Awaiting acceptance
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">License Usage</CardTitle>
-            <Settings className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">4/10</div>
-            <p className="text-xs text-muted-foreground">
-              Licenses used
             </p>
           </CardContent>
         </Card>
@@ -220,12 +272,16 @@ export default function TeamManagement() {
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium">Role</label>
-              <select className="w-full px-3 py-2 border rounded-md">
-                <option>Associate</option>
-                <option>Analyst</option>
-                <option>Partner</option>
-                <option>Admin</option>
-              </select>
+              <Select>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a role" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Admin">Admin</SelectItem>
+                  <SelectItem value="Evaluator">Evaluator</SelectItem>
+                  <SelectItem value="Analyst">Analyst</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <Button className="w-full">
               <Mail className="mr-2 h-4 w-4" />
@@ -235,27 +291,86 @@ export default function TeamManagement() {
         </Card>
 
         <Card>
-          <CardHeader>
-            <CardTitle>Role Permissions</CardTitle>
-            <CardDescription>
-              Overview of what each role can access
-            </CardDescription>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div>
+              <CardTitle>Role Permissions</CardTitle>
+              <CardDescription>
+                {isEditingPermissions ? "Customize permissions for each role" : "Overview of what each role can access"}
+              </CardDescription>
+            </div>
+            {!isEditingPermissions ? (
+              <Button variant="outline" size="sm" onClick={handleEditPermissions}>
+                <Edit className="mr-2 h-4 w-4" />
+                Edit
+              </Button>
+            ) : null}
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              {Object.entries(rolePermissions).map(([role, permissions]) => (
-                <div key={role} className="space-y-2">
-                  <h4 className="font-medium">{role}</h4>
-                  <div className="flex flex-wrap gap-1">
-                    {permissions.map((permission) => (
-                      <Badge key={permission} variant="outline" className="text-xs">
-                        {permission}
-                      </Badge>
-                    ))}
+            {!isEditingPermissions ? (
+              <div className="space-y-4">
+                {Object.entries(rolePermissions).map(([role, permissions]) => (
+                  <div key={role} className="space-y-2">
+                    <h4 className="font-medium">{role}</h4>
+                    <div className="flex flex-wrap gap-1">
+                      {Object.entries(permissions)
+                        .filter(([, enabled]) => enabled)
+                        .map(([permission]) => (
+                          <Badge key={permission} variant="outline" className="text-xs">
+                            {permission}
+                          </Badge>
+                        ))}
+                    </div>
                   </div>
+                ))}
+              </div>
+            ) : (
+              <div className="space-y-6">
+                {Object.entries(tempRolePermissions).map(([role, permissions]) => (
+                  <div key={role} className="space-y-3">
+                    <h4 className="font-medium text-sm">{role}</h4>
+                    <div className="space-y-4 pl-2">
+                      {Object.entries(permissionCategories).map(([category, categoryPermissions]) => (
+                        <div key={category} className="space-y-2">
+                          <h5 className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                            {category}
+                          </h5>
+                          <div className="space-y-2 pl-2">
+                            {categoryPermissions.map((permission) => (
+                              <div key={permission} className="flex items-center space-x-2">
+                                <Checkbox
+                                  id={`${role}-${permission}`}
+                                  checked={permissions[permission]}
+                                  disabled={role === 'Admin'}
+                                  onCheckedChange={(checked) => 
+                                    handlePermissionChange(role, permission, checked as boolean)
+                                  }
+                                />
+                                <label 
+                                  htmlFor={`${role}-${permission}`}
+                                  className={`text-sm ${role === 'Admin' ? 'text-muted-foreground' : 'cursor-pointer'}`}
+                                >
+                                  {permission}
+                                </label>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+                <div className="flex space-x-2 pt-4 border-t">
+                  <Button onClick={handleSavePermissions}>
+                    <Save className="mr-2 h-4 w-4" />
+                    Save Changes
+                  </Button>
+                  <Button variant="outline" onClick={handleCancelEdit}>
+                    <X className="mr-2 h-4 w-4" />
+                    Cancel
+                  </Button>
                 </div>
-              ))}
-            </div>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>
