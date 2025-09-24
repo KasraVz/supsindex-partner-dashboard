@@ -178,22 +178,26 @@ const mockApplications = [
 
 // Mock founder-centric analytics data
 const foundersEnrolledData = [
-  { founderId: "F-001", name: "Sarah Johnson", scholarshipId: "SCH-001", assessmentStarted: true, assessmentCompleted: true, assessmentScore: 87, enrolledAt: "2024-01-18", source: "Social Media" },
-  { founderId: "F-002", name: "Michael Chen", scholarshipId: "SCH-001", assessmentStarted: true, assessmentCompleted: true, assessmentScore: 92, enrolledAt: "2024-01-16", source: "Partner Referral" },
-  { founderId: "F-003", name: "Emily Davis", scholarshipId: "SCH-003", assessmentStarted: true, assessmentCompleted: true, assessmentScore: 85, enrolledAt: "2024-01-12", source: "Direct Application" },
-  { founderId: "F-004", name: "David Rodriguez", scholarshipId: "SCH-001", assessmentStarted: true, assessmentCompleted: false, assessmentScore: null, enrolledAt: "2024-01-10", source: "Online Ad" },
-  { founderId: "F-005", name: "Lisa Wang", scholarshipId: "SCH-001", assessmentStarted: true, assessmentCompleted: true, assessmentScore: 89, enrolledAt: "2024-01-08", source: "Partner Referral" },
-  { founderId: "F-006", name: "Alex Thompson", scholarshipId: "SCH-002", assessmentStarted: false, assessmentCompleted: false, assessmentScore: null, enrolledAt: "2024-01-05", source: "Community Event" },
-  { founderId: "F-007", name: "Maria Garcia", scholarshipId: "SCH-003", assessmentStarted: true, assessmentCompleted: true, assessmentScore: 91, enrolledAt: "2024-01-02", source: "Partner Referral" },
-  { founderId: "F-008", name: "James Wilson", scholarshipId: "SCH-001", assessmentStarted: true, assessmentCompleted: false, assessmentScore: null, enrolledAt: "2023-12-28", source: "Social Media" },
+  { founderId: "F-001", name: "Sarah Johnson", scholarshipId: "SCH-001", assessmentStarted: true, assessmentCompleted: true, assessmentScore: 87, enrolledAt: "2024-01-18", source: "Social Media", industry: "SaaS" },
+  { founderId: "F-002", name: "Michael Chen", scholarshipId: "SCH-001", assessmentStarted: true, assessmentCompleted: true, assessmentScore: 92, enrolledAt: "2024-01-16", source: "Partner Referral", industry: "CleanTech" },
+  { founderId: "F-003", name: "Emily Davis", scholarshipId: "SCH-003", assessmentStarted: true, assessmentCompleted: true, assessmentScore: 85, enrolledAt: "2024-01-12", source: "Direct Application", industry: "HealthTech" },
+  { founderId: "F-004", name: "David Rodriguez", scholarshipId: "SCH-001", assessmentStarted: true, assessmentCompleted: false, assessmentScore: null, enrolledAt: "2024-01-10", source: "Online Ad", industry: "FinTech" },
+  { founderId: "F-005", name: "Lisa Wang", scholarshipId: "SCH-001", assessmentStarted: true, assessmentCompleted: true, assessmentScore: 89, enrolledAt: "2024-01-08", source: "Partner Referral", industry: "EdTech" },
+  { founderId: "F-006", name: "Alex Thompson", scholarshipId: "SCH-002", assessmentStarted: false, assessmentCompleted: false, assessmentScore: null, enrolledAt: "2024-01-05", source: "Community Event", industry: "DeepTech" },
+  { founderId: "F-007", name: "Maria Garcia", scholarshipId: "SCH-003", assessmentStarted: true, assessmentCompleted: true, assessmentScore: 91, enrolledAt: "2024-01-02", source: "Partner Referral", industry: "FinTech" },
+  { founderId: "F-008", name: "James Wilson", scholarshipId: "SCH-001", assessmentStarted: true, assessmentCompleted: false, assessmentScore: null, enrolledAt: "2023-12-28", source: "Social Media", industry: "B2B" },
+  { founderId: "F-009", name: "Rachel Kim", scholarshipId: "SCH-001", assessmentStarted: true, assessmentCompleted: true, assessmentScore: 88, enrolledAt: "2023-12-25", source: "Partner Referral", industry: "FinTech" },
+  { founderId: "F-010", name: "Tom Anderson", scholarshipId: "SCH-002", assessmentStarted: true, assessmentCompleted: true, assessmentScore: 86, enrolledAt: "2023-12-20", source: "Direct Application", industry: "SaaS" },
 ];
 
-const sourceChannelData = [
-  { name: "Partner Referral", acceptedFounders: 12, totalFounders: 18, color: "#3b82f6" },
-  { name: "Social Media", acceptedFounders: 8, totalFounders: 15, color: "#8b5cf6" },
-  { name: "Direct Application", acceptedFounders: 6, totalFounders: 12, color: "#f59e0b" },
-  { name: "Community Event", acceptedFounders: 4, totalFounders: 8, color: "#10b981" },
-  { name: "Online Ad", acceptedFounders: 2, totalFounders: 5, color: "#ef4444" }
+const industryBreakdownData = [
+  { name: "FinTech", acceptedFounders: 3, totalFounders: 4, color: "#3b82f6" },
+  { name: "SaaS", acceptedFounders: 2, totalFounders: 3, color: "#8b5cf6" },
+  { name: "HealthTech", acceptedFounders: 1, totalFounders: 2, color: "#f59e0b" },
+  { name: "EdTech", acceptedFounders: 1, totalFounders: 1, color: "#10b981" },
+  { name: "CleanTech", acceptedFounders: 1, totalFounders: 1, color: "#ef4444" },
+  { name: "DeepTech", acceptedFounders: 1, totalFounders: 1, color: "#06b6d4" },
+  { name: "B2B", acceptedFounders: 1, totalFounders: 1, color: "#f97316" }
 ];
 
 const assessmentTimelineData = [
@@ -332,7 +336,7 @@ export default function Scholarships() {
     ? ((foundersEnrolledData.filter(f => f.assessmentCompleted).length / foundersEnrolledData.length) * 100).toFixed(1)
     : "0";
 
-  const topPerformingSource = sourceChannelData.reduce((top, current) => 
+  const topFounderIndustry = industryBreakdownData.reduce((top, current) => 
     current.acceptedFounders > top.acceptedFounders ? current : top
   ).name;
 
@@ -341,7 +345,7 @@ export default function Scholarships() {
        foundersEnrolledData.filter(f => f.assessmentScore !== null).length).toFixed(1)
     : "0";
 
-  const [selectedSourceFilter, setSelectedSourceFilter] = useState<string | null>(null);
+  const [selectedIndustryFilter, setSelectedIndustryFilter] = useState<string | null>(null);
   const [selectedScholarshipFilter, setSelectedScholarshipFilter] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState<'accepted' | 'completed'>('accepted');
 
@@ -912,13 +916,13 @@ export default function Scholarships() {
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Top Performing Source</CardTitle>
+                <CardTitle className="text-sm font-medium">Top Founder Industry</CardTitle>
                 <BarChart3 className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-lg font-bold">{topPerformingSource}</div>
+                <div className="text-lg font-bold">{topFounderIndustry}</div>
                 <p className="text-xs text-muted-foreground">
-                  {sourceChannelData.find(s => s.name === topPerformingSource)?.acceptedFounders} accepted founders
+                  {industryBreakdownData.find(s => s.name === topFounderIndustry)?.acceptedFounders} accepted founders
                 </p>
               </CardContent>
             </Card>
@@ -938,17 +942,17 @@ export default function Scholarships() {
           </div>
 
           <div className="grid gap-6 md:grid-cols-2">
-            {/* Founder Origin / Sourcing Channel Effectiveness */}
+            {/* Founder Industry Breakdown */}
             <Card>
               <CardHeader>
-                <CardTitle>Founder Origin / Sourcing Channel Effectiveness</CardTitle>
-                <CardDescription>Breakdown of accepted founders by source channel</CardDescription>
+                <CardTitle>Founder Industry Breakdown</CardTitle>
+                <CardDescription>Distribution of accepted founders by industry sector</CardDescription>
               </CardHeader>
               <CardContent>
                 <ResponsiveContainer width="100%" height={300}>
                   <PieChart>
                     <Pie
-                      data={sourceChannelData}
+                      data={industryBreakdownData}
                       cx="50%"
                       cy="50%"
                       innerRadius={60}
@@ -956,16 +960,16 @@ export default function Scholarships() {
                       paddingAngle={5}
                       dataKey="acceptedFounders"
                       onClick={(data) => {
-                        setSelectedSourceFilter(selectedSourceFilter === data.name ? null : data.name);
+                        setSelectedIndustryFilter(selectedIndustryFilter === data.name ? null : data.name);
                       }}
                       className="cursor-pointer"
                     >
-                      {sourceChannelData.map((entry, index) => (
+                      {industryBreakdownData.map((entry, index) => (
                         <Cell 
                           key={`cell-${index}`} 
                           fill={entry.color}
-                          stroke={selectedSourceFilter === entry.name ? "#000" : "none"}
-                          strokeWidth={selectedSourceFilter === entry.name ? 2 : 0}
+                          stroke={selectedIndustryFilter === entry.name ? "#000" : "none"}
+                          strokeWidth={selectedIndustryFilter === entry.name ? 2 : 0}
                         />
                       ))}
                     </Pie>
@@ -975,12 +979,11 @@ export default function Scholarships() {
                     <Legend />
                   </PieChart>
                 </ResponsiveContainer>
-                {selectedSourceFilter && (
+                {selectedIndustryFilter && (
                   <div className="text-sm text-center mt-2">
-                    <p className="font-medium">Source: {selectedSourceFilter}</p>
+                    <p className="font-medium">Industry: {selectedIndustryFilter}</p>
                     <p className="text-muted-foreground">
-                      {sourceChannelData.find(s => s.name === selectedSourceFilter)?.acceptedFounders} accepted / {' '}
-                      {sourceChannelData.find(s => s.name === selectedSourceFilter)?.totalFounders} total founders
+                      {industryBreakdownData.find(s => s.name === selectedIndustryFilter)?.acceptedFounders} accepted founders
                     </p>
                   </div>
                 )}
@@ -1071,13 +1074,13 @@ export default function Scholarships() {
             </CardContent>
           </Card>
 
-          {/* Filtered Founder Details */}
-          {selectedSourceFilter && (
+          {/* Filtered Founder Details by Industry */}
+          {selectedIndustryFilter && (
             <Card>
               <CardHeader>
-                <CardTitle>Founders from {selectedSourceFilter}</CardTitle>
+                <CardTitle>Founders in {selectedIndustryFilter}</CardTitle>
                 <CardDescription>
-                  Detailed view of founders sourced through {selectedSourceFilter}
+                  Detailed view of founders in the {selectedIndustryFilter} sector
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -1093,7 +1096,7 @@ export default function Scholarships() {
                   </TableHeader>
                   <TableBody>
                     {foundersEnrolledData
-                      .filter(founder => founder.source === selectedSourceFilter)
+                      .filter(founder => founder.industry === selectedIndustryFilter)
                       .map((founder) => (
                         <TableRow key={founder.founderId}>
                           <TableCell className="font-medium">{founder.name}</TableCell>
