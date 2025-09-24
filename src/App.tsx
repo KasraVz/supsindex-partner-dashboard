@@ -15,7 +15,7 @@ import MyCandidates from "@/pages/partner/individual/Candidates";
 import AffiliationsAndEarnings from "@/pages/partner/individual/Earnings";
 import IndividualClaims from "@/pages/partner/individual/Claims";
 import IndividualSupport from "@/pages/partner/individual/Support";
-import IndividualScholarships from "@/pages/partner/individual/Scholarships";
+
 import IndividualFastTrack from "@/pages/partner/individual/FastTrack";
 import OrganizationalAffiliations from "@/pages/partner/organizational/Affiliations";
 import IndividualProfile from "@/pages/partner/individual/Profile";
@@ -51,7 +51,7 @@ const App = () => (
                 <Route path="candidates" element={<MyCandidates />} />
                 <Route path="earnings" element={<AffiliationsAndEarnings />} />
                 <Route path="claims" element={<IndividualClaims />} />
-                <Route path="scholarships" element={<IndividualScholarships />} />
+                
                 <Route path="profile" element={<IndividualProfile />} />
                 <Route path="opportunities" element={<PartnershipOpportunities />} />
                 <Route path="support" element={<IndividualSupport />} />

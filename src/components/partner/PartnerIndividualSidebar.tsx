@@ -7,7 +7,6 @@ import {
   Briefcase,
   TrendingUp,
   CreditCard,
-  GraduationCap,
   HelpCircle,
   Zap,
 } from "lucide-react";
@@ -33,9 +32,6 @@ const affiliationAnalyticsItems = [
   { title: "Money Claims", url: "/individual/claims", icon: CreditCard },
 ];
 
-const scholarshipItems = [
-  { title: "My Scholarships", url: "/individual/scholarships", icon: GraduationCap },
-];
 
 const profileItems = [
   { title: "My Profile", url: "/individual/profile", icon: User },
@@ -103,23 +99,6 @@ export function PartnerIndividualSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        <SidebarGroup>
-          <SidebarGroupLabel>Scholarship Management</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {scholarshipItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild isActive={isActive(item.url)}>
-                    <NavLink to={item.url}>
-                      <item.icon className="h-4 w-4" />
-                      <span>{item.title}</span>
-                    </NavLink>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
 
         <SidebarGroup>
           <SidebarGroupLabel>My Profile & Growth</SidebarGroupLabel>
