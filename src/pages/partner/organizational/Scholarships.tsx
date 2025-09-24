@@ -25,7 +25,7 @@ import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Toolti
 // Form validation schema
 const scholarshipFormSchema = z.object({
   title: z.string().trim().min(1, "Title is required").max(100, "Title must be less than 100 characters"),
-  associatedTests: z.array(z.string()).min(1, "At least one test must be selected"),
+  associatedAssessment: z.string().min(1, "Assessment selection is required"),
   description: z.string().trim().min(1, "Description is required").max(500, "Description must be less than 500 characters"),
   rules: z.string().trim().min(1, "Rules are required").max(500, "Rules must be less than 500 characters"),
   acceptanceCriteria: z.string().trim().min(1, "Acceptance criteria are required").max(300, "Acceptance criteria must be less than 300 characters"),
@@ -38,7 +38,7 @@ const mockScholarships = [
   {
     id: "SCH-001",
     title: "Tech Founders Assessment Sponsorship",
-    associatedTests: ["FPA", "EEA"],
+    associatedAssessment: "FPA",
     description: "Sponsored assessment program for early-stage tech founders to evaluate their entrepreneurial potential and receive comprehensive feedback.",
     rules: "Open to founders with tech startups in pre-seed to seed stage. Must have a functional prototype or MVP.",
     acceptanceCriteria: "Strong technical background, clear product-market fit evidence, scalable business model potential.",
@@ -50,7 +50,7 @@ const mockScholarships = [
   {
     id: "SCH-002", 
     title: "Growth Stage Leadership Program",
-    associatedTests: ["GEB", "All-in-One Package"],
+    associatedAssessment: "All-in-One Package",
     description: "Comprehensive assessment sponsorship for growth-stage startup leaders looking to scale their organizations.",
     rules: "For founders leading startups with 10+ employees and $1M+ in revenue. Series A or later preferred.",
     acceptanceCriteria: "Proven leadership experience, clear growth trajectory, strong team and culture development focus.",
@@ -62,7 +62,7 @@ const mockScholarships = [
   {
     id: "SCH-003",
     title: "All-in-One Founder Assessment",
-    associatedTests: ["All-in-One Package"],
+    associatedAssessment: "All-in-One Package",
     description: "Complete entrepreneurial assessment covering all aspects of founder readiness and potential for any stage startup.",
     rules: "Open to all founders regardless of startup stage. Preference given to first-time founders seeking comprehensive evaluation.",
     acceptanceCriteria: "Demonstrated commitment to entrepreneurship, clear business concept, willingness to act on assessment insights.",
@@ -71,6 +71,13 @@ const mockScholarships = [
     maxApplications: 30,
     createdAt: "2024-01-10"
   }
+];
+
+const assessmentOptions = [
+  { value: "FPA", label: "FPA (Founder Public Awareness)" },
+  { value: "EEA", label: "EEA (Ecosystem Environment Awareness)" },
+  { value: "GEB", label: "GEB (General Entrepreneurial Behavior)" },
+  { value: "All-in-One Package", label: "All-in-One Package (FPA + EEA + GEB)" }
 ];
 
 const mockApplications = [
@@ -240,13 +247,14 @@ export default function Scholarships() {
   const [selectedSource, setSelectedSource] = useState<string | null>(null);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
   const { toast } = useToast();
 
   const form = useForm<ScholarshipFormData>({
     resolver: zodResolver(scholarshipFormSchema),
     defaultValues: {
       title: "",
-      associatedTests: [],
+      associatedAssessment: "",
       description: "",
       rules: "",
       acceptanceCriteria: "",
@@ -323,6 +331,42 @@ export default function Scholarships() {
       title: "Scholarship created successfully!",
       description: "Your new sponsorship program is now active and accepting applications.",
     });
+  };
+
+  const onUpdateScholarship = (data: ScholarshipFormData) => {
+    if (!selectedScholarship) return;
+    
+    setScholarships(prev => 
+      prev.map(s => s.id === selectedScholarship.id ? { ...s, ...data } : s)
+    );
+    setIsDetailsModalOpen(false);
+    setIsEditMode(false);
+    form.reset();
+    
+    toast({
+      title: "Scholarship updated successfully!",
+      description: "Your sponsorship program has been updated.",
+    });
+  };
+
+  const openDetailsModal = (scholarship: typeof mockScholarships[0]) => {
+    setSelectedScholarship(scholarship);
+    setIsDetailsModalOpen(true);
+    setIsEditMode(false);
+  };
+
+  const openEditMode = () => {
+    if (selectedScholarship) {
+      form.reset({
+        title: selectedScholarship.title,
+        associatedAssessment: selectedScholarship.associatedAssessment,
+        description: selectedScholarship.description,
+        rules: selectedScholarship.rules,
+        acceptanceCriteria: selectedScholarship.acceptanceCriteria,
+        maxApplications: selectedScholarship.maxApplications
+      });
+      setIsEditMode(true);
+    }
   };
 
   const filteredApplicationsBySource = selectedSource 
@@ -418,29 +462,24 @@ export default function Scholarships() {
 
                 <FormField
                   control={form.control}
-                  name="associatedTests"
+                  name="associatedAssessment"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Associated Assessment Tests</FormLabel>
-                      <div className="grid grid-cols-2 gap-3 mt-2">
-                        {["FPA", "EEA", "GEB", "All-in-One Package"].map((test) => (
-                          <div key={test} className="flex items-center space-x-2">
-                            <Checkbox
-                              id={test}
-                              checked={field.value?.includes(test)}
-                              onCheckedChange={(checked) => {
-                                const updatedTests = checked
-                                  ? [...(field.value || []), test]
-                                  : field.value?.filter(t => t !== test) || [];
-                                field.onChange(updatedTests);
-                              }}
-                            />
-                            <Label htmlFor={test} className="text-sm font-medium">
-                              {test}
-                            </Label>
-                          </div>
-                        ))}
-                      </div>
+                      <FormLabel>Associated Assessment</FormLabel>
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select an assessment" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {assessmentOptions.map((option) => (
+                            <SelectItem key={option.value} value={option.value}>
+                              {option.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -624,13 +663,7 @@ export default function Scholarships() {
                         </div>
                       </TableCell>
                       <TableCell>
-                        <div className="flex flex-wrap gap-1">
-                          {scholarship.associatedTests.map((test) => (
-                            <Badge key={test} variant="outline" className="text-xs">
-                              {test}
-                            </Badge>
-                          ))}
-                        </div>
+                        <Badge variant="outline">{scholarship.associatedAssessment}</Badge>
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center space-x-2">
@@ -679,16 +712,10 @@ export default function Scholarships() {
                                   </div>
                                 </div>
                                 
-                                <div className="space-y-3">
-                                  <h4 className="font-medium">Associated Tests</h4>
-                                  <div className="flex flex-wrap gap-2">
-                                    {scholarship.associatedTests.map((test) => (
-                                      <Badge key={test} variant="secondary">
-                                        {test}
-                                      </Badge>
-                                    ))}
-                                  </div>
-                                </div>
+                <div className="space-y-3">
+                  <h4 className="font-medium">Associated Assessment</h4>
+                  <Badge variant="secondary">{scholarship.associatedAssessment}</Badge>
+                </div>
                               </div>
 
                               <div className="space-y-4">
