@@ -1,154 +1,89 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, FileText, DollarSign, TrendingUp, Building, BarChart3 } from "lucide-react";
+import { GraduationCap, Beaker, BarChart3, Users, FileText } from "lucide-react";
+import { Link } from "react-router-dom";
+
+// Mock data from other organizational pages
+const mockScholarships = [
+  { id: "SCH-001", status: "active", applications: 24 },
+  { id: "SCH-002", status: "closed", applications: 18 },
+  { id: "SCH-003", status: "draft", applications: 0 }
+];
+
+const customTestRequests = [
+  { id: 1, status: "In Development" },
+  { id: 2, status: "Requirements Review" },
+  { id: 3, status: "Testing" },
+  { id: 4, status: "Complete" }
+];
+
+const strategicReports = [
+  { id: 1, status: "Complete" },
+  { id: 2, status: "Processing" },
+  { id: 3, status: "Complete" },
+  { id: 4, status: "Scheduled" }
+];
 
 export default function OrganizationalPartnerDashboard() {
+  // Calculate metrics from mock data
+  const activeScholarships = mockScholarships.filter(s => s.status === 'active').length;
+  const totalApplications = mockScholarships.reduce((sum, s) => sum + s.applications, 0);
+  
+  const activeCustomTests = customTestRequests.filter(t => 
+    t.status === 'In Development' || t.status === 'Testing'
+  ).length;
+  const completedCustomTests = customTestRequests.filter(t => t.status === 'Complete').length;
+  
+  const completeReports = strategicReports.filter(r => r.status === 'Complete').length;
+  const processingReports = strategicReports.filter(r => 
+    r.status === 'Processing' || r.status === 'Scheduled'
+  ).length;
+
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Organizational Partner Dashboard</h1>
         <p className="text-muted-foreground">
-          Comprehensive overview of your organization's partnership performance and portfolio insights.
+          Your home base for managing scholarships, custom tests, strategic reports, and team collaboration.
         </p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Portfolio Companies</CardTitle>
-            <Building className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">Total Active Scholarships</CardTitle>
+            <GraduationCap className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">28</div>
+            <div className="text-2xl font-bold">{activeScholarships}</div>
             <p className="text-xs text-muted-foreground">
-              +4 from last quarter
+              {totalApplications} applications received
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Active Assessments</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">Custom Test Requests</CardTitle>
+            <Beaker className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">15</div>
+            <div className="text-2xl font-bold">{activeCustomTests}</div>
             <p className="text-xs text-muted-foreground">
-              Currently in progress
+              {completedCustomTests} completed tests
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Earnings</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">$12,450</div>
-            <p className="text-xs text-muted-foreground">
-              +22% from last quarter
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Strategic Reports</CardTitle>
+            <CardTitle className="text-sm font-medium">Strategic Reports Generated</CardTitle>
             <BarChart3 className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">8</div>
+            <div className="text-2xl font-bold">{completeReports}</div>
             <p className="text-xs text-muted-foreground">
-              Generated this quarter
+              {processingReports} currently processing
             </p>
-          </CardContent>
-        </Card>
-      </div>
-
-      <div className="grid gap-4 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>Portfolio Performance</CardTitle>
-            <CardDescription>
-              Overview of your portfolio companies' assessment results
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                  <span className="text-sm">High Performers</span>
-                </div>
-                <span className="text-sm font-medium">12 companies</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                  <span className="text-sm">Moderate Performers</span>
-                </div>
-                <span className="text-sm font-medium">10 companies</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                  <span className="text-sm">Needs Attention</span>
-                </div>
-                <span className="text-sm font-medium">6 companies</span>
-              </div>
-              
-              <div className="pt-4 border-t">
-                <div className="flex justify-between text-sm">
-                  <span>Average Portfolio Score</span>
-                  <span className="font-medium">7.2/10</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span>Improvement Rate</span>
-                  <span className="font-medium text-green-600">+15%</span>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Team Activity</CardTitle>
-            <CardDescription>
-              Recent activities from your organization's team members
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-center space-x-4">
-                <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                <div className="flex-1 space-y-1">
-                  <p className="text-sm font-medium">John Smith reviewed TechCorp assessment</p>
-                  <p className="text-xs text-muted-foreground">2 hours ago</p>
-                </div>
-              </div>
-              <div className="flex items-center space-x-4">
-                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                <div className="flex-1 space-y-1">
-                  <p className="text-sm font-medium">Sarah Johnson requested strategic report</p>
-                  <p className="text-xs text-muted-foreground">5 hours ago</p>
-                </div>
-              </div>
-              <div className="flex items-center space-x-4">
-                <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-                <div className="flex-1 space-y-1">
-                  <p className="text-sm font-medium">Mike Chen created custom test request</p>
-                  <p className="text-xs text-muted-foreground">1 day ago</p>
-                </div>
-              </div>
-              <div className="flex items-center space-x-4">
-                <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
-                <div className="flex-1 space-y-1">
-                  <p className="text-sm font-medium">Lisa Wang added new team member</p>
-                  <p className="text-xs text-muted-foreground">2 days ago</p>
-                </div>
-              </div>
-            </div>
           </CardContent>
         </Card>
       </div>
@@ -157,26 +92,54 @@ export default function OrganizationalPartnerDashboard() {
         <CardHeader>
           <CardTitle>Quick Actions</CardTitle>
           <CardDescription>
-            Common tasks for your organization
+            Access your organization's core partnership features
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-4 md:grid-cols-3">
-            <div className="p-4 border rounded-lg hover:bg-muted/50 cursor-pointer transition-colors">
-              <BarChart3 className="h-8 w-8 text-primary mb-2" />
-              <h3 className="font-medium">Request Strategic Report</h3>
-              <p className="text-sm text-muted-foreground">Get comprehensive portfolio insights</p>
-            </div>
-            <div className="p-4 border rounded-lg hover:bg-muted/50 cursor-pointer transition-colors">
-              <Users className="h-8 w-8 text-primary mb-2" />
-              <h3 className="font-medium">Manage Team</h3>
-              <p className="text-sm text-muted-foreground">Add or modify team member permissions</p>
-            </div>
-            <div className="p-4 border rounded-lg hover:bg-muted/50 cursor-pointer transition-colors">
-              <FileText className="h-8 w-8 text-primary mb-2" />
-              <h3 className="font-medium">Custom Test Request</h3>
-              <p className="text-sm text-muted-foreground">Create organization-specific assessments</p>
-            </div>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <Link 
+              to="/organizational/scholarships" 
+              className="block p-6 border rounded-lg hover:bg-muted/50 cursor-pointer transition-colors group"
+            >
+              <GraduationCap className="h-10 w-10 text-primary mb-3 group-hover:scale-110 transition-transform" />
+              <h3 className="font-medium mb-2">Create Scholarship</h3>
+              <p className="text-sm text-muted-foreground">
+                Launch new scholarship programs to support talented individuals
+              </p>
+            </Link>
+
+            <Link 
+              to="/organizational/custom-tests" 
+              className="block p-6 border rounded-lg hover:bg-muted/50 cursor-pointer transition-colors group"
+            >
+              <Beaker className="h-10 w-10 text-primary mb-3 group-hover:scale-110 transition-transform" />
+              <h3 className="font-medium mb-2">Request Custom Test</h3>
+              <p className="text-sm text-muted-foreground">
+                Create custom assessments tailored to your organization's needs
+              </p>
+            </Link>
+
+            <Link 
+              to="/organizational/strategic-reports" 
+              className="block p-6 border rounded-lg hover:bg-muted/50 cursor-pointer transition-colors group"
+            >
+              <BarChart3 className="h-10 w-10 text-primary mb-3 group-hover:scale-110 transition-transform" />
+              <h3 className="font-medium mb-2">Order Strategic Report</h3>
+              <p className="text-sm text-muted-foreground">
+                Get comprehensive portfolio insights and market intelligence
+              </p>
+            </Link>
+
+            <Link 
+              to="/organizational/team" 
+              className="block p-6 border rounded-lg hover:bg-muted/50 cursor-pointer transition-colors group"
+            >
+              <Users className="h-10 w-10 text-primary mb-3 group-hover:scale-110 transition-transform" />
+              <h3 className="font-medium mb-2">Manage Team</h3>
+              <p className="text-sm text-muted-foreground">
+                Add team members and configure permissions and access levels
+              </p>
+            </Link>
           </div>
         </CardContent>
       </Card>
