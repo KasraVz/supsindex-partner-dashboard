@@ -186,10 +186,7 @@ export default function Claims() {
 
   const handleExportClaims = (format: "csv" | "pdf") => {
     const exportData = filteredClaims.map(claim => ({
-      "Claim ID": claim.id,
       "Date": claim.date,
-      "Type": claim.type,
-      "Candidates": claim.candidates,
       "Amount": `$${claim.amount.toFixed(2)}`,
       "Status": claim.status
     }));
@@ -216,14 +213,14 @@ export default function Claims() {
     }));
 
     if (format === "csv") {
-      exportToCSV(exportData, "transaction-history");
+      exportToCSV(exportData, "earning-history");
     } else {
-      exportToPDF(exportData, "transaction-history", "Transaction History Report");
+      exportToPDF(exportData, "earning-history", "Earning History Report");
     }
 
     toast({
       title: "Export successful", 
-      description: `Transaction history exported as ${format.toUpperCase()}`,
+      description: `Earning history exported as ${format.toUpperCase()}`,
     });
   };
 
@@ -302,7 +299,7 @@ export default function Claims() {
       <Tabs defaultValue="claims" className="w-full">
         <TabsList>
           <TabsTrigger value="claims">Claims History</TabsTrigger>
-          <TabsTrigger value="transactions">Transaction History</TabsTrigger>
+          <TabsTrigger value="transactions">Earning History</TabsTrigger>
           <TabsTrigger value="methods">Payout Methods</TabsTrigger>
           <TabsTrigger value="new-claim">New Claim</TabsTrigger>
         </TabsList>
@@ -361,10 +358,7 @@ export default function Claims() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Claim ID</TableHead>
                     <TableHead>Date</TableHead>
-                    <TableHead>Type</TableHead>
-                    <TableHead>Candidates</TableHead>
                     <TableHead>Amount</TableHead>
                     <TableHead>Status</TableHead>
                   </TableRow>
@@ -372,10 +366,7 @@ export default function Claims() {
                 <TableBody>
                   {filteredClaims.map(claim => (
                     <TableRow key={claim.id}>
-                      <TableCell className="font-medium">{claim.id}</TableCell>
                       <TableCell>{claim.date}</TableCell>
-                      <TableCell>{claim.type}</TableCell>
-                      <TableCell>{claim.candidates}</TableCell>
                       <TableCell>${claim.amount.toFixed(2)}</TableCell>
                       <TableCell>
                         <div className="flex items-center gap-2">
@@ -394,7 +385,7 @@ export default function Claims() {
         <TabsContent value="transactions" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Transaction History</CardTitle>
+              <CardTitle>Earning History</CardTitle>
               <CardDescription>
                 Detailed breakdown of all earnings that contribute to your balance
               </CardDescription>
