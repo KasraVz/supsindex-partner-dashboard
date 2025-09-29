@@ -6,11 +6,17 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Camera, MapPin, Briefcase, Award, ExternalLink, Eye } from "lucide-react";
 import { ProfileEditRequestDialog } from "@/components/profile/ProfileEditRequestDialog";
+import { AccountSettings } from "@/components/profile/AccountSettings";
+import { ProfileEditRequests } from "@/components/profile/ProfileEditRequests";
+
 export default function IndividualProfile() {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  return <div className="space-y-6">
+  
+  return (
+    <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">My Profile</h1>
         <p className="text-muted-foreground">
@@ -18,161 +24,174 @@ export default function IndividualProfile() {
         </p>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-3">
-        <div className="md:col-span-1">
-          <Card>
-            <CardHeader>
-              <CardTitle>Profile Photo</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex flex-col items-center space-y-4">
-                <Avatar className="h-32 w-32">
-                  <AvatarImage src="/placeholder.svg" />
-                  <AvatarFallback className="text-2xl">P</AvatarFallback>
-                </Avatar>
-                <Button variant="outline" size="sm">
-                  <Camera className="mr-2 h-4 w-4" />
-                  Upload Photo
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+      <Tabs defaultValue="profile" className="space-y-6">
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="profile">Profile</TabsTrigger>
+          <TabsTrigger value="edit-requests">Edit Requests</TabsTrigger>
+          <TabsTrigger value="account-settings">Account Settings</TabsTrigger>
+        </TabsList>
 
-          <Card className="mt-6">
-            <CardHeader>
-              <CardTitle>Statistics</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Partner Level:</span>
-                  <Badge className="bg-green-100 text-green-800 hover:bg-green-100">Active Partner</Badge>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Member Since:</span>
-                  <span className="text-sm font-medium">January 2024</span>
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Active Affiliation Codes:</span>
-                  <span className="text-sm font-medium">3</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Total Candidates Referred:</span>
-                  <span className="text-sm font-medium">28</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Successful Referrals:</span>
-                  <span className="text-sm font-medium">12</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Commission Earned:</span>
-                  <span className="text-sm font-medium">$2,450</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-        </div>
-
-        <div className="md:col-span-2 space-y-6">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle>Profile Information</CardTitle>
-              <Button variant="outline" size="sm" onClick={() => setIsEditDialogOpen(true)}>
-                <ExternalLink className="mr-2 h-4 w-4" />
-                Request Edit
-              </Button>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid gap-6 md:grid-cols-2">
-                <div className="space-y-3">
-                  <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                    <MapPin className="h-4 w-4" />
-                    <span>Full Name</span>
-                  </div>
-                  <p className="font-medium">John Doe</p>
-                </div>
-                
-                <div className="space-y-3">
-                  <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                    <ExternalLink className="h-4 w-4" />
-                    <span>Email Address</span>
-                  </div>
-                  <p className="font-medium">john.doe@example.com</p>
-                </div>
-                
-                <div className="space-y-3">
-                  <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                    <Briefcase className="h-4 w-4" />
-                    <span>Passport ID</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <p className="font-medium">ABC123456789</p>
-                    <Button variant="ghost" size="sm" className="h-auto p-1">
-                      <Eye className="h-4 w-4" />
+        <TabsContent value="profile" className="space-y-6">
+          <div className="grid gap-6 md:grid-cols-3">
+            <div className="md:col-span-1">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Profile Photo</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex flex-col items-center space-y-4">
+                    <Avatar className="h-32 w-32">
+                      <AvatarImage src="/placeholder.svg" />
+                      <AvatarFallback className="text-2xl">P</AvatarFallback>
+                    </Avatar>
+                    <Button variant="outline" size="sm">
+                      <Camera className="mr-2 h-4 w-4" />
+                      Upload Photo
                     </Button>
                   </div>
-                </div>
-                
-                <div className="space-y-3">
-                  <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                    <Award className="h-4 w-4" />
-                    <span>Verification Status</span>
+                </CardContent>
+              </Card>
+
+              <Card className="mt-6">
+                <CardHeader>
+                  <CardTitle>Statistics</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-muted-foreground">Partner Level:</span>
+                      <Badge className="bg-green-100 text-green-800 hover:bg-green-100">Active Partner</Badge>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-muted-foreground">Member Since:</span>
+                      <span className="text-sm font-medium">January 2024</span>
+                    </div>
+                    
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-muted-foreground">Active Affiliation Codes:</span>
+                      <span className="text-sm font-medium">3</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-muted-foreground">Total Candidates Referred:</span>
+                      <span className="text-sm font-medium">28</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-muted-foreground">Successful Referrals:</span>
+                      <span className="text-sm font-medium">12</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-muted-foreground">Commission Earned:</span>
+                      <span className="text-sm font-medium">$2,450</span>
+                    </div>
                   </div>
-                  <Badge className="bg-green-100 text-green-800 hover:bg-green-100">Verified</Badge>
-                </div>
-                </div>
-            </CardContent>
-          </Card>
+                </CardContent>
+              </Card>
+            </div>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Professional Profile</CardTitle>
-              <CardDescription>
-                Share your expertise and background with potential founders
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="title">Professional Title</Label>
-                <Input id="title" defaultValue="Senior Business Consultant" />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="company">Current Company</Label>
-                <Input id="company" defaultValue="Innovation Partners LLC" />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="bio">Bio</Label>
-                <Textarea id="bio" rows={4} defaultValue="Experienced business consultant with 15+ years in startup mentoring and venture capital. Specialized in helping early-stage companies develop scalable business models and secure funding." />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="expertise">Areas of Expertise</Label>
-                <Input id="expertise" defaultValue="Business Strategy, Fundraising, Product Development" />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="website">Website/LinkedIn</Label>
-                <Input id="website" defaultValue="https://linkedin.com/in/johnpartner" />
-              </div>
-            </CardContent>
-          </Card>
+            <div className="md:col-span-2 space-y-6">
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between">
+                  <CardTitle>Profile Information</CardTitle>
+                  <Button variant="outline" size="sm" onClick={() => setIsEditDialogOpen(true)}>
+                    <ExternalLink className="mr-2 h-4 w-4" />
+                    Request Edit
+                  </Button>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="grid gap-6 md:grid-cols-2">
+                    <div className="space-y-3">
+                      <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                        <MapPin className="h-4 w-4" />
+                        <span>Full Name</span>
+                      </div>
+                      <p className="font-medium">John Doe</p>
+                    </div>
+                    
+                    <div className="space-y-3">
+                      <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                        <ExternalLink className="h-4 w-4" />
+                        <span>Email Address</span>
+                      </div>
+                      <p className="font-medium">john.doe@example.com</p>
+                    </div>
+                    
+                    <div className="space-y-3">
+                      <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                        <Briefcase className="h-4 w-4" />
+                        <span>Passport ID</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <p className="font-medium">ABC123456789</p>
+                        <Button variant="ghost" size="sm" className="h-auto p-1">
+                          <Eye className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-3">
+                      <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                        <Award className="h-4 w-4" />
+                        <span>Verification Status</span>
+                      </div>
+                      <Badge className="bg-green-100 text-green-800 hover:bg-green-100">Verified</Badge>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
 
-          <Card>
-            
-            
-          </Card>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Professional Profile</CardTitle>
+                  <CardDescription>
+                    Share your expertise and background with potential founders
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="title">Professional Title</Label>
+                    <Input id="title" defaultValue="Senior Business Consultant" />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="company">Current Company</Label>
+                    <Input id="company" defaultValue="Innovation Partners LLC" />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="bio">Bio</Label>
+                    <Textarea id="bio" rows={4} defaultValue="Experienced business consultant with 15+ years in startup mentoring and venture capital. Specialized in helping early-stage companies develop scalable business models and secure funding." />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="expertise">Areas of Expertise</Label>
+                    <Input id="expertise" defaultValue="Business Strategy, Fundraising, Product Development" />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="website">Website/LinkedIn</Label>
+                    <Input id="website" defaultValue="https://linkedin.com/in/johnpartner" />
+                  </div>
+                </CardContent>
+              </Card>
 
-          <div className="flex justify-end space-x-4">
-            <Button variant="outline">Cancel</Button>
-            <Button>Save Changes</Button>
+              <div className="flex justify-end space-x-4">
+                <Button variant="outline">Cancel</Button>
+                <Button>Save Changes</Button>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
+        </TabsContent>
+
+        <TabsContent value="edit-requests">
+          <ProfileEditRequests />
+        </TabsContent>
+
+        <TabsContent value="account-settings">
+          <AccountSettings />
+        </TabsContent>
+      </Tabs>
 
       <ProfileEditRequestDialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen} />
-    </div>;
+    </div>
+  );
 }
