@@ -12,6 +12,7 @@ import {
   GraduationCap,
   HelpCircle,
   Zap,
+  Award,
 } from "lucide-react";
 import {
   Sidebar,
@@ -26,6 +27,7 @@ import {
 
 const mainItems = [
   { title: "Dashboard", url: "/organizational/dashboard", icon: LayoutDashboard },
+  { title: "Certificate Verification", url: "/organizational/certificates", icon: Award },
   { title: "Fast Track", url: "/organizational/fast-track", icon: Zap },
 ];
 

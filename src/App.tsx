@@ -20,6 +20,7 @@ import IndividualFastTrack from "@/pages/partner/individual/FastTrack";
 import OrganizationalAffiliations from "@/pages/partner/organizational/Affiliations";
 import IndividualProfile from "@/pages/partner/individual/Profile";
 import PartnershipOpportunities from "@/pages/partner/individual/Opportunities";
+import IndividualCertificateVerification from "@/pages/partner/individual/CertificateVerification";
 
 // Partner pages - Organizational
 import OrganizationalPartnerDashboard from "@/pages/partner/organizational/Dashboard";
@@ -30,6 +31,7 @@ import CustomTestRequests from "@/pages/partner/organizational/CustomTests";
 import OrganizationalSupport from "@/pages/partner/organizational/Support";
 import OrganizationalScholarships from "@/pages/partner/organizational/Scholarships";
 import OrganizationalFastTrack from "@/pages/partner/organizational/FastTrack";
+import OrganizationalCertificateVerification from "@/pages/partner/organizational/CertificateVerification";
 
 const queryClient = new QueryClient();
 
@@ -47,6 +49,7 @@ const App = () => (
               {/* Individual Partner Routes */}
               <Route path="/individual" element={<PartnerLayout />}>
                 <Route path="dashboard" element={<IndividualPartnerDashboard />} />
+                <Route path="certificates" element={<IndividualCertificateVerification />} />
                 <Route path="fast-track" element={<IndividualFastTrack />} />
                 <Route path="candidates" element={<MyCandidates />} />
                 <Route path="earnings" element={<AffiliationsAndEarnings />} />
@@ -60,6 +63,7 @@ const App = () => (
               {/* Organizational Partner Routes */}
               <Route path="/organizational" element={<PartnerLayout />}>
                 <Route path="dashboard" element={<OrganizationalPartnerDashboard />} />
+                <Route path="certificates" element={<OrganizationalCertificateVerification />} />
                 <Route path="fast-track" element={<OrganizationalFastTrack />} />
                 <Route path="candidates" element={<MyCandidates />} />
                 <Route path="affiliations" element={<OrganizationalAffiliations />} />

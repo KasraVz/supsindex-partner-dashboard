@@ -9,6 +9,7 @@ import {
   CreditCard,
   HelpCircle,
   Zap,
+  Award,
 } from "lucide-react";
 import {
   Sidebar,
@@ -23,6 +24,7 @@ import {
 
 const mainItems = [
   { title: "Dashboard", url: "/individual/dashboard", icon: LayoutDashboard },
+  { title: "Certificate Verification", url: "/individual/certificates", icon: Award },
   { title: "Fast Track", url: "/individual/fast-track", icon: Zap },
 ];
 

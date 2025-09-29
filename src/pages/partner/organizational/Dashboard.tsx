@@ -1,6 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { GraduationCap, Beaker, BarChart3, Users, FileText } from "lucide-react";
 import { Link } from "react-router-dom";
+import { CertificateSearchWidget } from "@/components/certificates/CertificateSearchWidget";
 
 // Mock data from other organizational pages
 const mockScholarships = [
@@ -87,6 +88,8 @@ export default function OrganizationalPartnerDashboard() {
           </CardContent>
         </Card>
       </div>
+
+      <CertificateSearchWidget />
 
       <Card>
         <CardHeader>

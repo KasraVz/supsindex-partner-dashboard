@@ -1,5 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, FileText, DollarSign, TrendingUp } from "lucide-react";
+import { CertificateSearchWidget } from "@/components/certificates/CertificateSearchWidget";
 export default function IndividualPartnerDashboard() {
   return <div className="space-y-6">
       <div>
@@ -50,7 +51,7 @@ export default function IndividualPartnerDashboard() {
           </CardContent>
         </Card>
 
-        
+        <CertificateSearchWidget className="lg:col-span-1" />
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">

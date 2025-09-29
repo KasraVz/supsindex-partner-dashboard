@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { GraduationCap, Users, Scale, Clock, MapPin, DollarSign } from "lucide-react";
+import { PartnershipApplicationDialog } from "@/components/partnership/PartnershipApplicationDialog";
 
 const opportunities = [
   {
@@ -46,6 +48,14 @@ const opportunities = [
 ];
 
 export default function PartnershipOpportunities() {
+  const [selectedOpportunity, setSelectedOpportunity] = useState<typeof opportunities[0] | null>(null);
+  const [isApplicationDialogOpen, setIsApplicationDialogOpen] = useState(false);
+
+  const handleApplyClick = (opportunity: typeof opportunities[0]) => {
+    setSelectedOpportunity(opportunity);
+    setIsApplicationDialogOpen(true);
+  };
+
   return (
     <div className="space-y-6">
       <div>
@@ -115,7 +125,10 @@ export default function PartnershipOpportunities() {
                     <p className="font-medium">{opportunity.type}</p>
                   </div>
                   
-                  <Button className="w-full">
+                  <Button 
+                    className="w-full"
+                    onClick={() => handleApplyClick(opportunity)}
+                  >
                     Apply for Position
                   </Button>
                 </div>
@@ -166,6 +179,15 @@ export default function PartnershipOpportunities() {
           </div>
         </CardContent>
       </Card>
+
+      {selectedOpportunity && (
+        <PartnershipApplicationDialog
+          open={isApplicationDialogOpen}
+          onOpenChange={setIsApplicationDialogOpen}
+          opportunityTitle={selectedOpportunity.title}
+          opportunityType={selectedOpportunity.type}
+        />
+      )}
     </div>
   );
 }
