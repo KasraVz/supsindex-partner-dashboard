@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Mail, Phone, FileText, ChevronDown, ChevronUp } from "lucide-react";
+import { Mail, FileText, ChevronDown, ChevronUp } from "lucide-react";
 import { CandidateAssessmentDetails } from "./CandidateAssessmentDetails";
 import { CandidateWithAssessments } from "@/types/assessment";
 
@@ -135,7 +135,6 @@ export function CandidatesTable({ candidates, loading }: CandidatesTableProps) {
                         assessmentDetails={candidate.assessmentDetails}
                         candidateName={candidate.name}
                         candidateEmail={candidate.email}
-                        candidatePhone={candidate.phone}
                       />
                     </div>
                   </TableCell>

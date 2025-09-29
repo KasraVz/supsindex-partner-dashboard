@@ -10,14 +10,12 @@ interface CandidateAssessmentDetailsProps {
   assessmentDetails: AssessmentDetail[];
   candidateName: string;
   candidateEmail: string;
-  candidatePhone: string;
 }
 
 export function CandidateAssessmentDetails({ 
   assessmentDetails, 
   candidateName, 
-  candidateEmail, 
-  candidatePhone 
+  candidateEmail
 }: CandidateAssessmentDetailsProps) {
   const getAssessmentStatusBadge = (status: string) => {
     switch (status) {
@@ -71,10 +69,6 @@ export function CandidateAssessmentDetails({
             <div className="flex items-center space-x-2 text-sm text-muted-foreground">
               <Mail className="h-3 w-3" />
               <span>{candidateEmail}</span>
-            </div>
-            <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-              <span className="h-3 w-3 text-center">📞</span>
-              <span>{candidatePhone}</span>
             </div>
           </div>
         </div>

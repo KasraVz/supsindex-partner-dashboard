@@ -61,7 +61,6 @@ const generateMockCandidates = (count: number): CandidateWithAssessments[] => {
       id: i + 1,
       name: names[i % names.length] + (i > 9 ? ` ${Math.floor(i / 10) + 1}` : ""),
       email: `user${i + 1}@${companies[i % companies.length].toLowerCase().replace(/[^a-z]/g, "")}.com`,
-      phone: `+1 (555) ${String(Math.floor(Math.random() * 900) + 100)}-${String(Math.floor(Math.random() * 9000) + 1000)}`,
       company: companies[i % companies.length],
       status: statuses[i % statuses.length],
       joinDate: new Date(2023, Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),

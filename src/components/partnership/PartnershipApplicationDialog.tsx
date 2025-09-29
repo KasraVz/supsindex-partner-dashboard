@@ -13,7 +13,6 @@ import { z } from "zod";
 
 const applicationSchema = z.object({
   fullName: z.string().min(2, "Full name must be at least 2 characters"),
-  phone: z.string().min(10, "Please enter a valid phone number"),
   currentPosition: z.string().min(2, "Please enter your current position"),
   company: z.string().min(2, "Please enter your company/organization"),
   yearsExperience: z.string().min(1, "Please select your years of experience"),
@@ -146,18 +145,6 @@ export function PartnershipApplicationDialog({ open, onOpenChange, opportunityTi
               />
               {errors.fullName && (
                 <p className="text-sm text-destructive mt-1">{errors.fullName.message}</p>
-              )}
-            </div>
-
-            <div>
-              <Label htmlFor="phone">Phone Number *</Label>
-              <Input
-                id="phone"
-                {...register("phone")}
-                placeholder="+1 (555) 123-4567"
-              />
-              {errors.phone && (
-                <p className="text-sm text-destructive mt-1">{errors.phone.message}</p>
               )}
             </div>
 
